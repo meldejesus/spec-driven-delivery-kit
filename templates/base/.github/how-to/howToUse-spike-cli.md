@@ -24,6 +24,8 @@ Replace `PROJECT-123` with your ticket ID throughout.
 mkdir -p workflow/tickets/PROJECT-123
 ```
 
+The Scope step creates `workflow/tickets/PROJECT-123/index.md` as the first workflow-owned file.
+
 ### Step 2 — Draft Scope (Gate A)
 
 ```text
@@ -177,6 +179,8 @@ ticket=PROJECT-456
 mkdir -p workflow/tickets/PROJECT-123
 ```
 
+The Scope step creates `index.md` before `scope.md`.
+
 > **Optional:** Drop a `pre-context.md` in this folder before Step 2. The Architect will read it automatically. Use it for known constraints, related prior spikes, or anything the ticket description omits.
 
 ---
@@ -190,12 +194,12 @@ Act as Architect following .github/agents/architect.agent.md and .github/prompts
 ticket=PROJECT-123
 ```
 
-**What happens:** The CLI fetches the Jira ticket (via Atlassian MCP), reads `pre-context.md` if present, scans `.github/archive/` for related prior spikes, and writes `scope.md` with: the question, why it matters, in/out of scope, timebox, and sources to consult.
+**What happens:** The CLI fetches the Jira ticket (via Atlassian MCP), creates `index.md` with searchable metadata, reads `pre-context.md` if present, scans `.github/archive/` for related prior spikes, and writes `scope.md` with: the question, why it matters, in/out of scope, timebox, and sources to consult.
 
 **Gate A — CLI pauses here.** You will be asked:
-> "I've drafted the Scope. Shall I proceed to Investigation, or do you want revisions?"
+> "I've initialized the spike index and drafted the Scope. Shall I proceed to Investigation, or do you want revisions?"
 
-**You do:** Read `workflow/tickets/PROJECT-123/scope.md`. If the question or boundaries are wrong, say so — the CLI will redraft. Do not proceed until you're satisfied with the framing.
+**You do:** Read `workflow/tickets/PROJECT-123/scope.md`. Use `index.md` to relocate the spike later by ID, summary, terms, paths, or links. If the question or boundaries are wrong, say so — the CLI will redraft. Do not proceed until you're satisfied with the framing.
 
 ---
 
@@ -277,6 +281,7 @@ Use the same project key as the original ticket.
 
 | File | Created by | Auto-written? | Gate |
 |---|---|---|---|
+| `workflow/tickets/PROJECT-123/index.md` | Architect | ✅ Yes | Pre-A |
 | `workflow/tickets/PROJECT-123/pre-context.md` | You | ❌ Manual (optional) | Pre-A |
 | `workflow/tickets/PROJECT-123/scope.md` | Architect | ✅ Yes | A |
 | `workflow/tickets/PROJECT-123/findings.md` | Spike-Investigator | ✅ Yes (running journal) | — |

@@ -38,6 +38,7 @@ Use `--all` to also install helper folders such as `scripts/`, `standup/`, and
 The actual specs are the per-ticket artifacts produced during a run:
 
 - `.active-workflow.md` - active workflow pointer under `workflow/tickets/`
+- `index.md` - searchable ticket front door with metadata, summary, terms, links, paths, and artifact map
 - `prompt.md` - Strategic Contract
 - `reproduce.md` - reproduction and QA guide
 - `plan.md` - atomic implementation plan
@@ -134,6 +135,7 @@ The gates are the main difference between this workflow and a normal "ask the ag
 | Artifact | Owner | Purpose |
 |---|---|---|
 | `workflow/tickets/.active-workflow.md` | Workflow | Active ticket, output directory, and next stage pointer |
+| `index.md` | Architect | Searchable ticket directory front door: ID, title, summary, keywords, paths, links, artifact map |
 | `prompt.md` | Architect | Immutable contract: scope, ACs, constraints, risks, evidence strategy |
 | `reproduce.md` | Architect | Reproduction and manual verification guide |
 | `plan.md` | Plan-Agent | Atomic tasks mapped to ACs and evidence |

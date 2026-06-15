@@ -119,7 +119,7 @@ run review but also consider workflow/tickets/PROJECT-123/manual-test-notes.md
 
 | Prompt | Purpose |
 |---|---|
-| `workflow-contract` | Fetch ticket, draft Strategic Contract. Gate A — you approve. |
+| `workflow-contract` | Fetch ticket, create searchable `index.md`, draft Strategic Contract. Gate A — you approve. |
 | `workflow-plan` | Break contract into atomic tasks. Gate B — you approve. Reads active state if inputs are omitted. |
 | `workflow-implement` | Execute tasks, journal progress, run final build validation, stop on failures. Reads active state if inputs are omitted. |
 | `workflow-review` | Review diff + AC/build coverage, write PR description. Gate D. Reads active state if inputs are omitted. |
@@ -168,7 +168,7 @@ Steps: scope → investigate → review → (educate + file follow-up tickets)
 
 | Prompt | Purpose |
 |---|---|
-| `spike-contract` | Draft scope doc — question, boundaries, timebox, sources. Gate A. |
+| `spike-contract` | Create searchable `index.md`, then draft scope doc — question, boundaries, timebox, sources. Gate A. |
 | `spike-investigate` | Work through sources, journal findings, write detailed output plus a readable `explained.md`. |
 | `spike-review` | Verify question was answered, findings are grounded, and `explained.md` is accurate. |
 

@@ -17,6 +17,8 @@ Replace `PROJECT-123` with your ticket ID.
 mkdir -p workflow/tickets/PROJECT-123
 ```
 
+The Scope step creates `workflow/tickets/PROJECT-123/index.md` as the first workflow-owned file.
+
 ### Step 2 — Draft Scope (Gate A)
 
 ```text
@@ -67,6 +69,8 @@ Use the same project key as the original ticket.
 mkdir -p workflow/tickets/PROJECT-123
 ```
 
+The Scope step creates `index.md` before `scope.md`.
+
 ---
 
 ## Step 2 — Draft Scope (Gate A)
@@ -79,9 +83,9 @@ ticket=https://your-domain.atlassian.net/browse/PROJECT-123
 output_dir=workflow/tickets/PROJECT-123
 ```
 
-**Expect:** Architect fetches the Jira ticket, scans for prior related spikes, and writes `scope.md` with: the question, why it matters, in/out of scope, timebox, and sources to consult. Ends with `"Stage Complete: Scope (Gate A)"`.
+**Expect:** Architect fetches the Jira ticket, creates `index.md` with searchable metadata, scans for prior related spikes, and writes `scope.md` with: the question, why it matters, in/out of scope, timebox, and sources to consult. Ends with `"Stage Complete: Scope (Gate A)"`.
 
-**You do:** Read `scope.md`. If the question or boundaries are wrong, say so — Architect will redraft. Do not proceed until you're satisfied.
+**You do:** Read `scope.md`. Use `index.md` to relocate the spike later by ID, summary, terms, paths, or links. If the question or boundaries are wrong, say so — Architect will redraft. Do not proceed until you're satisfied.
 
 ---
 
@@ -150,6 +154,7 @@ Use the same project key as the original ticket.
 
 | File | Created by | Gate |
 |---|---|---|
+| `workflow/tickets/PROJECT-123/index.md` | Architect | Pre-A |
 | `workflow/tickets/PROJECT-123/scope.md` | Architect | A |
 | `workflow/tickets/PROJECT-123/findings.md` | Spike-Investigator | — |
 | `workflow/tickets/PROJECT-123/spike-output.md` | Spike-Investigator | — |

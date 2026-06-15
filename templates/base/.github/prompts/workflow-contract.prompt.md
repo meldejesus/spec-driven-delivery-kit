@@ -1,6 +1,6 @@
 ---
 name: contract
-description: Fetch ticket + draft a Strategic Contract and Reproduction Guide for a new task.
+description: Fetch ticket, create a searchable ticket index, and draft a Strategic Contract and Reproduction Guide for a new task.
 agent: Architect
 model: claude-3-5-sonnet-20241022
 tools: [agent, search, read, write, github, atlassian/atlassian-mcp-server/*]
@@ -61,10 +61,65 @@ Do NOT stop. Instead:
 
 ---
 
+# 1.5 Initialize Ticket Directory Index
+Ensure `${output_dir}` exists. Before writing `prompt.md`, `reproduce.md`, or `handoff.md`, create or update:
+
+```text
+${output_dir}/index.md
+```
+
+This is the ticket directory's searchable front door. It should make the work findable with repository search, `rg`, or AI context search even before the full contract is read.
+
+Before writing the index, read `${output_dir}/pre-context.md` if it exists and incorporate any developer-provided paths, links, domain terms, or constraints into the metadata.
+
+Use this structure:
+
+```md
+# <PROJECT-ID>: <Ticket title>
+
+## Search Metadata
+- ticket: <PROJECT-ID>
+- ticket_url: <resolved Jira URL>
+- workflow_type: standard-ticket
+- output_dir: <resolved output_dir>
+- status: contract-drafting
+- created: <YYYY-MM-DD>
+- source: Jira
+- summary: <1-2 sentence plain-language description of the problem and intended outcome>
+- searchable_terms:
+  - <domain or product area>
+  - <feature, route, component, service, or data model>
+  - <important acceptance-criteria terms>
+- related_paths:
+  - <repo paths discovered or provided so far>
+- related_links:
+  - <Jira, PR, Confluence, or design links discovered or provided so far>
+
+## Artifact Map
+- `prompt.md` - Strategic Contract
+- `reproduce.md` - reproduction and QA guide
+- `plan.md` - implementation plan, created after Gate A approval
+- `codebase-scan.md` - planning research notes, created after Gate A approval
+- `handoff.md` - implementation journal
+- `test.md` - acceptance evidence log
+- `pull-request.md` - review and PR synthesis
+- `overview.md` - closeout walkthrough
+- `lessons-learned.md` - promotion candidates
+
+## Notes
+- <Any short context that improves searchability but does not belong in the immutable contract>
+```
+
+Rules:
+- Do not leave placeholder metadata if the ticket content provides a better title, summary, term, path, or link.
+- If `index.md` already exists, update its metadata and artifact map without deleting human-authored notes.
+- Keep the summary and searchable terms concrete enough that `rg "<term>" workflow/tickets` can rediscover the ticket later.
+- For change-request output directories, set `workflow_type: change-request` and include the parent ticket directory under `related_paths`.
+
 # 2. Research & Discovery
 Before drafting the contract:
 
-0. **Read pre-context** — Check if `${output_dir}/pre-context.md` exists. If it does, read it in full before doing anything else. It contains developer-provided context (file paths, API routes, third-party integrations, known constraints) that must be incorporated into the contract and should override any assumptions made from the ticket alone.
+0. **Read pre-context** — If `${output_dir}/pre-context.md` was not already read during index initialization, check for it now and read it in full if it exists. It contains developer-provided context (file paths, API routes, third-party integrations, known constraints) that must be incorporated into the contract and should override any assumptions made from the ticket alone.
 1. **Fetch external context** — Use `search` or `agent` to review relevant code, docs, `AGENTS.md`, `.github/copilot-instructions.md`, and `.github/lessons-learned.md`.
 2. **Similar-Issue Search** — Scan `.github/archive/` for past handoff logs relating to this feature or domain.
 3. **Investigate prior work** — If a GitHub diff or Jira link is provided, summarize relevant findings.
@@ -161,17 +216,18 @@ Set compaction rule: summarize handoff.md every 10 turns; if >50 lines, trigger 
 - **Altitude:** Stay strategic; do NOT produce code, file diffs, or low-level implementation details.
 - **Immutable Contract:** Once approved, Contract cannot change; a new contract must be drafted for scope changes.
 - **No Plan Creation:** Only Plan-Agent may generate `plan.md`. You only **approve**, revise, or reject plans.
-- **Checkpoint Gate A:** STOP after drafting both files. Wait for human approval before any planning.
+- **Checkpoint Gate A:** STOP after initializing `index.md` and drafting `prompt.md` and `reproduce.md`. Wait for human approval before any planning.
 
 ---
 
 # 6. Output
-Write **two files**:
+Write **three files**:
 
-1. **`${output_dir}/prompt.md`** — The Strategic Contract (sections 3.1–3.10)
-2. **`${output_dir}/reproduce.md`** — The Reproduction Guide (section 3.10)
+1. **`${output_dir}/index.md`** — The searchable ticket directory index
+2. **`${output_dir}/prompt.md`** — The Strategic Contract (sections 3.1–3.10)
+3. **`${output_dir}/reproduce.md`** — The Reproduction Guide (section 3.10)
 
-Both files are part of **Gate A** and must be reviewed by the human before proceeding to planning.
+`prompt.md` and `reproduce.md` are part of **Gate A** and must be reviewed by the human before proceeding to planning. `index.md` is a search/navigation aid and should be kept current if the title, summary, key terms, paths, or links become clearer during Contract.
 
 Also update `workflow/tickets/.active-workflow.md`:
 
@@ -188,11 +244,12 @@ updated_by: workflow-contract
 ---
 
 # 7. Final Prompt to Human
-After writing both files, ask:
+After writing the index and both Gate A files, ask:
 
-> "I have drafted the Strategic Contract and Reproduction Guide.
+> "I have initialized the ticket index and drafted the Strategic Contract and Reproduction Guide.
 >
-> Review both files:
+> Review these files:
+> - `${output_dir}/index.md` — Searchable ticket index (title, metadata, terms, artifact map)
 > - `${output_dir}/prompt.md` — Strategic Contract (ACs, NFRs, risks, etc.)
 > - `${output_dir}/reproduce.md` — Reproduction Guide (step-by-step to reproduce the issue)
 >
@@ -201,7 +258,7 @@ After writing both files, ask:
 ---
 
 # 8. Stage Completion
-After writing both files:
+After writing the index and both Gate A files:
 - Announce: "Stage Complete: Contract (Gate A)."
 - Provide the exact next command:
   ```

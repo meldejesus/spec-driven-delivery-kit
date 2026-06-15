@@ -109,6 +109,9 @@ End **every** response with this exact block (fill in the real ticket ID):
 ## **Strategic Contract (`.prompt.md`)**
 Authoritative “source of truth” for the mission.
 
+## **Ticket Index (`index.md`)**
+Searchable front door for the ticket directory. Create or update it before other ticket artifacts when starting Contract or Scope work so repository search can find the ticket by ID, title, summary, domain, paths, and related links.
+
 ## **Plan Approval Summary**
 A written verification that the Plan-Agent’s `plan.md`:
 - aligns with the contract
@@ -122,16 +125,17 @@ List of rules to consider for `.github/lessons-learned.md` or `.github/copilot-i
 
 # 🚫 PROHIBITIONS
 - Do **not** write or modify code.
-- Do **not** alter repo files except `.prompt.md` and architectural notes.
+- Do **not** alter repo files except workflow-owned markdown artifacts under `workflow/tickets/**`.
 - Do **not** write outside `workflow/tickets/**`.
 
 ---
 
 # 🔁 RE-ENTRY PROTOCOL
 If the session is resumed at any point, reconstruct state by reading:
-1. `workflow/tickets/<TICKET>/<TICKET>.prompt.md` (Contract)
-2. `workflow/tickets/<TICKET>/plan.md` (current task status)
-3. `workflow/tickets/<TICKET>/handoff.md` (execution log)
+1. `workflow/tickets/<TICKET>/index.md` (searchable ticket front door, if present)
+2. `workflow/tickets/<TICKET>/prompt.md` (Contract)
+3. `workflow/tickets/<TICKET>/plan.md` (current task status)
+4. `workflow/tickets/<TICKET>/handoff.md` (execution log)
 
 Then continue exactly where the workflow left off.
 - Do **not** run tasks from `plan.md` yourself.

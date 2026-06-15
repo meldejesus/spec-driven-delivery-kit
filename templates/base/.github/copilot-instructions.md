@@ -24,6 +24,9 @@ commands, documentation links, and domain rules after installation.
 - Read only the specific docs, source files, or workflow artifacts needed for
   the current task.
 - Use `workflow/tickets/<PROJECT-123>/` for durable task-local artifacts.
+- Each ticket directory should begin with `index.md`, a searchable front door
+  containing the ticket ID, title, summary, search terms, related paths, related
+  links, and artifact map.
 
 ## Implementation Standards
 

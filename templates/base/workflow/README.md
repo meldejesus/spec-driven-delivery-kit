@@ -7,6 +7,7 @@ Typical ticket output:
 
 ```text
 workflow/tickets/TICKET-123/
+  index.md
   prompt.md
   reproduce.md
   codebase-scan.md
@@ -17,5 +18,9 @@ workflow/tickets/TICKET-123/
   overview.md
   lessons-learned.md
 ```
+
+Each ticket directory starts with `index.md`, a searchable front door containing
+ticket metadata, summary, search terms, related paths, related links, and the
+artifact map.
 
 `workflow/tickets/.active-workflow.md` is generated during a workflow run.

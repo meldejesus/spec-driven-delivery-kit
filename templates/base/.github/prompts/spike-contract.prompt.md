@@ -1,6 +1,6 @@
 ---
 name: spike-contract
-description: Fetch a spike ticket and draft a Scope Document defining the research question, boundaries, timebox, and sources.
+description: Fetch a spike ticket, create a searchable ticket index, and draft a Scope Document defining the research question, boundaries, timebox, and sources.
 agent: Architect
 tools: [read, search, write, github, "atlassian/atlassian-mcp-server/*"]
 infer: false
@@ -34,6 +34,56 @@ Attempt `#fetch ${ticket}` to retrieve the ticket page directly.
 **Option C — Manual fallback:**
 Inform the user: "Atlassian MCP is unavailable. Please paste the ticket title, description, and acceptance criteria and I will draft the scope from that." Wait, then continue.
 
+# 1.5 Initialize Ticket Directory Index
+Ensure `${output_dir}` exists. Before writing `scope.md`, create or update:
+
+```text
+${output_dir}/index.md
+```
+
+This is the spike directory's searchable front door. It should make the research findable with repository search, `rg`, or AI context search even before the full spike output is read.
+
+Before writing the index, read `${output_dir}/pre-context.md` if it exists and incorporate any developer-provided paths, links, domain terms, or constraints into the metadata.
+
+Use this structure:
+
+```md
+# <PROJECT-ID>: <Ticket title>
+
+## Search Metadata
+- ticket: <PROJECT-ID>
+- ticket_url: <resolved Jira URL>
+- workflow_type: spike
+- output_dir: <resolved output_dir>
+- status: scope-drafting
+- created: <YYYY-MM-DD>
+- source: Jira
+- summary: <1-2 sentence plain-language description of the research question and decision this spike will unblock>
+- searchable_terms:
+  - <domain or product area>
+  - <feature, route, component, service, or data model>
+  - <important research terms>
+- related_paths:
+  - <repo paths discovered or provided so far>
+- related_links:
+  - <Jira, PR, Confluence, or design links discovered or provided so far>
+
+## Artifact Map
+- `scope.md` - approved research question, boundaries, timebox, and sources
+- `findings.md` - running investigation journal
+- `spike-output.md` - final evidence-backed research output
+- `explained.md` - readable front-door summary
+- `overview.md` - optional education walkthrough
+
+## Notes
+- <Any short context that improves searchability but does not belong in the scoped research question>
+```
+
+Rules:
+- Do not leave placeholder metadata if the ticket content provides a better title, summary, term, path, or link.
+- If `index.md` already exists, update its metadata and artifact map without deleting human-authored notes.
+- Keep the summary and searchable terms concrete enough that `rg "<term>" workflow/tickets` can rediscover the spike later.
+
 # 2. Scan for prior related spikes
 Search `workflow/tickets/` for any existing `scope.md` or `spike-output.md` files whose title or content overlaps with this ticket. Note any relevant prior findings in the scope document.
 
@@ -66,7 +116,7 @@ Ordered list of where the investigator should look first:
 - External docs or PRs
 
 # 4. Stage Completion
-After writing `scope.md`:
+After writing `index.md` and `scope.md`:
 - Announce **"Stage Complete: Scope (Gate A)"**
 - Provide the exact next CLI invocation:
 

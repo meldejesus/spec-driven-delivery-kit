@@ -55,7 +55,7 @@ Used in order for a standard ticket. See `.github/how-to/howToUse.md` for the fu
 
 | Prompt                         | What it does                                                                                          |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| `workflow-contract.prompt.md`  | Fetches Jira ticket, researches codebase, drafts Strategic Contract + reproduction guide. **Gate A.** |
+| `workflow-contract.prompt.md`  | Fetches Jira ticket, creates searchable `index.md`, researches codebase, drafts Strategic Contract + reproduction guide. **Gate A.** |
 | `workflow-plan.prompt.md`      | Converts approved contract into atomic `plan.md` + `codebase-scan.md`. **Gate B.**                    |
 | `workflow-implement.prompt.md` | Runs implementation task by task, journals handoff + evidence after each. Stops on failures.          |
 | `workflow-review.prompt.md`    | Reviews diff + AC coverage + lint. Produces severity-rated findings + PR description. **Gate D.**     |
@@ -69,7 +69,7 @@ Used for time-boxed research tickets. See `.github/how-to/howToUse-spike.md`.
 
 | Prompt                        | What it does                                                                                    |
 | ----------------------------- | ----------------------------------------------------------------------------------------------- |
-| `spike-contract.prompt.md`    | Fetches spike ticket, drafts scope document with question, boundaries, and sources. **Gate A.** |
+| `spike-contract.prompt.md`    | Fetches spike ticket, creates searchable `index.md`, drafts scope document with question, boundaries, and sources. **Gate A.** |
 | `spike-investigate.prompt.md` | Works through sources, journals findings, writes structured output document.                    |
 | `spike-review.prompt.md`      | Reviews spike output — checks question was answered, findings are grounded, gaps are honest.    |
 
