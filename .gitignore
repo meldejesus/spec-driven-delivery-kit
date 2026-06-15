@@ -1,0 +1,40 @@
+.DS_Store
+._*
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+passwords.md
+*password*
+*secret*
+*token*
+
+# Dependency and build output
+node_modules/
+dist/
+build/
+coverage/
+.turbo/
+.nx/
+
+# Runtime scratch output
+tmp/
+temp/
+*.log
+*.har
+*.csv
+
+# OS/editor files
+.idea/
+.vscode/*
+!.vscode/README.md
+!.vscode/*.example.json
+
+# Live workspace output and migration leftovers
+/workflow/
+/standup/
+/scripts/
+/messages/
+/templates/workflow/
+/examples/private-*/

@@ -1,0 +1,6 @@
+#!/bin/bash
+# Delegate to Husky's pre-commit if it exists
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+HUSKY_HOOK="$REPO_ROOT/.husky/pre-commit"
+[ -f "$HUSKY_HOOK" ] && bash "$HUSKY_HOOK"
+exit 0

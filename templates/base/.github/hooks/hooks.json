@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "comment": "Security gate — blocks destructive commands before execution. See pre-tool-use.sh to add/remove patterns.",
+        "bash": "bash .github/hooks/pre-tool-use.sh",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}
