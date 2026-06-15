@@ -10,16 +10,16 @@ worklog-enrich.py — enriches worklog dashboard and daily log:
 
 Usage:
   # Check which tickets need labels (outputs JSON list)
-  python3 scripts/worklog-sync/worklog-enrich.py --scan
+  python3 worklog/scripts/worklog-enrich.py --scan
 
   # Apply enrichment with labels from a JSON file
-  python3 scripts/worklog-sync/worklog-enrich.py --labels labels.json [--dry-run]
+  python3 worklog/scripts/worklog-enrich.py --labels labels.json [--dry-run]
 
   # Move checked [x] items to Done and prune old entries
-  python3 scripts/worklog-sync/worklog-enrich.py --move-done [--dry-run]
+  python3 worklog/scripts/worklog-enrich.py --move-done [--dry-run]
 
   # Promote untracked tickets from latest daily log to In Progress
-  python3 scripts/worklog-sync/worklog-enrich.py --promote-in-progress [--labels labels.json] [--dry-run]
+  python3 worklog/scripts/worklog-enrich.py --promote-in-progress [--labels labels.json] [--dry-run]
 """
 
 import re
@@ -118,7 +118,7 @@ def find_daily_log_range(lines: list[str]) -> tuple[int, int]:
 
 
 def scan_tickets(lines: list[str]) -> list[str]:
-    """Return sorted unique OSMS ticket IDs in checkout/commit lines that lack a label (daily log only)."""
+    """Return sorted unique ticket IDs in checkout/commit lines that lack a label (daily log only)."""
     start, end = find_daily_log_range(lines)
     if start is None:
         return []
@@ -349,7 +349,7 @@ def move_done(lines: list[str]) -> tuple[list[str], list[str], list[str]]:
 
 
 def find_latest_day_tickets(lines: list[str]) -> set[str]:
-    """Return all OSMS ticket IDs found in the most recent daily log day section."""
+    """Return all ticket IDs found in the most recent daily log day section."""
     start, end = find_daily_log_range(lines)
     if start is None:
         return set()
@@ -382,7 +382,7 @@ TRACKED_SECTION_MARKERS = {
 
 
 def find_tracked_tickets(lines: list[str]) -> set[str]:
-    """Return all OSMS ticket IDs already mentioned in any non-daily-log section."""
+    """Return all ticket IDs already mentioned in any non-daily-log section."""
     daily_log_start, _ = find_daily_log_range(lines)
     tickets = set()
     in_tracked = False
@@ -407,7 +407,7 @@ def promote_in_progress(
     labels: dict[str, str],
 ) -> tuple[list[str], list[str]]:
     """
-    Find OSMS tickets in the most recent daily log day that aren't already tracked
+    Find tickets in the most recent daily log day that aren't already tracked
     in any section. Insert them at the bottom of the In Progress section.
     Returns (updated_lines, promoted_items).
     """

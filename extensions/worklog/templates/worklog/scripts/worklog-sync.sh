@@ -21,7 +21,7 @@ report_only=0
 if [ "${1:-}" = "--report-only" ]; then
   report_only=1
 elif [ -n "${1:-}" ]; then
-  echo "Usage: ./scripts/worklog-sync/worklog-sync.sh [--report-only]" >&2
+  echo "Usage: ./worklog/scripts/worklog-sync.sh [--report-only]" >&2
   exit 2
 fi
 

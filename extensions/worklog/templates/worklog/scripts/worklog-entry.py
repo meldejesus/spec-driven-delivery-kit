@@ -3,8 +3,8 @@
 worklog-entry.py — appends a timestamped entry to today's section in worklog/daily-log.md.
 
 Usage:
-  python3 scripts/worklog-sync/worklog-entry.py checkout <branch>
-  python3 scripts/worklog-sync/worklog-entry.py commit   <branch> <message>
+  python3 worklog/scripts/worklog-entry.py checkout <branch>
+  python3 worklog/scripts/worklog-entry.py commit   <branch> <message>
 """
 
 import sys

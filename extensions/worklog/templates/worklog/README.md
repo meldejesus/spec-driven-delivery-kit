@@ -9,6 +9,7 @@ logs.
 worklog/
   dashboard.md    Current work grouped by status.
   daily-log.md    Append-only checkout/commit/manual work log.
+  scripts/        Optional sync, enrichment, and Git hook helpers.
   README.md       This guide.
 ```
 
@@ -28,11 +29,11 @@ For routine cleanup, ask the agent to `update worklog`.
 
 ## Auto-Logging
 
-The optional scripts under `scripts/worklog-sync/` can log checkout and commit
+The optional scripts under `worklog/scripts/` can log checkout and commit
 activity. Configure the hook path from the installed workspace root:
 
 ```bash
-git config --global core.hooksPath "$PWD/scripts/worklog-sync/hooks"
+git config --global core.hooksPath "$PWD/worklog/scripts/hooks"
 ```
 
 If your main source repo is not the workspace root, set:
@@ -44,6 +45,6 @@ export WORKLOG_REPO_PATH="/path/to/source/repo"
 ## Manual Log Entry
 
 ```bash
-python3 scripts/worklog-sync/worklog-entry.py checkout feature/example
-python3 scripts/worklog-sync/worklog-entry.py commit feature/example "short note"
+python3 worklog/scripts/worklog-entry.py checkout feature/example
+python3 worklog/scripts/worklog-entry.py commit feature/example "short note"
 ```

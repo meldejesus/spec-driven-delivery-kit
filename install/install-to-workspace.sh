@@ -28,7 +28,7 @@ Core install paths:
 Tool install paths with --with-tools, --with-worklog, or --all:
   messages/
   worklog/
-  scripts/worklog-sync/
+  .github/skills/worklog/
 USAGE
 }
 
@@ -147,6 +147,27 @@ install_path() {
   fi
 }
 
+remove_legacy_path() {
+  local path="$1"
+
+  if [ ! -e "$path" ] && [ ! -L "$path" ]; then
+    return
+  fi
+
+  if [ "$force" != "1" ]; then
+    echo "Legacy path remains because --force was not passed: $path"
+    return
+  fi
+
+  run rm -rf "$path"
+
+  if [ "$dry_run" = "1" ]; then
+    echo "Would remove legacy path: $path"
+  else
+    echo "Removed legacy path: $path"
+  fi
+}
+
 echo "Kit root: $kit_root"
 echo "Target workspace: $target"
 echo "Mode: $mode"
@@ -157,9 +178,14 @@ install_path "$kit_root/templates/base/.copilot" "$target/.copilot"
 install_path "$kit_root/templates/base/workflow" "$target/workflow"
 
 if [ "$include_tools" = "1" ]; then
+  remove_legacy_path "$target/standup"
+  remove_legacy_path "$target/scripts/standup-sync"
+  remove_legacy_path "$target/scripts/worklog-sync"
+  remove_legacy_path "$target/.github/skills/standup"
+
   install_path "$kit_root/extensions/messages/templates/messages" "$target/messages"
   install_path "$kit_root/extensions/worklog/templates/worklog" "$target/worklog"
-  install_path "$kit_root/extensions/worklog/templates/scripts/worklog-sync" "$target/scripts/worklog-sync"
+  install_path "$kit_root/extensions/worklog/templates/.github/skills/worklog" "$target/.github/skills/worklog"
 fi
 
 echo "Done. Open your CLI or editor from: $target"

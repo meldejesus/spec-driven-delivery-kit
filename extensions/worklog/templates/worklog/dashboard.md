@@ -1,6 +1,6 @@
 # Worklog Dashboard
 
-> Sync check: `./scripts/worklog-sync/worklog-sync.sh`
+> Sync check: `./worklog/scripts/worklog-sync.sh`
 > Last updated: YYYY-MM-DD
 >
 > Use `[PROJECT-123]` for ticket work and `[TODO]` for non-ticket work.
