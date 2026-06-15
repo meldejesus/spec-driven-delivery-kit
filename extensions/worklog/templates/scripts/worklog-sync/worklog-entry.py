@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-standup-log.py — appends a timestamped entry to today's section in standup/daily-log.md.
+worklog-entry.py — appends a timestamped entry to today's section in worklog/daily-log.md.
 
 Usage:
-  python3 scripts/standup-sync/standup-log.py checkout <branch>
-  python3 scripts/standup-sync/standup-log.py commit   <branch> <message>
+  python3 scripts/worklog-sync/worklog-entry.py checkout <branch>
+  python3 scripts/worklog-sync/worklog-entry.py commit   <branch> <message>
 """
 
 import sys
@@ -13,7 +13,7 @@ from datetime import datetime
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..", ".."))
-DAILY_LOG_PATH = os.path.join(ROOT, "standup", "daily-log.md")
+DAILY_LOG_PATH = os.path.join(ROOT, "worklog", "daily-log.md")
 DAILY_LOG_MARKER = "# 📋 Daily Log"
 COMMENT_LINE = "<!-- Auto-updated by git hooks. Newest first. -->"
 
@@ -35,9 +35,9 @@ def today_header() -> str:
     return datetime.now().strftime("## %Y-%m-%d")
 
 
-def update_standup(entry: str) -> None:
+def update_worklog(entry: str) -> None:
     if not os.path.exists(DAILY_LOG_PATH):
-        print(f"standup-log: file not found at {DAILY_LOG_PATH}", file=sys.stderr)
+        print(f"worklog-entry: file not found at {DAILY_LOG_PATH}", file=sys.stderr)
         return
 
     with open(DAILY_LOG_PATH, "r") as f:
@@ -58,7 +58,7 @@ def update_standup(entry: str) -> None:
             break  # found today's section, no need to keep searching
 
     if daily_log_idx is None:
-        print("standup-log: could not find '# 📋 Daily Log' section.", file=sys.stderr)
+        print("worklog-entry: could not find '# 📋 Daily Log' section.", file=sys.stderr)
         return
 
     if today_idx is None:
@@ -89,9 +89,9 @@ def update_standup(entry: str) -> None:
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: standup-log.py <checkout|commit> [args...]")
+        print("Usage: worklog-entry.py <checkout|commit> [args...]")
         sys.exit(1)
     event = sys.argv[1]
     args = sys.argv[2:]
     entry = build_entry(event, args)
-    update_standup(entry)
+    update_worklog(entry)

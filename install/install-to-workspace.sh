@@ -13,6 +13,7 @@ Options:
   --mode copy         Copy files into the workspace. Default.
   --mode symlink      Symlink files from this kit into the workspace.
   --with-tools        Also install optional extension templates.
+  --with-worklog      Also install the optional worklog extension.
   --all               Install core files and optional extension templates.
   --force             Replace existing installed paths.
   --dry-run           Print actions without changing files.
@@ -24,10 +25,10 @@ Core install paths:
   .copilot/
   workflow/           copied from templates/base/workflow/
 
-Tool install paths with --with-tools or --all:
+Tool install paths with --with-tools, --with-worklog, or --all:
   messages/
-  standup/
-  scripts/standup-sync/
+  worklog/
+  scripts/worklog-sync/
 USAGE
 }
 
@@ -50,7 +51,7 @@ while [ "$#" -gt 0 ]; do
       mode="${2:-}"
       shift 2
       ;;
-    --with-tools|--all)
+    --with-tools|--with-worklog|--all)
       include_tools="1"
       shift
       ;;
@@ -157,8 +158,8 @@ install_path "$kit_root/templates/base/workflow" "$target/workflow"
 
 if [ "$include_tools" = "1" ]; then
   install_path "$kit_root/extensions/messages/templates/messages" "$target/messages"
-  install_path "$kit_root/extensions/standup/templates/standup" "$target/standup"
-  install_path "$kit_root/extensions/standup/templates/scripts/standup-sync" "$target/scripts/standup-sync"
+  install_path "$kit_root/extensions/worklog/templates/worklog" "$target/worklog"
+  install_path "$kit_root/extensions/worklog/templates/scripts/worklog-sync" "$target/scripts/worklog-sync"
 fi
 
 echo "Done. Open your CLI or editor from: $target"

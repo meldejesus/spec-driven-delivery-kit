@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-standup-enrich.py — enriches standup dashboard and daily log:
+worklog-enrich.py — enriches worklog dashboard and daily log:
   - Merges adjacent same-day checkout + commit pairs for the same branch into one line
   - Annotates ticket IDs with tracker summaries (if --labels provided)
   - Outputs a list of ticket IDs that need label lookup (for agent enrichment)
@@ -10,16 +10,16 @@ standup-enrich.py — enriches standup dashboard and daily log:
 
 Usage:
   # Check which tickets need labels (outputs JSON list)
-  python3 scripts/standup-sync/standup-enrich.py --scan
+  python3 scripts/worklog-sync/worklog-enrich.py --scan
 
   # Apply enrichment with labels from a JSON file
-  python3 scripts/standup-sync/standup-enrich.py --labels labels.json [--dry-run]
+  python3 scripts/worklog-sync/worklog-enrich.py --labels labels.json [--dry-run]
 
   # Move checked [x] items to Done and prune old entries
-  python3 scripts/standup-sync/standup-enrich.py --move-done [--dry-run]
+  python3 scripts/worklog-sync/worklog-enrich.py --move-done [--dry-run]
 
   # Promote untracked tickets from latest daily log to In Progress
-  python3 scripts/standup-sync/standup-enrich.py --promote-in-progress [--labels labels.json] [--dry-run]
+  python3 scripts/worklog-sync/worklog-enrich.py --promote-in-progress [--labels labels.json] [--dry-run]
 """
 
 import re
@@ -31,8 +31,8 @@ from typing import Optional
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..", ".."))
-DASHBOARD_PATH = os.path.join(ROOT, "standup", "dashboard.md")
-DAILY_LOG_PATH = os.path.join(ROOT, "standup", "daily-log.md")
+DASHBOARD_PATH = os.path.join(ROOT, "worklog", "dashboard.md")
+DAILY_LOG_PATH = os.path.join(ROOT, "worklog", "daily-log.md")
 DAILY_LOG_MARKER = "# 📋 Daily Log"
 TODO_MARKER = "### To Do"
 IN_PROGRESS_MARKER = "### In Progress"
@@ -44,7 +44,7 @@ CHECKED_RE = re.compile(r"^- \[x\] (.+)$", re.IGNORECASE)
 DAY_HEADER_RE = re.compile(r"^## \d{4}-\d{2}-\d{2}$")
 CHECKOUT_RE = re.compile(r"^- (\d{2}:\d{2}) 🔀 checkout → `([^`]+)`(.*)?$")
 COMMIT_RE = re.compile(r"^- (\d{2}:\d{2}) 💾 commit \[`([^`]+)`\] \"(.*)\"$")
-TICKET_RE = re.compile(os.environ.get("STANDUP_TICKET_PATTERN", r"[A-Z][A-Z0-9]+-\d+"))
+TICKET_RE = re.compile(os.environ.get("WORKLOG_TICKET_PATTERN", r"[A-Z][A-Z0-9]+-\d+"))
 HEADING_RE = re.compile(r"^#{1,6}\s")
 
 
@@ -81,7 +81,7 @@ def label_for(branch: str, labels: dict[str, str]) -> Optional[str]:
 
 def parse_args():
     import argparse
-    parser = argparse.ArgumentParser(description="Enrich standup dashboard and daily log.")
+    parser = argparse.ArgumentParser(description="Enrich worklog dashboard and daily log.")
     parser.add_argument("--scan", action="store_true",
                         help="Scan for ticket IDs needing labels and output as JSON")
     parser.add_argument("--labels", metavar="FILE",
@@ -208,7 +208,7 @@ def enrich(lines: list[str], labels: dict[str, str]) -> list[str]:
     """Enrich all day sections in the daily log."""
     start, end = find_daily_log_range(lines)
     if start is None:
-        print("standup-enrich: could not find '# 📋 Daily Log' section.", file=sys.stderr)
+        print("worklog-enrich: could not find '# 📋 Daily Log' section.", file=sys.stderr)
         return lines
 
     # Collect lines before and after the daily log section
@@ -433,7 +433,7 @@ def promote_in_progress(
         in_progress_end = len(lines)
 
     if in_progress_end is None:
-        print("standup-enrich: could not find In Progress section end.", file=sys.stderr)
+        print("worklog-enrich: could not find In Progress section end.", file=sys.stderr)
         return lines, []
 
     promoted = []
@@ -466,7 +466,7 @@ def main():
         lines = read_dashboard()
         updated, moved, pruned = move_done(lines)
         if not moved and not pruned:
-            print("✅ standup-enrich --move-done: nothing to move or prune.")
+            print("✅ worklog-enrich --move-done: nothing to move or prune.")
             return
         for item in moved:
             print(f"  ➡️  Moved to Done: {item}")
@@ -477,7 +477,7 @@ def main():
         else:
             with open(DASHBOARD_PATH, "w") as f:
                 f.writelines(updated)
-            print(f"✅ standup-enrich: updated {DASHBOARD_PATH}")
+            print(f"✅ worklog-enrich: updated {DASHBOARD_PATH}")
         return
 
     labels: dict[str, str] = {}
@@ -490,7 +490,7 @@ def main():
         daily_log_lines = read_daily_log()
         updated, promoted = promote_in_progress(dashboard_lines, daily_log_lines, labels)
         if not promoted:
-            print("✅ standup-enrich --promote-in-progress: nothing to promote.")
+            print("✅ worklog-enrich --promote-in-progress: nothing to promote.")
             return
         for item in promoted:
             print(f"  ⬆️  Promoted to In Progress: {item}")
@@ -499,7 +499,7 @@ def main():
         else:
             with open(DASHBOARD_PATH, "w") as f:
                 f.writelines(updated)
-            print(f"✅ standup-enrich: updated {DASHBOARD_PATH}")
+            print(f"✅ worklog-enrich: updated {DASHBOARD_PATH}")
         return
 
     lines = read_daily_log()
@@ -510,7 +510,7 @@ def main():
     else:
         with open(DAILY_LOG_PATH, "w") as f:
             f.writelines(enriched)
-        print(f"✅ standup-enrich: updated {DAILY_LOG_PATH}")
+        print(f"✅ worklog-enrich: updated {DAILY_LOG_PATH}")
 
 
 if __name__ == "__main__":

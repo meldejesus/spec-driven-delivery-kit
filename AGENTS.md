@@ -9,7 +9,7 @@ When editing this repo:
   - `templates/base/.github/`
   - `templates/base/.copilot/`
   - `templates/base/workflow/`
-- Do not put live ticket artifacts, standup logs, credentials, raw exports, or
+- Do not put live ticket artifacts, worklog history, credentials, raw exports, or
   internal project details into the reusable base template.
 - Put optional workflow tooling under `extensions/`.
 - Put non-core examples under `examples/`, and keep private examples out of any

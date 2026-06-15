@@ -1,6 +1,6 @@
-# Standup Dashboard
+# Worklog Dashboard
 
-> Sync check: `./scripts/standup-sync/standup-sync.sh`
+> Sync check: `./scripts/worklog-sync/worklog-sync.sh`
 > Last updated: YYYY-MM-DD
 >
 > Use `[PROJECT-123]` for ticket work and `[TODO]` for non-ticket work.
@@ -37,5 +37,5 @@
 
 ## Notes
 
-Use this section for short standup-adjacent notes. Move durable technical
+Use this section for short worklog-adjacent notes. Move durable technical
 context into `workflow/tickets/<PROJECT-123>/`.

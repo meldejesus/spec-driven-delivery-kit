@@ -3,12 +3,12 @@
 script_dir="$(cd "$(dirname "$0")/.." && pwd)"
 workspace_root="$(cd "$script_dir/../.." && pwd)"
 repo_root="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
-target_repo="${STANDUP_REPO_PATH:-$workspace_root}"
+target_repo="${WORKLOG_REPO_PATH:-$workspace_root}"
 
 [ "$repo_root" = "$target_repo" ] || exit 0
-[ "${3:-0}" = "1" ] || exit 0
 
 branch="$(git branch --show-current)"
+message="$(git log -1 --format="%s")"
 python_bin="${PYTHON_BIN:-python3}"
-"$python_bin" "$script_dir/standup-log.py" checkout "$branch" &
+"$python_bin" "$script_dir/worklog-entry.py" commit "$branch" "$message" &
 exit 0

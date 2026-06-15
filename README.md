@@ -55,7 +55,7 @@ Optional extensions currently include:
 
 ```text
 extensions/messages/
-extensions/standup/
+extensions/worklog/
 ```
 
 ## Install Into A Workspace
@@ -118,10 +118,10 @@ Recommended split:
 ```text
 spec-driven-delivery-kit/          Reusable kit source.
 spec-driven-delivery-overlay/      Project/team-specific instructions.
-workflow-archive-private/          Real ticket artifacts and standup logs.
+workflow-archive-private/          Real ticket artifacts and worklog history.
 ```
 
-Do not publish real Jira tickets, private standup logs, raw logs, CSV exports,
+Do not publish real Jira tickets, private worklog history, raw logs, CSV exports,
 HAR files, screenshots, production payloads, credentials, or internal links in a
 public kit.
 

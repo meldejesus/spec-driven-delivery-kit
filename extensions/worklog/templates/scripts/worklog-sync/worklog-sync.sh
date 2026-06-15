@@ -1,37 +1,37 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Cross-reference ticket IDs in standup/dashboard.md against git history.
+# Cross-reference ticket IDs in worklog/dashboard.md against git history.
 #
 # Optional environment:
-#   STANDUP_REPO_PATH=/path/to/source/repo
-#   STANDUP_TICKET_PATTERN='[A-Z][A-Z0-9]+-[0-9]+'
-#   STANDUP_GIT_AUTHOR_PATTERN='your.name|your.email'
+#   WORKLOG_REPO_PATH=/path/to/source/repo
+#   WORKLOG_TICKET_PATTERN='[A-Z][A-Z0-9]+-[0-9]+'
+#   WORKLOG_GIT_AUTHOR_PATTERN='your.name|your.email'
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 root="$(cd "$script_dir/../.." && pwd)"
-dashboard="$root/standup/dashboard.md"
-daily_log="$root/standup/daily-log.md"
-repo="${STANDUP_REPO_PATH:-$root}"
-ticket_pattern="${STANDUP_TICKET_PATTERN:-[A-Z][A-Z0-9]+-[0-9]+}"
-author_pattern="${STANDUP_GIT_AUTHOR_PATTERN:-}"
-enrich="$script_dir/standup-enrich.py"
+dashboard="$root/worklog/dashboard.md"
+daily_log="$root/worklog/daily-log.md"
+repo="${WORKLOG_REPO_PATH:-$root}"
+ticket_pattern="${WORKLOG_TICKET_PATTERN:-[A-Z][A-Z0-9]+-[0-9]+}"
+author_pattern="${WORKLOG_GIT_AUTHOR_PATTERN:-}"
+enrich="$script_dir/worklog-enrich.py"
 report_only=0
 
 if [ "${1:-}" = "--report-only" ]; then
   report_only=1
 elif [ -n "${1:-}" ]; then
-  echo "Usage: ./scripts/standup-sync/standup-sync.sh [--report-only]" >&2
+  echo "Usage: ./scripts/worklog-sync/worklog-sync.sh [--report-only]" >&2
   exit 2
 fi
 
 if [ ! -f "$dashboard" ]; then
-  echo "standup dashboard not found at $dashboard" >&2
+  echo "worklog dashboard not found at $dashboard" >&2
   exit 1
 fi
 
 if [ ! -f "$daily_log" ]; then
-  echo "standup daily log not found at $daily_log" >&2
+  echo "worklog daily log not found at $daily_log" >&2
   exit 1
 fi
 
