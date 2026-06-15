@@ -14,6 +14,7 @@ Options:
   --mode symlink      Symlink files from this kit into the workspace.
   --with-tools        Also install optional extension templates.
   --with-worklog      Also install the optional worklog extension.
+  --with-cleanup      Also install the optional cleanup extension.
   --all               Install core files and optional extension templates.
   --force             Replace existing installed paths.
   --dry-run           Print actions without changing files.
@@ -25,10 +26,11 @@ Core install paths:
   .copilot/
   workflow/           copied from templates/base/workflow/
 
-Tool install paths with --with-tools, --with-worklog, or --all:
+Optional install paths:
   messages/
   worklog/
   .github/skills/worklog/
+  scripts/cleanup/
 USAGE
 }
 
@@ -37,7 +39,9 @@ kit_root="$(cd "${script_dir}/.." && pwd)"
 
 target=""
 mode="copy"
-include_tools="0"
+include_messages="0"
+include_worklog="0"
+include_cleanup="0"
 force="0"
 dry_run="0"
 
@@ -51,8 +55,18 @@ while [ "$#" -gt 0 ]; do
       mode="${2:-}"
       shift 2
       ;;
-    --with-tools|--with-worklog|--all)
-      include_tools="1"
+    --with-tools|--all)
+      include_messages="1"
+      include_worklog="1"
+      include_cleanup="1"
+      shift
+      ;;
+    --with-worklog)
+      include_worklog="1"
+      shift
+      ;;
+    --with-cleanup)
+      include_cleanup="1"
       shift
       ;;
     --force)
@@ -177,15 +191,24 @@ install_path "$kit_root/templates/base/.github" "$target/.github"
 install_path "$kit_root/templates/base/.copilot" "$target/.copilot"
 install_path "$kit_root/templates/base/workflow" "$target/workflow"
 
-if [ "$include_tools" = "1" ]; then
+if [ "$include_worklog" = "1" ]; then
   remove_legacy_path "$target/standup"
   remove_legacy_path "$target/scripts/standup-sync"
   remove_legacy_path "$target/scripts/worklog-sync"
   remove_legacy_path "$target/.github/skills/standup"
+fi
 
+if [ "$include_messages" = "1" ]; then
   install_path "$kit_root/extensions/messages/templates/messages" "$target/messages"
+fi
+
+if [ "$include_worklog" = "1" ]; then
   install_path "$kit_root/extensions/worklog/templates/worklog" "$target/worklog"
   install_path "$kit_root/extensions/worklog/templates/.github/skills/worklog" "$target/.github/skills/worklog"
+fi
+
+if [ "$include_cleanup" = "1" ]; then
+  install_path "$kit_root/extensions/cleanup/templates/scripts/cleanup" "$target/scripts/cleanup"
 fi
 
 echo "Done. Open your CLI or editor from: $target"
