@@ -56,6 +56,7 @@ Optional extensions currently include:
 ```text
 extensions/messages/
 extensions/cleanup/
+extensions/codex/
 extensions/worklog/
 ```
 

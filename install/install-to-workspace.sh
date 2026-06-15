@@ -15,6 +15,7 @@ Options:
   --with-tools        Also install optional extension templates.
   --with-worklog      Also install the optional worklog extension.
   --with-cleanup      Also install the optional cleanup extension.
+  --with-codex        Also install optional Codex helper scripts.
   --all               Install core files and optional extension templates.
   --force             Replace existing installed paths.
   --dry-run           Print actions without changing files.
@@ -31,6 +32,7 @@ Optional install paths:
   worklog/
   .github/skills/worklog/
   scripts/cleanup/
+  scripts/codex/
 USAGE
 }
 
@@ -42,6 +44,7 @@ mode="copy"
 include_messages="0"
 include_worklog="0"
 include_cleanup="0"
+include_codex="0"
 force="0"
 dry_run="0"
 
@@ -59,6 +62,7 @@ while [ "$#" -gt 0 ]; do
       include_messages="1"
       include_worklog="1"
       include_cleanup="1"
+      include_codex="1"
       shift
       ;;
     --with-worklog)
@@ -67,6 +71,10 @@ while [ "$#" -gt 0 ]; do
       ;;
     --with-cleanup)
       include_cleanup="1"
+      shift
+      ;;
+    --with-codex)
+      include_codex="1"
       shift
       ;;
     --force)
@@ -209,6 +217,10 @@ fi
 
 if [ "$include_cleanup" = "1" ]; then
   install_path "$kit_root/extensions/cleanup/templates/scripts/cleanup" "$target/scripts/cleanup"
+fi
+
+if [ "$include_codex" = "1" ]; then
+  install_path "$kit_root/extensions/codex/templates/scripts/codex" "$target/scripts/codex"
 fi
 
 echo "Done. Open your CLI or editor from: $target"
