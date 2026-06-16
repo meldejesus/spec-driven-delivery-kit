@@ -20,6 +20,10 @@ Different tools read different MCP files:
 | `.copilot/mcp-config.json` | GitHub Copilot cloud/coding agent | Used for autonomous PR and issue work. |
 | `.vscode/mcp.json` | Local VS Code workspace | Use for local-only overrides. Do not rely on this for teammates. |
 
+Do not keep legacy copied MCP files in archive or scratch folders unless a
+current tool reads them. To run Playwright MCP, configure it in the MCP client
+you actually launch; the old `vscode-sanitized/mcp.json` copy is not required.
+
 When this workflow comes from the standalone kit, install `.github/` and
 `.copilot/` into the active workspace. A sibling kit repository is not enough for
 tool discovery.

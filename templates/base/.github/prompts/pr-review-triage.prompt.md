@@ -11,6 +11,21 @@ target: vscode
 - pr_url: ${input:pr_url}     # e.g. https://github.com/your-org/your-repo/pull/6531
 - ticket: ${input:ticket}     # optional — e.g. https://your-domain.atlassian.net/browse/PROJECT-123
 - context: ${input:context}   # optional — anything you already know about the area, author's intent, or known constraints
+- output_dir: ${input:output_dir} # optional — defaults to workflow/code-review/<repo>-pr-<number>
+
+# 0. Normalize Output Directory
+Before fetching context, resolve `output_dir`.
+
+1. Extract the repo name and PR number from `pr_url`.
+2. If `output_dir` was omitted, set it to `workflow/code-review/<repo>-pr-<number>`.
+3. Ensure `${output_dir}` exists.
+4. Create or update `${output_dir}/index.md` with:
+   - PR URL
+   - ticket URL if provided
+   - workflow_type: code-review
+   - output_dir
+   - status: triage
+   - artifact map for `triage.md`, `review.md`, `verdict.md`, and `testing-notes.md`
 
 # 1. Fetch All Available Context
 Use every source available before forming opinions. Pull:
@@ -59,6 +74,7 @@ Things you don't know that could change how findings are classified. These becom
 2–3 areas to prioritize (or flag as unclear and needing author input).
 
 # 4. Stage Completion
+- Write the full triage output to `${output_dir}/triage.md`.
 - Announce: "Stage Complete: Triage"
 - Ask: "Does this scope look right? Anything to add about the author's intent or constraints before I do the full review?"
 - Provide next command:
@@ -68,6 +84,7 @@ Things you don't know that could change how findings are classified. These becom
 
   pr_url=${pr_url}
   ticket=${ticket}
+  output_dir=${output_dir}
   context=<add anything from triage or your own knowledge>
   ```
 

@@ -79,7 +79,7 @@ If APPROVE: confirm which suggested follow-up tickets (if any) should be filed, 
    - Announce **"Stage Complete: Review (Gate D)"**
    - Provide next CLI invocation for follow-up ticket filing (optional):
      ```
-     File follow-up tickets from workflow/tickets/PROJECT-123/spike-output.md — Suggested Follow-up Tickets section
+     File follow-up tickets from workflow/spikes/PROJECT-123/spike-output.md — Suggested Follow-up Tickets section
      ```
 
 2. If **REQUEST CHANGES**: list BLOCKER items with exact fix guidance. Do not write to `spike-output.md`. STOP.

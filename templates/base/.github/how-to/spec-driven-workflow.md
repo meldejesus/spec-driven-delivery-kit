@@ -8,7 +8,7 @@ Those folders are the workflow infrastructure:
 - `.github/prompts/` defines the repeatable stage instructions.
 - `AGENTS.md` is the registry and quick reference.
 - `.github/how-to/` explains how to run and maintain the workflow.
-- `workflow/tickets/.active-workflow.md` stores the active ticket and output directory so later stages can run from short commands.
+- `workflow/tickets/.active-workflow.md` stores the active implementation ticket and output directory so later stages can run from short commands.
 
 ## Kit Source vs Installed Workspace
 
@@ -32,8 +32,8 @@ Install the kit into an active workspace before running ticket work:
 ./install/install-to-workspace.sh --target /path/to/workspace
 ```
 
-Use `--all` to also install helper folders such as `scripts/`, `standup/`, and
-`messages/`.
+Use `--all` to also install helper folders such as `scripts/`, `standup/`,
+`workflow/pointing/`, and `workflow/messages/`.
 
 The actual specs are the per-ticket artifacts produced during a run:
 
@@ -48,6 +48,18 @@ The actual specs are the per-ticket artifacts produced during a run:
 - `pull-request.md` - PR synthesis
 - `overview.md` - mentoring walkthrough
 - `lessons-learned.md` - promotion candidates
+
+Workflow artifacts live in the lane that matches the kind of work:
+
+| Workflow type | Output directory |
+|---|---|
+| Implementation tickets | `workflow/tickets/<ticket-id>/` |
+| Ticket assessment / pointing prep | `workflow/pointing/<ticket-or-batch>.md` |
+| Spikes / research tickets | `workflow/spikes/<ticket-id>/` |
+| Reviews of someone else's PR | `workflow/code-review/<repo>-pr-<number>/` |
+| Durable message drafts | `workflow/messages/<message-name>/` |
+| Lesson maintenance | `workflow/lessons/` |
+| Durable product/codebase maps | `workflow/maps/` |
 
 The best short label for this system is:
 

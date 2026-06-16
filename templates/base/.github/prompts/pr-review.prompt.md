@@ -15,6 +15,21 @@ target: vscode
 - pr_url: ${input:pr_url}    # e.g. https://github.com/your-org/your-repo/pull/6531
 - ticket: ${input:ticket}    # optional — e.g. https://your-domain.atlassian.net/browse/PROJECT-123
 - context: ${input:context}  # optional — anything you know about the area, author's intent, or constraints
+- output_dir: ${input:output_dir} # optional — defaults to workflow/code-review/<repo>-pr-<number>
+
+# Output Directory
+Before fetching context, resolve `output_dir`.
+
+1. Extract the repo name and PR number from `pr_url`.
+2. If `output_dir` was omitted, set it to `workflow/code-review/<repo>-pr-<number>`.
+3. Ensure `${output_dir}` exists.
+4. Create or update `${output_dir}/index.md` with:
+   - PR URL
+   - ticket URL if provided
+   - workflow_type: code-review
+   - output_dir
+   - status: review-running
+   - artifact map for `testing-guide.md`, `review.md`, `verdict.md`, and `testing-notes.md`
 
 # Silent Fetch (do this before any output)
 1. Use `github` to fetch: PR title, description, changed file paths, full diff, existing review comments
@@ -69,6 +84,8 @@ Tailor to what the diff actually changes. Detect from the diff: frontend, backen
 ### Automated Tests
 - Where the tests live and how to run them (exact command)
 
+Write Stage 1 to `${output_dir}/testing-guide.md`.
+
 ---
 
 *Go test. The code review is running below — read it when you're back.*
@@ -122,6 +139,8 @@ Specific uncovered scenarios or potential regressions.
 |---|---|---|
 | (text) | ✅ / ❌ / ⚠️ | |
 
+Write Stage 2 to `${output_dir}/review.md`.
+
 ---
 
 **STOP — Code review complete.**
@@ -133,6 +152,7 @@ Say what passed, what failed, or anything unexpected. Say `skip testing` to go s
 # Stage 3 — Verdict
 
 Incorporate the user's test results into the final output. If testing revealed new issues, add them to the verdict.
+If the user provides test results, write them to `${output_dir}/testing-notes.md`. If the user says `skip testing`, write that note instead.
 
 ## Final Verdict
 **APPROVE** or **REQUEST CHANGES** — one sentence.
@@ -147,5 +167,7 @@ Numbered list. Each: what to fix and why.
 - Change requests numbered for easy author response
 - Closes with what would move this to approval (or a clear approval statement)
 - **Max 200 words**
+
+Write Stage 3 to `${output_dir}/verdict.md`.
 
 STOP. GitHub Comment last for easy copy-paste.

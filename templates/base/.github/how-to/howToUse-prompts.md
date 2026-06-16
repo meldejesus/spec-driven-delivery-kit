@@ -17,7 +17,7 @@
 #read .github/prompts/workflow-contract.prompt.md
 
 ticket=https://your-domain.atlassian.net/browse/PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 ### Standard Ticket — Later Stages
@@ -53,7 +53,7 @@ context=<anything you know about the area>
 Read .github/agents/architect.agent.md and .github/prompts/spike-contract.prompt.md
 
 ticket=https://your-domain.atlassian.net/browse/PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 ### Message Workflow
@@ -67,14 +67,15 @@ context=docs-in-progress/app/apps/purchasing/purchasing.md
 request=Explain how the purchasing flow works for a non-technical marketing team. Focus on user experience, points of confusion, and language to avoid.
 ```
 
-### Pointing
+### Ticket Assessment / Pointing Prep
 
 ```text
 @pointing-analyst
 #read .github/prompts/pointing-plan.prompt.md
 
-mode=sprint
-sprint=Apollo 2.0 (2026)
+mode=tickets
+tickets=PROJECT-123
+output_dir=workflow/pointing
 ```
 
 ### Dev Starters
@@ -134,7 +135,7 @@ run review but also consider workflow/tickets/PROJECT-123/manual-test-notes.md
 #read .github/prompts/workflow-contract.prompt.md
 
 ticket=https://your-domain.atlassian.net/browse/PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 ---
@@ -177,7 +178,7 @@ Steps: scope → investigate → review → (educate + file follow-up tickets)
 Read .github/agents/architect.agent.md and .github/prompts/spike-contract.prompt.md
 
 ticket=https://your-domain.atlassian.net/browse/PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 ---
@@ -203,19 +204,25 @@ context=docs-in-progress/app/apps/purchasing/purchasing.md
 request=Explain how the purchasing flow works for a non-technical marketing team. Focus on user experience, points of confusion, and language to avoid.
 ```
 
-Use `output_mode=conversation` by default. Add `output_mode=final` or `output_mode=full` with `output_dir=messages/<name>` when the message should be preserved.
+Use `output_mode=conversation` by default. Add `output_mode=final` or `output_mode=full` with `output_dir=workflow/messages/<name>` when the message should be preserved.
 
 ---
 
-## `pointing-*` — Sprint estimation
+## `pointing-*` — Ticket assessment / pointing prep
 **Agent:** `@pointing-analyst`
+
+Use this before a ticket is assigned or approved when you need a skim-friendly
+assessment: what the issue is, what likely needs to be done, how it could be
+done at a high level, what docs/code paths matter, and whether the ticket is
+ready for the standard workflow.
 
 ```
 @pointing-analyst
 #read .github/prompts/pointing-plan.prompt.md
 
-mode=sprint
-sprint=Apollo 2.0 (2026)
+mode=tickets
+tickets=PROJECT-123
+output_dir=workflow/pointing
 ```
 
 ---

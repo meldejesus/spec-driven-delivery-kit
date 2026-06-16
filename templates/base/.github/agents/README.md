@@ -57,7 +57,7 @@ Both modes always run lint + format + tests after applying changes.
 @Message-Writer (approach → outline → draft → review → lessons)
 ```
 
-Use for turning dense technical docs into clearer technical, mixed-audience, or non-technical messages. File-backed output is optional and limited to `messages/**`.
+Use for turning dense technical docs into clearer technical, mixed-audience, or non-technical messages. File-backed output is optional and limited to `workflow/messages/**`.
 
 ### Addressing Review Feedback
 - **Single BLOCKER**: `@targeted-writer` (surgical mode)
@@ -87,7 +87,7 @@ Use for turning dense technical docs into clearer technical, mixed-audience, or 
 
 ### Limited Writing Agents
 **Message-Writer**
-- Can write only under `messages/**`
+- Can write only under `workflow/messages/**`
 - Pauses after approach and outline
 - Does not edit code, ticket artifacts, or global instructions
 

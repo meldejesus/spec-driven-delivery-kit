@@ -34,14 +34,14 @@ Invoke by mentioning them by name with a prompt file.
 | `@Implementer`             | Executes `plan.md` task by task, journals every step to `handoff.md`, stops for human approval on pivots.                                                                           | `.github/agents/implementer.agent.md`             |
 | `@Reviewer`                | Reviews code diffs and PRs. Produces severity-rated findings and a GitHub-ready comment. Read-only — never edits files.                                                             | `.github/agents/reviewer.agent.md`                |
 | `@targeted-writer`         | Approval-gated code writer. Plans first, waits for confirmation, then applies surgical or multi-file changes.                                                                       | `.github/agents/targeted-writer.agent.md`         |
-| `@Message-Writer`          | Turns dense technical source material into clearer messages for technical, mixed, or non-technical audiences. Writes only under `messages/**` when file-backed output is requested. | `.github/agents/message-writer.agent.md`          |
+| `@Message-Writer`          | Turns dense technical source material into clearer messages for technical, mixed, or non-technical audiences. Writes only under `workflow/messages/**` when file-backed output is requested. | `.github/agents/message-writer.agent.md`          |
 | `@Educator`                | Explains a completed implementation to a junior dev — code flow, trade-offs, hard decisions, plan deviations.                                                                       | `.github/agents/educator.agent.md`                |
 | `@Architect` (promotion)   | After review, extracts generalizable lessons and proposes updates to global instructions.                                                                                           | `.github/agents/architect.agent.md`               |
 | `@Compactor`               | Summarizes and compacts `handoff.md` when it grows too long. Preserves audit trail.                                                                                                 | `.github/agents/compactor.agent.md`               |
 | `@merge-conflict-resolver` | Resolves merge conflicts, preserving intent of both branches.                                                                                                                       | `.github/agents/merge-conflict-resolver.agent.md` |
 | `@Legacy-Dev`              | Starts a legacy/backend dev environment using project-discovered commands.                                                                                                          | `.github/agents/legacy-dev.agent.md`              |
 | `@Mobile-Dev`              | Starts a mobile dev environment using project-discovered commands.                                                                                                                  | `.github/agents/mobile-dev.agent.md`              |
-| `@pointing-analyst`        | Fetches Jira backlog tickets, estimates effort, and writes sprint pointing reports.                                                                                                 | `.github/agents/pointing-analyst.agent.md`        |
+| `@pointing-analyst`        | Reviews backlog or unassigned Jira tickets against docs/codebase, then writes skim-friendly ticket assessments, readiness notes, and estimates.                                     | `.github/agents/pointing-analyst.agent.md`        |
 | `@Spike-Investigator`      | Works through spike research sources, journals findings, produces a structured output document.                                                                                     | `.github/agents/spike-investigator.agent.md`      |
 
 ---
@@ -86,13 +86,13 @@ Used to turn one or more technical source documents into a clearer message. See 
 
 | Prompt                       | What it does                                                                                                                                            |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `message-workflow.prompt.md` | Reads source docs and a request, then runs approach → outline → draft → review → lessons. Defaults to conversation-only; can write under `messages/**`. |
+| `message-workflow.prompt.md` | Reads source docs and a request, then runs approach → outline → draft → review → lessons. Defaults to conversation-only; can write under `workflow/messages/**`. |
 
-### `pointing-*` — Sprint estimation
+### `pointing-*` — Ticket assessment / pointing prep
 
 | Prompt                    | What it does                                                                                     |
 | ------------------------- | ------------------------------------------------------------------------------------------------ |
-| `pointing-plan.prompt.md` | Fetches Jira backlog tickets, scores readiness, estimates effort, writes sprint pointing report. |
+| `pointing-plan.prompt.md` | Reviews backlog tickets, compares them to docs/codebase, and writes lightweight proto-contract assessment reports. |
 
 ### Dev environment starters
 
@@ -112,6 +112,25 @@ Used to turn one or more technical source documents into a clearer message. See 
 ---
 
 ## Workflow Chains
+
+Workflow artifacts should use the directory that matches the work:
+
+| Workflow type | Output directory |
+| ------------- | ---------------- |
+| Implementation ticket | `workflow/tickets/<ticket-id>/` |
+| Ticket assessment / pointing prep | `workflow/pointing/<ticket-or-batch>.md` |
+| Spike / research ticket | `workflow/spikes/<ticket-id>/` |
+| Review of someone else's PR | `workflow/code-review/<repo>-pr-<number>/` |
+| Durable message draft | `workflow/messages/<message-name>/` |
+
+### Ticket assessment / pointing prep
+```
+@pointing-analyst → pointing-plan
+    ↓
+skim issue summary, docs/codebase signals, estimate, readiness, next workflow
+    ↓
+standard ticket workflow, spike workflow, backlog clarification, split/merge, or defer
+```
 
 ### Standard ticket
 ```
@@ -170,6 +189,8 @@ Skills are self-contained tools invoked by name — no prompt file or agent pref
 | `docs-refresh`         | Refresh existing docs from stale-doc requests or doc-specific audit findings                   | `use the docs-refresh skill on docs/<doc-name>.md`           |
 | `docs-review`          | Review docs audit findings or content-fit candidates without editing files                     | `use the docs-review skill to review content-fit candidates` |
 | `copilot-chat-cleanup` | Remove old VS Code Copilot chat threads (dry-run first, confirm before delete)                 | `use the copilot-chat-cleanup skill`                         |
+| `private-workspace-archive` | Archive private workspace state into `workflow-archive-private` before cleanup or reinstall | `use the private-workspace-archive skill`                    |
+| `private-workspace-restore` | Restore private workspace state from `workflow-archive-private` after reinstalling the kit | `use the private-workspace-restore skill`                    |
 
-> `tailwind-check`, `docs-audit`, `docs-refresh`, and `docs-review` are defined in `.github/skills/`. `sonar-check` and `copilot-chat-cleanup` are built-in project skills.
+> `tailwind-check`, `docs-audit`, `docs-refresh`, `docs-review`, `private-workspace-archive`, and `private-workspace-restore` are defined in `.github/skills/`. `sonar-check` and `copilot-chat-cleanup` are built-in project skills.
 > Both `sonar-check` and `tailwind-check` run automatically inside `workflow-review` and `pr-review` — you only need to invoke them standalone for one-off audits.

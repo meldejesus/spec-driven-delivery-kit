@@ -7,7 +7,7 @@ Use it when a rewritten message is important enough to preserve beyond the chat 
 Recommended shape:
 
 ```text
-messages/<message-name>/
+workflow/messages/<message-name>/
   approach.md
   outline.md
   draft.md
@@ -18,4 +18,4 @@ messages/<message-name>/
 
 For quick messages, keep the workflow conversation-only and do not create files.
 
-Reusable style lessons can be proposed for `messages/style-lessons.md`.
+Reusable style lessons can be proposed for `workflow/messages/style-lessons.md`.

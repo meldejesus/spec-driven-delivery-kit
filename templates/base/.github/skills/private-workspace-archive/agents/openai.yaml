@@ -1,0 +1,4 @@
+interface:
+  display_name: "Private Workspace Archive"
+  short_description: "Archive private workspace rebuild files"
+  default_prompt: "Use $private-workspace-archive to sync private workspace files into workflow-archive-private."

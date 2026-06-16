@@ -14,10 +14,10 @@ Replace `PROJECT-123` with your ticket ID.
 ### Step 1 — Create the task folder
 
 ```bash
-mkdir -p workflow/tickets/PROJECT-123
+mkdir -p workflow/spikes/PROJECT-123
 ```
 
-The Scope step creates `workflow/tickets/PROJECT-123/index.md` as the first workflow-owned file.
+The Scope step creates `workflow/spikes/PROJECT-123/index.md` as the first workflow-owned file.
 
 ### Step 2 — Draft Scope (Gate A)
 
@@ -25,7 +25,7 @@ The Scope step creates `workflow/tickets/PROJECT-123/index.md` as the first work
 Read .github/agents/architect.agent.md and .github/prompts/spike-contract.prompt.md
 
 ticket=https://your-domain.atlassian.net/browse/PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 ### Step 3 — Investigate
@@ -34,7 +34,7 @@ output_dir=workflow/tickets/PROJECT-123
 Read .github/agents/spike-investigator.agent.md and .github/prompts/spike-investigate.prompt.md
 
 ticket=PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 ### Step 4 — Review (Gate D)
@@ -43,7 +43,7 @@ output_dir=workflow/tickets/PROJECT-123
 Read .github/agents/reviewer.agent.md and .github/prompts/spike-review.prompt.md
 
 ticket=PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 ### Step 5 — Educate (Optional)
@@ -52,12 +52,13 @@ output_dir=workflow/tickets/PROJECT-123
 Read .github/agents/educator.agent.md and .github/prompts/workflow-educate.prompt.md
 
 ticket=PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 ### Step 6 — File Follow-Up Tickets (Optional)
 
 ```text
-File the follow-up tickets listed in workflow/tickets/PROJECT-123/spike-output.md using the Atlassian MCP tool.
+File the follow-up tickets listed in workflow/spikes/PROJECT-123/spike-output.md using the Atlassian MCP tool.
 Use the same project key as the original ticket.
 ```
 
@@ -66,7 +67,7 @@ Use the same project key as the original ticket.
 ## Step 1 — Create the task folder
 
 ```bash
-mkdir -p workflow/tickets/PROJECT-123
+mkdir -p workflow/spikes/PROJECT-123
 ```
 
 The Scope step creates `index.md` before `scope.md`.
@@ -80,7 +81,7 @@ The Scope step creates `index.md` before `scope.md`.
 Read .github/agents/architect.agent.md and .github/prompts/spike-contract.prompt.md
 
 ticket=https://your-domain.atlassian.net/browse/PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 **Expect:** Architect fetches the Jira ticket, creates `index.md` with searchable metadata, scans for prior related spikes, and writes `scope.md` with: the question, why it matters, in/out of scope, timebox, and sources to consult. Ends with `"Stage Complete: Scope (Gate A)"`.
@@ -96,7 +97,7 @@ output_dir=workflow/tickets/PROJECT-123
 Read .github/agents/spike-investigator.agent.md and .github/prompts/spike-investigate.prompt.md
 
 ticket=PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 **Expect:** Spike-Investigator works through the sources in `scope.md`, journals each finding to `findings.md`, then writes `spike-output.md` with: Executive Summary, Technical Findings, Confidence Level, Gaps & Assumptions, and optional Suggested Follow-up Tickets. It also writes `explained.md`, a shorter readable summary that starts with the basic goal and target page/route/endpoint before moving into workflow, data changes, safety, and open decisions. Ends with `"Stage Complete: Investigation"`.
@@ -112,7 +113,7 @@ output_dir=workflow/tickets/PROJECT-123
 Read .github/agents/reviewer.agent.md and .github/prompts/spike-review.prompt.md
 
 ticket=PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 **Expect:** Reviewer reads `scope.md`, `findings.md`, `spike-output.md`, and `explained.md`. Checks that the question was answered, findings are evidence-grounded, gaps are honest, scope was respected, and the readable summary is accurate. Outputs **APPROVE** or **REQUEST CHANGES** with severity-rated findings. On approval, appends a review footer to `spike-output.md`. Ends with `"Stage Complete: Review (Gate D)"`.
@@ -128,9 +129,10 @@ output_dir=workflow/tickets/PROJECT-123
 Read .github/agents/educator.agent.md and .github/prompts/workflow-educate.prompt.md
 
 ticket=PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
-**Expect:** Educator reads the scope, findings, and output. Produces a plain-language walkthrough of what was investigated, what was found, the key decision point, and the main takeaway. Writes to `workflow/tickets/PROJECT-123/overview.md`. Ends with `"Stage Complete: Education"`.
+**Expect:** Educator reads the scope, findings, and output. Produces a plain-language walkthrough of what was investigated, what was found, the key decision point, and the main takeaway. Writes to `workflow/spikes/PROJECT-123/overview.md`. Ends with `"Stage Complete: Education"`.
 
 **Skip if:** The spike was straightforward or the audience doesn't need a walkthrough.
 
@@ -142,7 +144,7 @@ If `spike-output.md` contains a Suggested Follow-up Tickets section and the revi
 
 **You say:**
 ```
-File the follow-up tickets listed in workflow/tickets/PROJECT-123/spike-output.md using the Atlassian MCP tool.
+File the follow-up tickets listed in workflow/spikes/PROJECT-123/spike-output.md using the Atlassian MCP tool.
 Use the same project key as the original ticket.
 ```
 
@@ -154,12 +156,12 @@ Use the same project key as the original ticket.
 
 | File | Created by | Gate |
 |---|---|---|
-| `workflow/tickets/PROJECT-123/index.md` | Architect | Pre-A |
-| `workflow/tickets/PROJECT-123/scope.md` | Architect | A |
-| `workflow/tickets/PROJECT-123/findings.md` | Spike-Investigator | — |
-| `workflow/tickets/PROJECT-123/spike-output.md` | Spike-Investigator | — |
-| `workflow/tickets/PROJECT-123/explained.md` | Spike-Investigator | — |
-| `workflow/tickets/PROJECT-123/overview.md` | Educator | — (optional) |
+| `workflow/spikes/PROJECT-123/index.md` | Architect | Pre-A |
+| `workflow/spikes/PROJECT-123/scope.md` | Architect | A |
+| `workflow/spikes/PROJECT-123/findings.md` | Spike-Investigator | — |
+| `workflow/spikes/PROJECT-123/spike-output.md` | Spike-Investigator | — |
+| `workflow/spikes/PROJECT-123/explained.md` | Spike-Investigator | — |
+| `workflow/spikes/PROJECT-123/overview.md` | Educator | — (optional) |
 
 ---
 

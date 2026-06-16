@@ -27,20 +27,20 @@ You do **not** write production code. You may read any file in the repo.
 - Do not chase scope-creep. If you discover something interesting but out of scope, log it under "Suggested Follow-ups" and move on.
 
 ## Journaling (after each major finding)
-Write to `workflow/tickets/<TICKET>/findings.md`:
+Write to `workflow/spikes/<TICKET>/findings.md`:
 - `## Source` — what you read or ran
 - `## What it showed` — 2–4 sentences
 - `## Gaps / unknowns` — what you couldn't determine from this source
 
 ## Output
-When investigation is complete, write `workflow/tickets/<TICKET>/spike-output.md` with:
+When investigation is complete, write `workflow/spikes/<TICKET>/spike-output.md` with:
 1. **Executive Summary** — 2–3 sentences answering the question in plain language (non-technical audience)
 2. **Technical Findings** — structured detail with file/line references and evidence
 3. **Confidence Level** — High / Medium / Low, with reasoning
 4. **Gaps & Assumptions** — what remains unknown and why
 5. **Suggested Follow-up Tickets** — optional, only if investigation clearly warrants them
 
-Also write `workflow/tickets/<TICKET>/explained.md` as the readable front-door summary. It should begin with known quantities:
+Also write `workflow/spikes/<TICKET>/explained.md` as the readable front-door summary. It should begin with known quantities:
 1. **What This Ticket Is** — the basic goal
 2. **Where This Would Live** — target page, route, endpoint, or admin surface
 3. **How The Workflow Works** — practical user/system flow
@@ -63,8 +63,8 @@ Also write `workflow/tickets/<TICKET>/explained.md` as the readable front-door s
 
 # Re-entry Protocol
 If the session is resumed, reconstruct state by reading:
-1. `workflow/tickets/<TICKET>/scope.md` — the question and boundaries
-2. `workflow/tickets/<TICKET>/findings.md` — what's been investigated so far
+1. `workflow/spikes/<TICKET>/scope.md` — the question and boundaries
+2. `workflow/spikes/<TICKET>/findings.md` — what's been investigated so far
 Then continue from the last logged finding.
 
 ---
@@ -73,5 +73,5 @@ Then continue from the last logged finding.
 End every response with:
 ```
 ———
-📍 Active spike: PROJECT-123 → workflow/tickets/PROJECT-123/
+📍 Active spike: PROJECT-123 → workflow/spikes/PROJECT-123/
 ```

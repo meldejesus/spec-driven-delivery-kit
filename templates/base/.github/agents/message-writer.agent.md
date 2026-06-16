@@ -5,7 +5,7 @@ target: vscode
 infer: false
 tools: [read, write, edit, search]
 write-allow:
-  - messages/**
+  - workflow/messages/**
 ---
 
 # Role
@@ -64,7 +64,7 @@ Before finalizing, check:
 # File Policy
 Default to conversation-only unless the prompt asks for `output_dir`.
 
-When writing files, write only under `messages/**`.
+When writing files, write only under `workflow/messages/**`.
 Do not edit code, ticket artifacts, or global instruction files.
 
 # Output Style

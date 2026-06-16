@@ -27,6 +27,10 @@ workspace/
   .copilot/
   workflow/
     tickets/
+    pointing/
+    spikes/
+    code-review/
+    messages/
 ```
 
 Agents and prompts assume those paths exist relative to the workspace root.
@@ -54,7 +58,6 @@ templates/base/
 Optional extensions currently include:
 
 ```text
-extensions/messages/
 extensions/cleanup/
 extensions/codex/
 extensions/worklog/

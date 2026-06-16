@@ -19,6 +19,7 @@ Pipeline: **Context + Testing Guide → [you test / agent reviews in parallel] �
 Act as Reviewer following .github/prompts/pr-review-triage.prompt.md
 
 pr_url=https://github.com/your-org/your-repo/pull/<PR_NUMBER>
+output_dir=workflow/code-review/<repo>-pr-<PR_NUMBER>
 ```
 
 ### Step 1 — Run The Review
@@ -29,6 +30,7 @@ Act as Reviewer following .github/prompts/pr-review.prompt.md
 worktree=monorepo
 pr_url=https://github.com/your-org/your-repo/pull/<PR_NUMBER>
 ticket=https://your-domain.atlassian.net/browse/PROJECT-123
+output_dir=workflow/code-review/<repo>-pr-<PR_NUMBER>
 context=<anything you know about the area>
 ```
 
@@ -64,6 +66,7 @@ The review runs in three stages designed so your time and the agent's time overl
 - **GitHub PR URL** — e.g. `https://github.com/your-org/your-repo/pull/6531`
 - **Jira ticket URL** — optional, enables AC coverage check
 - **Your context** — anything you know: area familiarity, author's known constraints, prior conversations
+- **Output directory** — optional; defaults to `workflow/code-review/<repo>-pr-<PR_NUMBER>`
 
 Context doesn't need to be formal. A sentence helps.
 
@@ -81,6 +84,7 @@ Act as Reviewer following .github/prompts/pr-review.prompt.md
 worktree=monorepo
 pr_url=https://github.com/your-org/your-repo/pull/<PR_NUMBER>
 ticket=https://your-domain.atlassian.net/browse/PROJECT-123
+output_dir=workflow/code-review/<repo>-pr-<PR_NUMBER>
 context=<anything you know>
 ```
 
@@ -91,6 +95,7 @@ context=<anything you know>
 - Files changed + why
 - AC list from ticket
 - Testing guide — manual steps and/or backend verification, tailored to the diff
+- Also written to `workflow/code-review/<repo>-pr-<PR_NUMBER>/testing-guide.md`
 
 **Stage 2 output (ready when you're back from testing):**
 - What works well
@@ -99,6 +104,7 @@ context=<anything you know>
 - Questions for Author (looks off but may be intentional — phrased as questions)
 - Edge cases & breaking risks
 - AC coverage table
+- Also written to `workflow/code-review/<repo>-pr-<PR_NUMBER>/review.md`
 
 **One stop point** after Stage 2, asking for your test results.
 
@@ -122,6 +128,7 @@ Or say `skip testing` to go straight to the verdict.
 - Final verdict: APPROVE or REQUEST CHANGES
 - Numbered change requests (if any)
 - GitHub comment ready to paste (≤ 200 words, plain language)
+- Also written to `workflow/code-review/<repo>-pr-<PR_NUMBER>/verdict.md`; your testing notes are written to `testing-notes.md`
 
 ---
 

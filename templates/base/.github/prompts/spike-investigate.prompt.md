@@ -109,6 +109,6 @@ After writing all three files:
 Read .github/agents/reviewer.agent.md and .github/prompts/spike-review.prompt.md
 
 ticket=PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 STOP. Wait for human to review `explained.md` and `spike-output.md` before proceeding.

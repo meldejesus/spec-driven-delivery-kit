@@ -13,7 +13,7 @@ tools: [read, write, edit, search]
 - context: ${input:context}         # required unless source material is pasted inline; file path(s), comma-separated
 - format: ${input:format}           # optional: email, Slack, one-pager, FAQ, talking points, memo, release note, etc.
 - output_mode: ${input:output_mode} # optional: conversation (default), final, or full
-- output_dir: ${input:output_dir}   # optional: messages/<name>; required for output_mode=final/full
+- output_dir: ${input:output_dir}   # optional: workflow/messages/<name>; required for output_mode=final/full
 - constraints: ${input:constraints} # optional: length, tone, must-include, must-avoid, deadline, approval context
 
 ## Output Modes
@@ -37,13 +37,13 @@ Before starting:
 3. Read every file listed in `context`.
 4. Treat pasted source material or extra inline instructions as context too.
 5. If a referenced file cannot be read, tell the user and continue only if enough source material remains.
-6. If `output_dir` was provided, confirm it starts with `messages/`. If it does not, ask for a `messages/<name>` directory before writing files.
-7. If `output_dir` was provided, write only under `messages/**`.
+6. If `output_dir` was provided, confirm it starts with `workflow/messages/`. If it does not, ask for a `workflow/messages/<name>` directory before writing files.
+7. If `output_dir` was provided, write only under `workflow/messages/**`.
 
 If `output_dir` is provided, create or update:
 
 ```text
-messages/.active-message.md
+workflow/messages/.active-message.md
 ```
 
 Use this format:
@@ -187,12 +187,12 @@ ${output_dir}/lessons-learned.md
 If a lesson is broadly reusable across many messages, propose it as a candidate for:
 
 ```text
-messages/style-lessons.md
+workflow/messages/style-lessons.md
 ```
 
-Do not edit `messages/style-lessons.md` unless the user explicitly approves.
+Do not edit `workflow/messages/style-lessons.md` unless the user explicitly approves.
 
-If `output_dir` was provided, update `messages/.active-message.md`:
+If `output_dir` was provided, update `workflow/messages/.active-message.md`:
 
 ```md
 # Active Message

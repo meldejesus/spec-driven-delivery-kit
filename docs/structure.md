@@ -23,6 +23,11 @@ workspace/
   .github/
   .copilot/
   workflow/
+    tickets/
+    pointing/
+    spikes/
+    code-review/
+    messages/
 ```
 
 Agents read files relative to the active workspace. They do not automatically
@@ -50,8 +55,9 @@ Implement -> Review -> Closeout workflow.
 
 Current extensions:
 
-- `extensions/messages/`
-- `extensions/standup/`
+- `extensions/worklog/`
+- `extensions/cleanup/`
+- `extensions/codex/`
 
 Install them with:
 
@@ -68,5 +74,6 @@ base template:
 workflow-archive-private/
   workflow/tickets/
   workflow/pointing/
-  standup/daily-log.md
+  workflow/messages/
+  worklog/daily-log.md
 ```

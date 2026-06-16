@@ -1,0 +1,4 @@
+interface:
+  display_name: "Private Workspace Restore"
+  short_description: "Restore private workspace rebuild files"
+  default_prompt: "Use $private-workspace-restore to populate a fresh workspace from workflow-archive-private."

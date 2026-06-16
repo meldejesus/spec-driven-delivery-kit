@@ -17,8 +17,8 @@ Before doing anything else, resolve the working values of `ticket` and `output_d
 
 1. **Ticket ID extraction** — If `ticket` is a short ID (matches `[A-Z][A-Z0-9]+-\d+`), expand it:
    - `ticket` → `https://your-domain.atlassian.net/browse/<ID>`
-   - If `output_dir` was not provided, set it to `workflow/tickets/<ID>`
-2. **Full URL provided** — If `ticket` is already a full URL, extract the ticket ID from the path segment and set `output_dir` to `workflow/tickets/<ID>` if not explicitly provided.
+   - If `output_dir` was not provided, set it to `workflow/spikes/<ID>`
+2. **Full URL provided** — If `ticket` is already a full URL, extract the ticket ID from the path segment and set `output_dir` to `workflow/spikes/<ID>` if not explicitly provided.
 3. **Context files** — If `context` was provided, read each file path listed. Treat their contents as authoritative developer-provided context alongside `pre-context.md`. They override assumptions from the ticket alone.
 4. Confirm the resolved values internally before proceeding. Do not ask the user to confirm — just use them.
 
@@ -82,10 +82,10 @@ Use this structure:
 Rules:
 - Do not leave placeholder metadata if the ticket content provides a better title, summary, term, path, or link.
 - If `index.md` already exists, update its metadata and artifact map without deleting human-authored notes.
-- Keep the summary and searchable terms concrete enough that `rg "<term>" workflow/tickets` can rediscover the spike later.
+- Keep the summary and searchable terms concrete enough that `rg "<term>" workflow/spikes workflow/tickets` can rediscover the spike later.
 
 # 2. Scan for prior related spikes
-Search `workflow/tickets/` for any existing `scope.md` or `spike-output.md` files whose title or content overlaps with this ticket. Note any relevant prior findings in the scope document.
+Search `workflow/spikes/` first, then `workflow/tickets/` for legacy spike outputs, for any existing `scope.md` or `spike-output.md` files whose title or content overlaps with this ticket. Note any relevant prior findings in the scope document.
 
 # 3. Draft the Scope Document
 Write `${output_dir}/scope.md` with the following sections:
@@ -124,6 +124,6 @@ After writing `index.md` and `scope.md`:
 Read .github/agents/spike-investigator.agent.md and .github/prompts/spike-investigate.prompt.md
 
 ticket=PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 STOP. Wait for human approval before investigation begins.

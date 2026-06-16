@@ -21,10 +21,10 @@ Replace `PROJECT-123` with your ticket ID throughout.
 ### Step 1 — Create the task folder
 
 ```bash
-mkdir -p workflow/tickets/PROJECT-123
+mkdir -p workflow/spikes/PROJECT-123
 ```
 
-The Scope step creates `workflow/tickets/PROJECT-123/index.md` as the first workflow-owned file.
+The Scope step creates `workflow/spikes/PROJECT-123/index.md` as the first workflow-owned file.
 
 ### Step 2 — Draft Scope (Gate A)
 
@@ -54,12 +54,15 @@ Act as Reviewer following .github/agents/reviewer.agent.md and .github/prompts/s
 
 ```text
 Act as Educator following .github/agents/educator.agent.md and .github/prompts/workflow-educate.prompt.md
+
+ticket=PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
 ```
 
 ### Step 6 — File Follow-Up Tickets (Optional)
 
 ```text
-File the follow-up tickets listed in workflow/tickets/PROJECT-123/spike-output.md using the Atlassian MCP tool.
+File the follow-up tickets listed in workflow/spikes/PROJECT-123/spike-output.md using the Atlassian MCP tool.
 Use the same project key as the original ticket.
 ```
 
@@ -85,7 +88,7 @@ A formal named parameter accepted by `spike-contract`. Pass a single file path o
 Act as Architect following .github/agents/architect.agent.md and .github/prompts/spike-contract.prompt.md
 
 ticket=PROJECT-123
-context=workflow/tickets/PROJECT-123/pre-context.md,docs/prior-spike.md,docs/architecture/caching.md
+context=workflow/spikes/PROJECT-123/pre-context.md,docs/prior-spike.md,docs/architecture/caching.md
 ```
 
 The CLI reads each file and treats its contents as **authoritative developer context** — overriding assumptions from the ticket alone. Use it for prior related spikes, ADRs, known constraints, or research sources you want the Architect to start from.
@@ -100,7 +103,7 @@ Drop a file named `pre-context.md` in the ticket folder before any step:
 
 ```bash
 echo "Prior spike PROJECT-123 concluded X. The question here is narrower — only about Y." \
-  > workflow/tickets/PROJECT-123/pre-context.md
+  > workflow/spikes/PROJECT-123/pre-context.md
 ```
 
 **Every agent reads this file automatically** as its first action — no parameter needed. It is the standard way to pre-load context for steps that don't have a `context=` slot (Investigate, Review).
@@ -122,7 +125,7 @@ Act as Architect following .github/agents/architect.agent.md and .github/prompts
 ticket=PROJECT-123
 context=docs/architecture/caching.md
 
-Also read everything in workflow/tickets/PROJECT-123/ and path/to/relevant/cache/.
+Also read everything in workflow/spikes/PROJECT-123/ and path/to/relevant/cache/.
 ```
 
 The CLI will glob and read those directories as part of its research. You can mix both — `context=` for specific files you know matter, plain text for broader "look at this whole area" instructions.
@@ -141,13 +144,13 @@ ticket=PROJECT-123
 ```
 The CLI auto-derives:
 - `ticket` → `https://your-domain.atlassian.net/browse/PROJECT-123`
-- `output_dir` → `workflow/tickets/PROJECT-123`
+- `output_dir` → `workflow/spikes/PROJECT-123`
 
 **All subsequent steps** — omit ticket and output_dir entirely:
 ```
 Act as Spike-Investigator following .github/agents/spike-investigator.agent.md and .github/prompts/spike-investigate.prompt.md
 ```
-The CLI will confirm: *"Using ticket=PROJECT-123, output_dir=workflow/tickets/PROJECT-123 — proceed?"*
+The CLI will confirm: *"Using ticket=PROJECT-123, output_dir=workflow/spikes/PROJECT-123 — proceed?"*
 
 To **switch tickets mid-session**, just supply the new ticket number:
 ```
@@ -176,7 +179,7 @@ ticket=PROJECT-456
 ## Step 1 — Create the task folder
 
 ```bash
-mkdir -p workflow/tickets/PROJECT-123
+mkdir -p workflow/spikes/PROJECT-123
 ```
 
 The Scope step creates `index.md` before `scope.md`.
@@ -199,7 +202,7 @@ ticket=PROJECT-123
 **Gate A — CLI pauses here.** You will be asked:
 > "I've initialized the spike index and drafted the Scope. Shall I proceed to Investigation, or do you want revisions?"
 
-**You do:** Read `workflow/tickets/PROJECT-123/scope.md`. Use `index.md` to relocate the spike later by ID, summary, terms, paths, or links. If the question or boundaries are wrong, say so — the CLI will redraft. Do not proceed until you're satisfied with the framing.
+**You do:** Read `workflow/spikes/PROJECT-123/scope.md`. Use `index.md` to relocate the spike later by ID, summary, terms, paths, or links. If the question or boundaries are wrong, say so — the CLI will redraft. Do not proceed until you're satisfied with the framing.
 
 ---
 
@@ -222,7 +225,7 @@ It also writes `explained.md`, a shorter readable summary that starts with known
 
 Ends with `"Stage Complete: Investigation"`.
 
-**You do:** Read `workflow/tickets/PROJECT-123/explained.md` first for the practical answer, then use `spike-output.md` for evidence and deeper detail. If the question wasn't actually answered, send back with specific feedback — the CLI will re-investigate the gap.
+**You do:** Read `workflow/spikes/PROJECT-123/explained.md` first for the practical answer, then use `spike-output.md` for evidence and deeper detail. If the question wasn't actually answered, send back with specific feedback — the CLI will re-investigate the gap.
 
 ---
 
@@ -254,10 +257,13 @@ Outputs **APPROVE** or **REQUEST CHANGES** with severity-rated findings. On appr
 **You type:**
 ```
 Act as Educator following .github/agents/educator.agent.md and .github/prompts/workflow-educate.prompt.md
-```
-> `ticket` is optional — the CLI defaults to the last value used.
 
-**What happens:** The CLI reads the scope, findings, and output. Produces a plain-language walkthrough of what was investigated, what was found, the key decision point, and the main takeaway. Writes to `workflow/tickets/PROJECT-123/overview.md`.
+ticket=PROJECT-123
+output_dir=workflow/spikes/PROJECT-123
+```
+> `ticket` and `output_dir` are optional when session memory is correct, but passing both avoids falling back to the implementation-ticket directory.
+
+**What happens:** The CLI reads the scope, findings, and output. Produces a plain-language walkthrough of what was investigated, what was found, the key decision point, and the main takeaway. Writes to `workflow/spikes/PROJECT-123/overview.md`.
 
 **Skip if:** The spike was straightforward or the audience doesn't need a walkthrough.
 
@@ -269,7 +275,7 @@ If `spike-output.md` contains a Suggested Follow-up Tickets section and the revi
 
 **You type:**
 ```
-File the follow-up tickets listed in workflow/tickets/PROJECT-123/spike-output.md using the Atlassian MCP tool.
+File the follow-up tickets listed in workflow/spikes/PROJECT-123/spike-output.md using the Atlassian MCP tool.
 Use the same project key as the original ticket.
 ```
 
@@ -281,13 +287,13 @@ Use the same project key as the original ticket.
 
 | File | Created by | Auto-written? | Gate |
 |---|---|---|---|
-| `workflow/tickets/PROJECT-123/index.md` | Architect | ✅ Yes | Pre-A |
-| `workflow/tickets/PROJECT-123/pre-context.md` | You | ❌ Manual (optional) | Pre-A |
-| `workflow/tickets/PROJECT-123/scope.md` | Architect | ✅ Yes | A |
-| `workflow/tickets/PROJECT-123/findings.md` | Spike-Investigator | ✅ Yes (running journal) | — |
-| `workflow/tickets/PROJECT-123/spike-output.md` | Spike-Investigator | ✅ Yes | — |
-| `workflow/tickets/PROJECT-123/explained.md` | Spike-Investigator | ✅ Yes | — |
-| `workflow/tickets/PROJECT-123/overview.md` | Educator | ✅ Yes | — (optional) |
+| `workflow/spikes/PROJECT-123/index.md` | Architect | ✅ Yes | Pre-A |
+| `workflow/spikes/PROJECT-123/pre-context.md` | You | ❌ Manual (optional) | Pre-A |
+| `workflow/spikes/PROJECT-123/scope.md` | Architect | ✅ Yes | A |
+| `workflow/spikes/PROJECT-123/findings.md` | Spike-Investigator | ✅ Yes (running journal) | — |
+| `workflow/spikes/PROJECT-123/spike-output.md` | Spike-Investigator | ✅ Yes | — |
+| `workflow/spikes/PROJECT-123/explained.md` | Spike-Investigator | ✅ Yes | — |
+| `workflow/spikes/PROJECT-123/overview.md` | Educator | ✅ Yes | — (optional) |
 
 ---
 

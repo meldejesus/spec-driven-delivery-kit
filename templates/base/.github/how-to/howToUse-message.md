@@ -39,7 +39,7 @@ format=FAQ
 context=docs-in-progress/app/apps/study-schedule.md
 request=Create an FAQ that explains study schedule behavior for Support and Product.
 output_mode=full
-output_dir=messages/study-schedule-support-faq
+output_dir=workflow/messages/study-schedule-support-faq
 ```
 
 ### File-Backed — VS Code Chat
@@ -53,7 +53,7 @@ format=FAQ
 context=docs-in-progress/app/apps/study-schedule.md
 request=Create an FAQ that explains study schedule behavior for Support and Product.
 output_mode=full
-output_dir=messages/study-schedule-support-faq
+output_dir=workflow/messages/study-schedule-support-faq
 ```
 
 ### Revision Request
@@ -142,7 +142,7 @@ format=FAQ
 context=docs-in-progress/app/apps/study-schedule.md
 request=Create an FAQ that explains study schedule behavior for Support and Product.
 output_mode=full
-output_dir=messages/study-schedule-support-faq
+output_dir=workflow/messages/study-schedule-support-faq
 ```
 
 **VS Code Chat:**
@@ -156,25 +156,25 @@ format=FAQ
 context=docs-in-progress/app/apps/study-schedule.md
 request=Create an FAQ that explains study schedule behavior for Support and Product.
 output_mode=full
-output_dir=messages/study-schedule-support-faq
+output_dir=workflow/messages/study-schedule-support-faq
 ```
 
 Files written in `output_mode=full`:
 
 ```text
-messages/<name>/approach.md
-messages/<name>/outline.md
-messages/<name>/draft.md
-messages/<name>/review.md
-messages/<name>/final.md
-messages/<name>/lessons-learned.md
+workflow/messages/<name>/approach.md
+workflow/messages/<name>/outline.md
+workflow/messages/<name>/draft.md
+workflow/messages/<name>/review.md
+workflow/messages/<name>/final.md
+workflow/messages/<name>/lessons-learned.md
 ```
 
 Use `output_mode=final` if you only want:
 
 ```text
-messages/<name>/final.md
-messages/<name>/lessons-learned.md
+workflow/messages/<name>/final.md
+workflow/messages/<name>/lessons-learned.md
 ```
 
 ---
@@ -190,7 +190,7 @@ context=docs/a.md,docs/b.md
 You can also add instructions naturally:
 
 ```text
-Also consider the notes in messages/prior-support-feedback.md.
+Also consider the notes in workflow/messages/prior-support-feedback.md.
 Keep this under 500 words and avoid mentioning implementation class names.
 ```
 
@@ -248,9 +248,9 @@ The agent extracts reusable style lessons:
 - what sentence patterns should be reused or avoided
 - what should be clarified earlier next time
 
-Local lessons go in `messages/<name>/lessons-learned.md` when file-backed mode is used.
+Local lessons go in `workflow/messages/<name>/lessons-learned.md` when file-backed mode is used.
 
-Broad reusable lessons can be proposed for `messages/style-lessons.md`, but should not be applied without approval.
+Broad reusable lessons can be proposed for `workflow/messages/style-lessons.md`, but should not be applied without approval.
 
 ---
 

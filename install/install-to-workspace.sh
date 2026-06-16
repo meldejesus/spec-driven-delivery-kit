@@ -28,7 +28,6 @@ Core install paths:
   workflow/           copied from templates/base/workflow/
 
 Optional install paths:
-  messages/
   worklog/
   .github/skills/worklog/
   scripts/cleanup/
@@ -41,7 +40,6 @@ kit_root="$(cd "${script_dir}/.." && pwd)"
 
 target=""
 mode="copy"
-include_messages="0"
 include_worklog="0"
 include_cleanup="0"
 include_codex="0"
@@ -59,7 +57,6 @@ while [ "$#" -gt 0 ]; do
       shift 2
       ;;
     --with-tools|--all)
-      include_messages="1"
       include_worklog="1"
       include_cleanup="1"
       include_codex="1"
@@ -204,10 +201,6 @@ if [ "$include_worklog" = "1" ]; then
   remove_legacy_path "$target/scripts/standup-sync"
   remove_legacy_path "$target/scripts/worklog-sync"
   remove_legacy_path "$target/.github/skills/standup"
-fi
-
-if [ "$include_messages" = "1" ]; then
-  install_path "$kit_root/extensions/messages/templates/messages" "$target/messages"
 fi
 
 if [ "$include_worklog" = "1" ]; then
