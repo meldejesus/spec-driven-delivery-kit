@@ -27,10 +27,9 @@ workspace/
   .copilot/
   workflow/
     tickets/
-    pointing/
+    refinement/
     spikes/
     code-review/
-    messages/
 ```
 
 Agents and prompts assume those paths exist relative to the workspace root.

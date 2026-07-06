@@ -9,12 +9,9 @@ restore, and cleanup stay predictable.
 ```text
 workflow/
 ├── tickets/       # Implementation ticket delivery: contract, plan, implement, review, closeout
-├── pointing/      # Backlog ticket assessment, estimation prep, and proto-contract notes
+├── refinement/    # Backlog ticket refinement, estimation prep, and proto-contract notes
 ├── spikes/        # Time-boxed research: scope, findings, output, review, optional overview
 ├── code-review/   # Reviews of someone else's PRs: triage, testing guide, findings, verdict
-├── messages/      # Durable message-writing workflow outputs
-├── lessons/       # Promotion audits and other lesson-maintenance artifacts
-├── maps/          # Durable product/codebase workflow maps
 └── cleanup-log.md # Workspace organization history when worth preserving
 ```
 
@@ -42,12 +39,12 @@ artifact map.
 
 `workflow/tickets/.active-workflow.md` is generated during a workflow run.
 
-## Pointing / Ticket Assessment
+## Ticket Refinement
 
-Pointing outputs belong under:
+Refinement outputs belong under:
 
 ```text
-workflow/pointing/
+workflow/refinement/
   TICKET-123.md
   ticket-assessment-YYYY-MM-DD.md
   tech-debt-<workflow>-<sub-workflow>-YYYY-MM-DD.md
@@ -99,20 +96,3 @@ workflow/code-review/<repo-or-ticket>-pr-123/
 Use this lane for PR review artifacts that need to survive the conversation.
 Reviewing your own implementation ticket before opening a PR still belongs in
 that ticket's `workflow/tickets/TICKET-123/` folder.
-
-## Messages
-
-Durable message-writing outputs belong under:
-
-```text
-workflow/messages/<message-name>/
-  approach.md
-  outline.md
-  draft.md
-  review.md
-  final.md
-  lessons-learned.md
-```
-
-Use this lane only when a rewritten message should survive beyond the chat
-session. Quick message rewrites can stay conversation-only.

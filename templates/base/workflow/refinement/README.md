@@ -1,4 +1,4 @@
-# Ticket Assessment / Pointing Prep
+# Ticket Refinement
 
 This directory stores lightweight ticket assessments before a ticket becomes an
 active implementation or spike workflow.
@@ -11,7 +11,7 @@ full implementation plan.
 ## Output Shape
 
 ```text
-workflow/pointing/
+workflow/refinement/
   TICKET-123.md
   ticket-assessment-YYYY-MM-DD.md
   <sprint-or-batch>.md
@@ -32,13 +32,13 @@ Each assessment should answer:
 
 ## Boundary
 
-Pointing output is a proto-contract. It can recommend one of these next steps:
+Refinement output is a proto-contract. It can recommend one of these next steps:
 
 - Run the standard ticket workflow under `workflow/tickets/<ticket-id>/`.
 - Run the spike workflow under `workflow/spikes/<ticket-id>/`.
 - Keep the ticket in backlog pending clarification.
 - Split, merge, or defer the ticket.
 
-Do not mutate a pointing report into a Strategic Contract. If the ticket is
+Do not mutate a refinement report into a Strategic Contract. If the ticket is
 selected for delivery, create a fresh contract in `workflow/tickets/<ticket-id>/`
 so the gated ticket workflow starts cleanly.

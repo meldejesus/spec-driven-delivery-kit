@@ -40,6 +40,10 @@ You operate at the Tactical Layer. Execute tasks from plan.md exactly as written
      - Link to `workflow/tickets/<TICKET>/logs/<name>.log` if full output was saved
      - If no test was run for this task, write `N/A — no test artifact for this task`
   3. **Mark the task `[x]`** in plan.md.
+  4. **Commit the task** — run `git add -A && git commit -m "<message>"` with a verb-first imperative message describing only what this task did. Max 72 chars. No ticket prefix.
+     - Good: `Add search endpoint to API`, `Extract ranking logic into standalone module`
+     - Bad: `WIP`, `Fix stuff`, `PROJECT-123 changes`
+     - If terminal is unavailable, record the intended message in `handoff.md` under `## Pending Commit`.
 - If any task fails ≥3 times: mark `[FAILED]`, propose Pivot path, STOP (Gate C).
 - Compaction: every 5–10 handoff.md updates, invoke `@Compactor` or add a compacted `## State Summary` and prune verbose entries above.
 - Never modify the Strategic Contract or re-plan work.

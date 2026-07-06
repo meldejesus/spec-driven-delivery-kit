@@ -24,10 +24,9 @@ workspace/
   .copilot/
   workflow/
     tickets/
-    pointing/
+    refinement/
     spikes/
     code-review/
-    messages/
 ```
 
 Agents read files relative to the active workspace. They do not automatically
@@ -73,7 +72,6 @@ base template:
 ```text
 workflow-archive-private/
   workflow/tickets/
-  workflow/pointing/
-  workflow/messages/
+  workflow/refinement/
   worklog/daily-log.md
 ```

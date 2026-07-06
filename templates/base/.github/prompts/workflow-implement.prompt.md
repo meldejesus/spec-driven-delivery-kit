@@ -38,6 +38,10 @@ If `${output_dir}/pre-context.md` exists, read it too.
   1. **Update `${output_dir}/handoff.md`** with Success, Friction, and State Summary.
   2. **Update `${output_dir}/test.md`** with PASS/FAIL evidence (or N/A if no test artifact).
   3. **Mark task `[x]`** in plan.md.
+  4. **Commit the task** — run `git add -A && git commit -m "<message>"` where `<message>` is a verb-first imperative sentence describing only what this task did. Max 72 chars. No ticket prefix needed.
+     - Good: `Add search endpoint to API`, `Extract ranking logic into standalone module`, `Add unit tests for session reducer`
+     - Bad: `WIP`, `Fix stuff`, `PROJECT-123 changes`
+     - If terminal is unavailable, record the intended commit message in `${output_dir}/handoff.md` under `## Pending Commit` so it can be applied manually.
 - Never skip journaling, even for trivial tasks — handoff.md is the context survival file.
 - If a task fails ≥3 times: mark `[FAILED]`, propose Pivot, stop and wait for Gate C approval.
 - **Final build validation is mandatory before implementation can complete.**

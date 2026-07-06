@@ -1,0 +1,4 @@
+interface:
+  display_name: "Message Clarity"
+  short_description: "Turn dense technical notes into clearer prose."
+  default_prompt: "Rewrite this for clarity."

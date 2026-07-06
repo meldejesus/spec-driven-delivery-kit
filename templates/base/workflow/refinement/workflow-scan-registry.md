@@ -27,14 +27,14 @@ Set sub_workflow = <optional sub-workflow to target>
 ```
 
 Saved output path:
-`workflow/pointing/tech-debt-<workflow>-<sub-workflow>-YYYY-MM-DD.md`
+`workflow/refinement/tech-debt-<workflow>-<sub-workflow>-YYYY-MM-DD.md`
 
-To convert ticket drafts into assessment-ready pointing output:
+To convert ticket drafts into refinement-ready output:
 
 ```text
 Use .github/prompts/pointing-plan.prompt.md
 Set mode = tech-debt
-Set source_file = workflow/pointing/tech-debt-<workflow>-<sub-workflow>-YYYY-MM-DD.md
+Set source_file = workflow/refinement/tech-debt-<workflow>-<sub-workflow>-YYYY-MM-DD.md
 ```
 
 ## Notes

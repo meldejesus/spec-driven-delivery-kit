@@ -1,6 +1,6 @@
 ---
 name: private-workspace-archive
-description: Archive private Osmosis workspace files into workflow-archive-private before a machine wipe, workspace cleanup, fresh kit reinstall, or whenever Codex needs to preserve local private workflow state outside the active workspace. Use for exporting root lessons, workflow messages, workflow pointing assessments, worklog, and active workflow tickets into the private archive.
+description: Archive private Osmosis workspace files into workflow-archive-private before a machine wipe, workspace cleanup, fresh kit reinstall, or whenever Codex needs to preserve local private workflow state outside the active workspace. Use for exporting root lessons, workflow refinement assessments, worklog, and active workflow tickets into the private archive.
 ---
 
 # Private Workspace Archive
@@ -24,13 +24,10 @@ dependency caches, or the public `spec-driven-delivery-kit`.
 4. Review the listed copy operations. The default set is:
    - `.github/lessons-learned.md`
    - `worklog/`
-   - `workflow/messages/`
-   - `workflow/pointing/`
+   - `workflow/refinement/`
    - `workflow/tickets/`
    - `workflow/spikes/`
    - `workflow/code-review/`
-   - `workflow/lessons/`
-   - `workflow/maps/`
    - `workflow/cleanup-log.md`
 5. If the operations match the request, apply them:
 
@@ -52,7 +49,7 @@ dependency caches, or the public `spec-driven-delivery-kit`.
 - Keep private root files in root-relative archive paths.
 - Keep reference-only material under `workflow-archive-private/other/`.
 - Keep workflow tickets under `workflow-archive-private/workflow/tickets/`.
-- Keep pointing assessments under `workflow-archive-private/workflow/pointing/`.
+- Keep refinement assessments under `workflow-archive-private/workflow/refinement/`.
 - Keep spike outputs under `workflow-archive-private/workflow/spikes/`.
 - Keep PR review outputs under `workflow-archive-private/workflow/code-review/`.
 - Keep worklog files under `workflow-archive-private/worklog/`.

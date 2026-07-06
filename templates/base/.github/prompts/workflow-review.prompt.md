@@ -33,7 +33,7 @@ If `${output_dir}/pre-context.md` exists, read it too.
 # Diff, Build, Lint/Test, and Quality Gates (report-only)
 - Run the following if terminal tools are available:
   - git fetch origin
-  - git log --oneline -15          # inspect recent commits to inform the commit message
+  - git log --oneline origin/main...HEAD   # read the per-task commit story before reviewing the diff
   - git diff --name-status origin/main...HEAD
   - git diff origin/main...HEAD
   - yarn nx affected --target=build # final build check for the diff
@@ -135,17 +135,16 @@ Rules:
 ### 6. Boundaries
 Optional. Include only meaningful non-goals, known baseline behavior, or follow-up tradeoffs.
 
-### 7. Commit Message
-One conventional-commit line plus a short body if useful.
+### 7. PR Title
+One conventional-commit line suitable as the GitHub PR title.
 
-## Commit Message Format
-Generate a single conventional-commit message that describes what this PR does relative to the previous commits seen in `git log`.
-- Format: `<type>(<scope>): <what changed>` on line 1, blank line, then 1–2 sentences of “why” if useful
+## PR Title Format
+Generate a single conventional-commit line that names what this PR does as a whole. Individual task commits already tell the detailed story; this title labels the chapter collection.
+- Format: `<type>(<scope>): <what changed>` — max 72 chars, imperative mood, no trailing period
 - Types: `fix`, `feat`, `refactor`, `test`, `chore`, `docs`
 - Scope: the affected module/component/domain (e.g. `qbank`, `nav`, `auth`)
-- Subject line: max 72 chars, imperative mood, no trailing period
-- Contrast with recent commits — do not repeat what was already described in the log
-- Example: `fix(daily-practice): restore empty-state check on session load`
+- Summarize the PR's purpose, not any single commit — reviewers can read the commit log for detail
+- Example: `feat(search): add relevance-ranked search endpoint with unit and integration tests`
 
 # End State
 1. Write the Pull Request Synthesis section to `${output_dir}/pull-request.md`.

@@ -98,13 +98,10 @@ fi
 
 copy_file ".github/lessons-learned.md" ".github/lessons-learned.md"
 copy_dir "worklog" "worklog"
-copy_dir "workflow/messages" "workflow/messages"
-copy_dir "workflow/pointing" "workflow/pointing"
+copy_dir "workflow/refinement" "workflow/refinement"
 copy_dir "workflow/tickets" "workflow/tickets"
 copy_dir "workflow/spikes" "workflow/spikes"
 copy_dir "workflow/code-review" "workflow/code-review"
-copy_dir "workflow/lessons" "workflow/lessons"
-copy_dir "workflow/maps" "workflow/maps"
 copy_file "workflow/cleanup-log.md" "workflow/cleanup-log.md"
 
 printf 'Done.\n'

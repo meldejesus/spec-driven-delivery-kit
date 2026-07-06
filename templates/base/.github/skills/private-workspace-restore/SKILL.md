@@ -1,6 +1,6 @@
 ---
 name: private-workspace-restore
-description: Restore private Osmosis workspace files from workflow-archive-private into a fresh or reinstalled workspace after cloning the kit. Use when Codex needs to repopulate root lessons, workflow messages, worklog, active workflow pointers, optional pointing history, optional ticket archives, or optional local rebuild notes.
+description: Restore private Osmosis workspace files from workflow-archive-private into a fresh or reinstalled workspace after cloning the kit. Use when Codex needs to repopulate root lessons, worklog, active workflow pointers, optional refinement history, optional ticket archives, or optional local rebuild notes.
 ---
 
 # Private Workspace Restore
@@ -22,7 +22,6 @@ Use this skill after cloning/installing the public kit and cloning
 4. Review the listed copy operations. The default restore set is:
    - `.github/lessons-learned.md`
    - `worklog/`
-   - `workflow/messages/`
    - `workflow/tickets/.active-workflow.md`
 5. Apply the default restore:
 
@@ -34,7 +33,7 @@ Use this skill after cloning/installing the public kit and cloning
 
 ```bash
 .github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-tickets
-.github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-pointing
+.github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-refinement
 .github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-spikes
 .github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-code-review
 .github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-workflow-history
@@ -52,7 +51,7 @@ Use this skill after cloning/installing the public kit and cloning
   cloned app repos.
 - Restore full archived tickets only with `--include-tickets`; default restore
   should keep active workflow state lightweight.
-- Restore pointing assessments only with `--include-pointing` or
+- Restore refinement assessments only with `--include-refinement` or
   `--include-workflow-history`.
-- Restore full spike, code-review, lesson, and map histories only with their
-  explicit flags or `--include-workflow-history`.
+- Restore full spike and code-review histories only with their explicit flags
+  or `--include-workflow-history`.

@@ -5,7 +5,7 @@ prompt. Project workspaces can customize the workflow names, examples, and
 effort rubric after installation.
 
 Saved scan outputs are written alongside this file as:
-`workflow/pointing/tech-debt-<workflow>-<sub-workflow>-YYYY-MM-DD.md`
+`workflow/refinement/tech-debt-<workflow>-<sub-workflow>-YYYY-MM-DD.md`
 
 ## Canonical Ticket Structure
 

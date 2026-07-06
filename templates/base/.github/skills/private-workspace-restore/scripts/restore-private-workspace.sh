@@ -3,7 +3,7 @@ set -euo pipefail
 
 apply=0
 include_tickets=0
-include_pointing=0
+include_refinement=0
 include_spikes=0
 include_code_review=0
 include_workflow_history=0
@@ -20,8 +20,8 @@ for arg in "$@"; do
     --include-tickets)
       include_tickets=1
       ;;
-    --include-pointing)
-      include_pointing=1
+    --include-refinement|--include-pointing)
+      include_refinement=1
       ;;
     --include-spikes)
       include_spikes=1
@@ -32,7 +32,7 @@ for arg in "$@"; do
     --include-workflow-history)
       include_workflow_history=1
       include_tickets=1
-      include_pointing=1
+      include_refinement=1
       include_spikes=1
       include_code_review=1
       ;;
@@ -97,15 +97,14 @@ fi
 
 restore_file ".github/lessons-learned.md" ".github/lessons-learned.md"
 restore_dir "worklog" "worklog"
-restore_dir "workflow/messages" "workflow/messages"
 restore_file "workflow/tickets/.active-workflow.md" "workflow/tickets/.active-workflow.md"
 
 if [ "$include_tickets" -eq 1 ]; then
   restore_dir "workflow/tickets" "workflow/tickets"
 fi
 
-if [ "$include_pointing" -eq 1 ]; then
-  restore_dir "workflow/pointing" "workflow/pointing"
+if [ "$include_refinement" -eq 1 ]; then
+  restore_dir "workflow/refinement" "workflow/refinement"
 fi
 
 if [ "$include_spikes" -eq 1 ]; then
@@ -117,8 +116,6 @@ if [ "$include_code_review" -eq 1 ]; then
 fi
 
 if [ "$include_workflow_history" -eq 1 ]; then
-  restore_dir "workflow/lessons" "workflow/lessons"
-  restore_dir "workflow/maps" "workflow/maps"
   restore_file "workflow/cleanup-log.md" "workflow/cleanup-log.md"
 fi
 

@@ -1,6 +1,6 @@
 # Prompt Flows — Quick Reference
 
-> Deep dives: `.github/how-to/howToUse.md` · `.github/how-to/howToUse-spike.md` · `.github/how-to/howToUse-codeReview.md` · `.github/how-to/howToUse-message.md`
+> Deep dives: `.github/how-to/howToUse.md` · `.github/how-to/howToUse-spike.md` · `.github/how-to/howToUse-codeReview.md`
 >
 > Conceptual overview: `.github/how-to/spec-driven-workflow.md`
 >
@@ -56,17 +56,6 @@ ticket=https://your-domain.atlassian.net/browse/PROJECT-123
 output_dir=workflow/spikes/PROJECT-123
 ```
 
-### Message Workflow
-
-```text
-Act as Message-Writer following .github/agents/message-writer.agent.md and .github/prompts/message-workflow.prompt.md
-
-audience=non-technical
-format=one-pager
-context=docs-in-progress/app/apps/purchasing/purchasing.md
-request=Explain how the purchasing flow works for a non-technical marketing team. Focus on user experience, points of confusion, and language to avoid.
-```
-
 ### Ticket Assessment / Pointing Prep
 
 ```text
@@ -75,7 +64,7 @@ request=Explain how the purchasing flow works for a non-technical marketing team
 
 mode=tickets
 tickets=PROJECT-123
-output_dir=workflow/pointing
+output_dir=workflow/refinement
 ```
 
 ### Dev Starters
@@ -183,38 +172,30 @@ output_dir=workflow/spikes/PROJECT-123
 
 ---
 
-## `message-*` — Turning dense docs into clearer communication
-**Agent:** `@Message-Writer`
+## Message clarity
 
-Steps: approach → outline → draft → review → lessons learned
+Use the `message-clarity` skill when source material is technically dense and
+the output needs to be easier for a specific audience to consume.
 
-Use this when source material is technically dense and the output needs to be easier for a specific audience to consume. This is not only for non-technical readers; use `audience=technical`, `audience=mixed`, or `audience=non-technical`.
-
-| Prompt | Purpose |
-|---|---|
-| `message-workflow` | Read context docs and a request, propose an approach, outline, draft, review, final message, and reusable style lessons. |
-
-**CLI start with:**
 ```
-Act as Message-Writer following .github/agents/message-writer.agent.md and .github/prompts/message-workflow.prompt.md
+use the message-clarity skill
 
-audience=non-technical
-format=one-pager
 context=docs-in-progress/app/apps/purchasing/purchasing.md
 request=Explain how the purchasing flow works for a non-technical marketing team. Focus on user experience, points of confusion, and language to avoid.
 ```
 
-Use `output_mode=conversation` by default. Add `output_mode=final` or `output_mode=full` with `output_dir=workflow/messages/<name>` when the message should be preserved.
-
 ---
 
-## `pointing-*` — Ticket assessment / pointing prep
+## Ticket refinement — Backlog ticket refinement
 **Agent:** `@pointing-analyst`
 
-Use this before a ticket is assigned or approved when you need a skim-friendly
-assessment: what the issue is, what likely needs to be done, how it could be
-done at a high level, what docs/code paths matter, and whether the ticket is
-ready for the standard workflow.
+Use this before a ticket is assigned or sprint-planned. The agent fetches the
+ticket, finds the relevant code, then runs a short dialogue with you to confirm
+its understanding before writing anything. Output is a concise plain-English doc:
+what the problem is, where the code lives, what the fix looks like, and the key
+risk.
+
+See `.github/how-to/howToUse-ticket-refinement.md` for the full walkthrough.
 
 ```
 @pointing-analyst
@@ -222,7 +203,7 @@ ready for the standard workflow.
 
 mode=tickets
 tickets=PROJECT-123
-output_dir=workflow/pointing
+output_dir=workflow/refinement
 ```
 
 ---

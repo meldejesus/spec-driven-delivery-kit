@@ -52,13 +52,6 @@ Both modes always run lint + format + tests after applying changes.
 @Architect (contract) → @Plan-Agent (plan) → @Implementer (code + handoff) → @Reviewer (review) → @targeted-writer (fixes)
 ```
 
-### Message Writing
-```
-@Message-Writer (approach → outline → draft → review → lessons)
-```
-
-Use for turning dense technical docs into clearer technical, mixed-audience, or non-technical messages. File-backed output is optional and limited to `workflow/messages/**`.
-
 ### Addressing Review Feedback
 - **Single BLOCKER**: `@targeted-writer` (surgical mode)
 - **Multiple coordinated fixes**: `@targeted-writer` (planned mode)
@@ -84,12 +77,6 @@ Use for turning dense technical docs into clearer technical, mixed-audience, or 
 - Can modify files and run commands
 - Must validate changes (lint, format, test)
 - Use `infer: true` in frontmatter
-
-### Limited Writing Agents
-**Message-Writer**
-- Can write only under `workflow/messages/**`
-- Pauses after approach and outline
-- Does not edit code, ticket artifacts, or global instructions
 
 ### Terminal Access
 Agents with terminal access can:
