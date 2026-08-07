@@ -1,6 +1,6 @@
 # Prompt Flows — Quick Reference
 
-> Deep dives: `.github/how-to/howToUse.md` · `.github/how-to/howToUse-spike.md` · `.github/how-to/howToUse-codeReview.md`
+> Deep dives: `.github/how-to/howToUse.md` · `.github/how-to/howToUse-spike.md` · `.github/how-to/howToUse-codeReview.md` · `.github/how-to/howToUse-merge-conflict-resolution.md`
 >
 > Conceptual overview: `.github/how-to/spec-driven-workflow.md`
 >
@@ -75,6 +75,17 @@ Read .github/prompts/legacy-dev-start.prompt.md
 
 ```text
 Read .github/prompts/mobile-start.prompt.md
+```
+
+### Merge Conflicts
+
+```text
+@merge-conflict-resolver
+#read .github/prompts/merge-conflict.prompt.md
+
+ticket=PROJECT-123
+output_dir=workflow/tickets/PROJECT-123
+target_branch=origin/main
 ```
 
 ### Standalone Skills

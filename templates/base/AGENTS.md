@@ -97,6 +97,7 @@ Used to review a teammate's PR from a GitHub URL. See `.github/how-to/howToUse-c
 
 | Prompt                     | What it does                                                  |
 | -------------------------- | ------------------------------------------------------------- |
+| `merge-conflict.prompt.md` | Resolves target-branch merges while preserving both sides' intent and auditing resolution scope. |
 | `quality-audit.prompt.md`  | Audits code quality across a file or component.               |
 | `tech-debt-scan.prompt.md` | Scans for tech debt patterns and produces a prioritized list. |
 | `fix-docs-index.prompt.md` | Repairs and updates the docs index file.                      |
@@ -175,6 +176,7 @@ Skills are self-contained tools invoked by name — no prompt file or agent pref
 | `private-workspace-restore` | Restore private workspace state from `workflow-archive-private` after reinstalling the kit | `use the private-workspace-restore skill`                    |
 | `message-clarity`     | Rewrite or summarize dense technical notes into clearer prose without creating workflow artifacts | `use the message-clarity skill`                       |
 | `kit-sync`             | Audit or sync workflow files between the installed workspace and the spec-driven-delivery-kit source | `use the kit-sync skill`                              |
+| `merge-conflict-resolution` | Resolve merge conflicts with intent analysis, validation, and a manual-change scope audit | `use the merge-conflict-resolution skill`             |
 
-> `tailwind-check`, `docs-audit`, `docs-refresh`, `docs-review`, `private-workspace-archive`, `private-workspace-restore`, `message-clarity`, and `kit-sync` are defined in `.github/skills/`. `sonar-check` and `copilot-chat-cleanup` are built-in project skills.
+> `tailwind-check`, `docs-audit`, `docs-refresh`, `docs-review`, `private-workspace-archive`, `private-workspace-restore`, `message-clarity`, `kit-sync`, and `merge-conflict-resolution` are defined in `.github/skills/`. `sonar-check` and `copilot-chat-cleanup` are built-in project skills.
 > Both `sonar-check` and `tailwind-check` run automatically inside `workflow-review` and `pr-review` — you only need to invoke them standalone for one-off audits.
