@@ -1,0 +1,4 @@
+interface:
+  display_name: "Workflow Index"
+  short_description: "Update the cross-lane workflow inventory."
+  default_prompt: "Update the workflow index."

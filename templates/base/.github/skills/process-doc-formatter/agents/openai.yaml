@@ -1,0 +1,4 @@
+interface:
+  display_name: "Process Doc Formatter"
+  short_description: "Format notes as input/process/output"
+  default_prompt: "Use the process-doc-formatter skill to turn my rough notes into concise Input, Process, Output sections while preserving my scope."
