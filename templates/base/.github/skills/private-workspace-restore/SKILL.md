@@ -22,7 +22,7 @@ Use this skill after cloning/installing the public kit and cloning
 4. Review the listed copy operations. The default restore set is:
    - `.github/lessons-learned.md`
    - `worklog/`
-   - `workflow/tickets/.active-workflow.md`
+   - `workflow/.active-workflow.md`
 5. Apply the default restore:
 
 ```bash

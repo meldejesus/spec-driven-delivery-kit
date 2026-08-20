@@ -36,6 +36,43 @@ tool discovery.
 | GitHub | PRs, diffs, commit history, CI status |
 | GitKraken or git tooling | Local branch and history inspection, when configured |
 
+## MCP Server Reference
+
+| Server | Purpose | Install command |
+|---|---|---|
+| Atlassian | Jira + Confluence ticket fetching | `npx -y @atlassian/mcp-atlassian` |
+| GitHub | PR diffs, issue reading, repo search | `npx -y @modelcontextprotocol/server-github` |
+| Playwright | Browser automation for QA | `npx -y @playwright/mcp` |
+| Linear | Linear issue fetching | `npx -y @linear/mcp` |
+| Filesystem | Read files outside workspace | `npx -y @modelcontextprotocol/server-filesystem` |
+
+### Which servers are needed per stage
+
+| Stage | Server required |
+|---|---|
+| `run contract` | Atlassian (or use `pre-context.md` fallback) |
+| `run peer-review` | GitHub |
+| `run sonar` | SonarQube API (project-specific setup) |
+| All other stages | None — reads local files only |
+
+## Environment Variables
+
+Never commit credentials. Store them in your shell profile or a local env file.
+
+**Claude Code** — create `~/.claude/.env`:
+```
+JIRA_URL=https://your-domain.atlassian.net
+JIRA_TOKEN=your-personal-access-token
+GITHUB_TOKEN=your-github-token
+```
+
+**Copilot / Codex** — add to `~/.zshrc` or `~/.bashrc`:
+```bash
+export JIRA_URL=https://your-domain.atlassian.net
+export JIRA_TOKEN=your-personal-access-token
+export GITHUB_TOKEN=your-github-token
+```
+
 ## Where It Fits
 
 | Stage | MCP value |
@@ -58,7 +95,7 @@ tool discovery.
 If MCP cannot fetch a ticket, create:
 
 ```text
-workflow/tickets/PROJECT-123/pre-context.md
+workflow/PROJECT-123/pre-context.md
 ```
 
 Paste:

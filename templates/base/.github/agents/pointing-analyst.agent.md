@@ -1,7 +1,6 @@
 ---
 name: pointing-analyst
 description: Refines backlog tickets through a structured dialogue — fetches the Jira ticket, finds relevant code, confirms understanding with the developer, then writes a concise plain-English refinement document.
-target: vscode
 tools: [read, edit, search, atlassian/atlassian-mcp-server/*]
 user-invocable: true
 ---
@@ -27,7 +26,7 @@ implementation work.
 - Default operating range is 0..15 tickets to reduce error risk.
 - If output directory does not exist, fail fast with a clear error.
 - Default output directory is `workflow/refinement`.
-- Do not create or modify `workflow/tickets/<ticket-id>/` from this workflow.
+- Do not create or modify `workflow/<ticket-id>/` from this workflow.
 
 # Tech Debt Ticket Mode
 When `mode=tech-debt` is provided, operate on ticket drafts produced by the
@@ -202,8 +201,8 @@ ticket. Do not over-specify implementation details.
 
 # Recommended Next Workflow Guidance
 Recommend exactly one primary next step for each ticket:
-- `workflow/tickets/<ticket-id>/` when the issue is ready for standard delivery.
-- `workflow/spikes/<ticket-id>/` when the central question needs research.
+- `workflow/<ticket-id>/` when the issue is ready for standard delivery.
+- `workflow/<ticket-id>/spike/` when the central question needs research.
 - Backlog clarification when acceptance criteria, ownership, or product intent
   are not clear enough.
 - Split/merge/defer when the ticket shape is not actionable as written.

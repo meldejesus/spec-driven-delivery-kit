@@ -3,21 +3,27 @@ name: workflow-review
 description: Run a full PR review for a ticket using contract, plan, handoff, evidence, and the current diff.
 tools: [read, agent, write, terminal, search]
 agent: Reviewer
+auto-read:
+  - workflow/.active-workflow.md
+  - workflow/${ticket}/prompt.md
+  - workflow/${ticket}/plan.md
+  - workflow/${ticket}/handoff.md
+  - workflow/${ticket}/test.md
 ---
 
 # Review Invocation (Reusable)
 
 # Inputs
 - ticket: ${input:Ticket ID (e.g., PROJECT-123)}
-- output_dir: ${input:output_dir} # optional - defaults from active workflow or workflow/tickets/${ticket}
+- output_dir: ${input:output_dir} # optional - defaults from active workflow or workflow/${ticket}
 - context: ${input:context}       # optional - file path(s) to additional context (comma-separated or single path)
 
 # 0. Resolve Inputs
 Before loading context, resolve `ticket` and `output_dir`:
 
-1. If either value was omitted, read `workflow/tickets/.active-workflow.md` and use its `ticket`, `ticket_url`, and `output_dir` values.
+1. If either value was omitted, read `workflow/.active-workflow.md` and use its `ticket`, `ticket_url`, and `output_dir` values.
 2. If `ticket` is a full Jira URL, extract the `PROJECT-123` ID.
-3. If `output_dir` is still missing, use `workflow/tickets/${ticket}`.
+3. If `output_dir` is still missing, use `workflow/${ticket}`.
 4. If `context` was provided, read each listed file before reviewing.
 5. Treat any additional inline instructions in the invocation, such as "run review but also consider x.md", as developer-provided context. If a file path is mentioned, read it before reviewing.
 6. If `ticket` is still missing after active-state lookup, ask the user for it before proceeding.
@@ -149,7 +155,7 @@ Generate a single conventional-commit line that names what this PR does as a who
 # End State
 1. Write the Pull Request Synthesis section to `${output_dir}/pull-request.md`.
    - If this file does not yet exist, use `create_file` to create it.
-2. Update `workflow/tickets/.active-workflow.md`:
+2. Update `workflow/.active-workflow.md`:
    ```md
    # Active Workflow
    ticket: ${ticket}
@@ -157,6 +163,7 @@ Generate a single conventional-commit line that names what this PR does as a who
    output_dir: ${output_dir}
    last_completed_stage: review
    next_stage: closeout
+   available_next_commands: "run closeout"
    updated_by: workflow-review
    ```
 3. Announce **"Stage Complete: Review (Gate D)"**

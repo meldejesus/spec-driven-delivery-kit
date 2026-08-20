@@ -1,11 +1,10 @@
 ---
 name: reviewer
 description: Code review agent that analyzes diffs, rates findings by severity, and provides structured feedback with fix guidance.
-target: vscode
 infer: false
 tools: ["read", "search", "terminal", "write", "edit", "github", "atlassian/atlassian-mcp-server/*"]
 write-allow:
-  - workflow/tickets/**
+  - workflow/**
 ---
 
 # File Tool Usage
@@ -37,11 +36,11 @@ Quick review of specific files or changes with targeted feedback.
 
 
 # Inputs (from prompt)
-- Contract: /workflow/tickets/<ticket>/<ticket>.prompt.md
-- Plan: /workflow/tickets/<ticket>/plan.md
-- Handoff Log: /workflow/tickets/<ticket>/handoff.md
-- Evidence Log: /workflow/tickets/<ticket>/test.md
-- **PR Draft (optional)**: /workflow/tickets/<ticket>/pull-request.md
+- Contract: /workflow/<ticket>/<ticket>.prompt.md
+- Plan: /workflow/<ticket>/plan.md
+- Handoff Log: /workflow/<ticket>/handoff.md
+- Evidence Log: /workflow/<ticket>/test.md
+- **PR Draft (optional)**: /workflow/<ticket>/pull-request.md
 - **PR description** (paste or summarize)
 - Optional: explicit paths to focus, or files to ignore
 - Review mode: full or focused
@@ -118,7 +117,7 @@ Group findings under headings:
 - Tests & Coverage
 - Tailwind Violations (diff-introduced issues only; skip section if no changed UI files)
 
-### Pull Request Synthesis (for /workflow/tickets/<ticket>/pull-request.md)
+### Pull Request Synthesis (for /workflow/<ticket>/pull-request.md)
 
 Write a clear, scan-friendly PR description for engineers and semi-technical reviewers. The reader should understand the change, the protected behavior, the remaining boundaries, and the verification path in 60-90 seconds.
 
@@ -172,7 +171,7 @@ End **every** response with this exact block (fill in the real ticket ID):
 
 ```
 ———
-📍 Active ticket: PROJECT-123 → workflow/tickets/PROJECT-123/
+📍 Active ticket: PROJECT-123 → workflow/PROJECT-123/
 ```
 
 # Process
@@ -211,10 +210,10 @@ run closeout
 
 # Re-Entry Protocol
 If the session is resumed, reconstruct state by reading:
-1. `workflow/tickets/<TICKET>/<TICKET>.prompt.md`
-2. `workflow/tickets/<TICKET>/plan.md`
-3. `workflow/tickets/<TICKET>/handoff.md`
-4. `workflow/tickets/<TICKET>/test.md`
+1. `workflow/<TICKET>/<TICKET>.prompt.md`
+2. `workflow/<TICKET>/plan.md`
+3. `workflow/<TICKET>/handoff.md`
+4. `workflow/<TICKET>/test.md`
 
 Then continue exactly where the review left off.
 

@@ -6,7 +6,7 @@
 
 ## Context
 
-Once a ticket is merged, its directory moves to `workflow-archive/workflow/tickets/<ticket-id>/`.
+Once a ticket is merged, its directory moves to `workflow-archive/workflow/<ticket-id>/`.
 At that point, the workflow artifacts (plan, handoff, codebase-scan, etc.) have served their
 primary purpose. This guide describes two defensible approaches for pruning that directory,
 with the trade-offs of each.
@@ -127,4 +127,4 @@ for archive pruning decisions.
 ## Related
 
 - `howToUse.md` — full ticket lifecycle and artifact descriptions
-- `workflow-archive/workflow/tickets/README.md` — grouped index of all archived tickets
+- `workflow-archive/workflow/README.md` — grouped index of all archived tickets

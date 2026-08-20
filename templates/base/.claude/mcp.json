@@ -1,0 +1,26 @@
+{
+  "_comment": "Copy this file to .claude/mcp.json in your workspace root. Set credentials in ~/.claude/.env or your shell profile. Optional servers: Linear (npx @linear/mcp), SonarQube, Filesystem (npx @modelcontextprotocol/server-filesystem).",
+  "mcpServers": {
+    "atlassian": {
+      "command": "npx",
+      "args": ["-y", "@atlassian/mcp-atlassian"],
+      "env": {
+        "JIRA_URL": "${JIRA_URL}",
+        "JIRA_TOKEN": "${JIRA_TOKEN}",
+        "CONFLUENCE_URL": "${CONFLUENCE_URL}",
+        "CONFLUENCE_TOKEN": "${CONFLUENCE_TOKEN}"
+      }
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"]
+    }
+  }
+}

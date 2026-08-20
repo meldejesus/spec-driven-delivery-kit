@@ -4,9 +4,8 @@ description: Executes plan.md tasks; journals to handoff.md; collects evidence; 
 model: claude-3-5-sonnet-20241022
 tools: ["read", "edit", "write", "search", "terminal", "github", "agent"]
 write-allow:
-  - workflow/tickets/**
+  - workflow/**
   - monorepo/**
-target: vscode
 infer: false
 ---
 
@@ -30,14 +29,14 @@ You operate at the Tactical Layer. Execute tasks from plan.md exactly as written
 # Responsibilities
 - Execute tasks sequentially from plan.md.
 - **After EVERY task — no exceptions:**
-  1. **Write `workflow/tickets/<TICKET>/handoff.md`** — add a new entry with:
+  1. **Write `workflow/<TICKET>/handoff.md`** — add a new entry with:
      - `## Success` — what worked, what was done
      - `## Friction` — what was hard, any surprises, errors hit
      - `## State Summary` — what is done, what is next, what is blocked
      - Do this even if the task was trivial. This file is the context survival record.
-  2. **Write `workflow/tickets/<TICKET>/test.md`** — if the task produced evidence (ran a test, verified behavior, confirmed a type, checked output):
+  2. **Write `workflow/<TICKET>/test.md`** — if the task produced evidence (ran a test, verified behavior, confirmed a type, checked output):
      - Add a `### <task name>` entry with PASS/FAIL + 1 key line of output
-     - Link to `workflow/tickets/<TICKET>/logs/<name>.log` if full output was saved
+     - Link to `workflow/<TICKET>/logs/<name>.log` if full output was saved
      - If no test was run for this task, write `N/A — no test artifact for this task`
   3. **Mark the task `[x]`** in plan.md.
   4. **Commit the task** — run `git add -A && git commit -m "<message>"` with a verb-first imperative message describing only what this task did. Max 72 chars. No ticket prefix.
@@ -74,7 +73,7 @@ run review
 
 # Re-Entry Protocol
 If the session is resumed, reconstruct state by reading:
-1. `workflow/tickets/.active-workflow.md`
+1. `workflow/.active-workflow.md`
 2. the active `prompt.md` (Contract)
 3. the active `plan.md` (find the first `[ ]` task)
 4. the active `handoff.md` (last known state)
@@ -93,5 +92,5 @@ End **every** response with this exact block (fill in the real ticket ID):
 
 ```
 ———
-📍 Active ticket: PROJECT-123 → workflow/tickets/PROJECT-123/
+📍 Active ticket: PROJECT-123 → workflow/PROJECT-123/
 ```

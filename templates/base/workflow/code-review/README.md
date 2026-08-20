@@ -13,4 +13,4 @@ workflow/code-review/<repo-or-ticket>-pr-123/
   testing-notes.md
 ```
 
-Keep implementation-ticket self-review output in `workflow/tickets/<ticket>/`.
+Keep implementation-ticket self-review output in `workflow/<ticket>/`.

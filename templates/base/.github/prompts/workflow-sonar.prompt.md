@@ -14,7 +14,7 @@ Run this after the branch is pushed, the PR is open, and CI has completed.
 - `ticket`: e.g. `PROJECT-123`
 - `pr_number`: GitHub PR number
 
-If `ticket` is omitted, read `workflow/tickets/.active-workflow.md`.
+If `ticket` is omitted, read `workflow/.active-workflow.md`.
 
 ## Required Environment
 

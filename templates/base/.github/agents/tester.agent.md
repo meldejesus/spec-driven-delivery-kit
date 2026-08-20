@@ -1,7 +1,6 @@
 ---
 name: tester
 description: "DEPRECATED — test commands promoted to .github/copilot-instructions.md. Use @targeted-writer to write tests."
-target: vscode
 infer: false
 tools: ["read"]
 ---

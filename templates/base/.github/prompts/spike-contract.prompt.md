@@ -5,6 +5,9 @@ agent: Architect
 tools: [read, search, write, github, "atlassian/atlassian-mcp-server/*"]
 infer: false
 target: vscode
+auto-read:
+  - workflow/${ticket}/pre-context.md
+  - .github/lessons-learned.md
 ---
 
 # Inputs
@@ -17,8 +20,8 @@ Before doing anything else, resolve the working values of `ticket` and `output_d
 
 1. **Ticket ID extraction** — If `ticket` is a short ID (matches `[A-Z][A-Z0-9]+-\d+`), expand it:
    - `ticket` → `https://your-domain.atlassian.net/browse/<ID>`
-   - If `output_dir` was not provided, set it to `workflow/spikes/<ID>`
-2. **Full URL provided** — If `ticket` is already a full URL, extract the ticket ID from the path segment and set `output_dir` to `workflow/spikes/<ID>` if not explicitly provided.
+   - If `output_dir` was not provided, set it to `workflow/<ID>/spike`
+2. **Full URL provided** — If `ticket` is already a full URL, extract the ticket ID from the path segment and set `output_dir` to `workflow/<ID>/spike` if not explicitly provided.
 3. **Context files** — If `context` was provided, read each file path listed. Treat their contents as authoritative developer-provided context alongside `pre-context.md`. They override assumptions from the ticket alone.
 4. Confirm the resolved values internally before proceeding. Do not ask the user to confirm — just use them.
 
@@ -48,44 +51,55 @@ Before writing the index, read `${output_dir}/pre-context.md` if it exists and i
 Use this structure:
 
 ```md
-# <PROJECT-ID>: <Ticket title>
+---
+ticket: <PROJECT-ID>
+title: <Ticket title>
+type: spike
+status: scope-drafting
+created: <YYYY-MM-DD>
+jira_url: <resolved Jira URL>
+pr_url: ""
+tags:
+  - area/<product-area>
+  - type/spike
+  - component/<ComponentOrServiceName>
+description: <2-3 sentence plain-language description of the research question and what decision or build work this spike will unblock.>
+aliases:
+  - <common search term 1>
+  - <the question being asked, as plain language>
+  - <system or feature being investigated>
+  - <synonym or abbreviation>
+paths:
+  - <repo path 1>
+links:
+  - <jira_url>
+  - <any Confluence, design, or reference link>
+related:
+  - "[[RELATED-TICKET-ID]]"
+---
 
-## Search Metadata
-- ticket: <PROJECT-ID>
-- ticket_url: <resolved Jira URL>
-- workflow_type: spike
-- output_dir: <resolved output_dir>
-- status: scope-drafting
-- created: <YYYY-MM-DD>
-- source: Jira
-- summary: <1-2 sentence plain-language description of the research question and decision this spike will unblock>
-- searchable_terms:
-  - <domain or product area>
-  - <feature, route, component, service, or data model>
-  - <important research terms>
-- related_paths:
-  - <repo paths discovered or provided so far>
-- related_links:
-  - <Jira, PR, Confluence, or design links discovered or provided so far>
+# <PROJECT-ID>: <Ticket title> (Spike)
 
-## Artifact Map
-- `scope.md` - approved research question, boundaries, timebox, and sources
-- `findings.md` - running investigation journal
-- `spike-output.md` - final evidence-backed research output
-- `explained.md` - readable front-door summary
-- `overview.md` - optional education walkthrough
+## Artifacts
+- `scope.md` — approved research question, boundaries, timebox, and sources (Gate A)
+- `findings.md` — running investigation journal
+- `spike-output.md` — final evidence-backed research output
+- `explained.md` — readable summary of findings
+- `overview.md` — optional education walkthrough
 
 ## Notes
-- <Any short context that improves searchability but does not belong in the scoped research question>
+<!-- Anything that improves findability but does not belong in the scoped research question -->
 ```
 
 Rules:
-- Do not leave placeholder metadata if the ticket content provides a better title, summary, term, path, or link.
-- If `index.md` already exists, update its metadata and artifact map without deleting human-authored notes.
-- Keep the summary and searchable terms concrete enough that `rg "<term>" workflow/spikes workflow/tickets` can rediscover the spike later.
+- **`aliases`** should include how the research question would be phrased in conversation, the system or feature being investigated, and common synonyms for the decision being unblocked. Think: what would someone search for if they wanted to know whether this question was already researched?
+- **`description`** must be plain language — describe both the question and why it matters.
+- **`tags`** follow the taxonomy in `workflow/TAGS.md`. Always include `type/spike`.
+- Do not leave placeholder metadata if the ticket content provides a better value.
+- If `index.md` already exists, update its frontmatter without deleting human-authored notes.
 
 # 2. Scan for prior related spikes
-Search `workflow/spikes/` first, then `workflow/tickets/` for legacy spike outputs, for any existing `scope.md` or `spike-output.md` files whose title or content overlaps with this ticket. Note any relevant prior findings in the scope document.
+Search `workflow/` for any existing `scope.md` or `spike-output.md` files whose title or content overlaps with this ticket. Note any relevant prior findings in the scope document.
 
 # 3. Draft the Scope Document
 Write `${output_dir}/scope.md` with the following sections:
@@ -124,6 +138,6 @@ After writing `index.md` and `scope.md`:
 Read .github/agents/spike-investigator.agent.md and .github/prompts/spike-investigate.prompt.md
 
 ticket=PROJECT-123
-output_dir=workflow/spikes/PROJECT-123
+output_dir=workflow/PROJECT-123/spike
 ```
 STOP. Wait for human approval before investigation begins.

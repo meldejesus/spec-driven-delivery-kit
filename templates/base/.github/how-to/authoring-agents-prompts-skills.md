@@ -62,6 +62,20 @@ State the role in one short paragraph.
 Define the shape of the final response or written file.
 ```
 
+## The `infer:` Flag — How Approval Gates Are Enforced
+
+Every agent file has an `infer:` field in its frontmatter. This field is what makes approval gates real:
+
+**`infer: false`** — The agent follows the prompt exactly and stops at every gate. It cannot proceed past a stopping point without an explicit user continuation. Use for advisory agents: Architect, Reviewer, Plan-Agent.
+
+**`infer: true`** — The agent can take next steps without explicit user continuation. Use for implementation agents: Implementer, Targeted-Writer.
+
+If `infer: false` is removed or overridden on an advisory agent, gates stop working — the agent will proceed through Gate A, B, and D without waiting for approval. This is the most common cause of runaway agent behavior in the wild.
+
+**When authoring:**
+- Default to `infer: false` unless the agent is explicitly an implementation worker
+- Never set `infer: true` on an agent that has approval gates in its prompts
+
 ## Prompt Files
 
 Prompt files define a workflow stage.
@@ -176,7 +190,7 @@ When giving an agent extra context, include only what helps the next stage:
 - commands already tried
 - test or evidence expectations
 
-For large or durable context, put it in `workflow/tickets/<TICKET>/pre-context.md`.
+For large or durable context, put it in `workflow/<TICKET>/pre-context.md`.
 
 For one-stage context, use the `context=` parameter if the prompt supports it.
 

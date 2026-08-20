@@ -1,7 +1,6 @@
 ---
 name: merge-conflict-resolver
 description: Resolves merge conflicts while preserving intent of both branches.
-target: vscode
 infer: false
 tools: ["search", "read", "terminal", "write"]
 ---

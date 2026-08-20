@@ -9,7 +9,7 @@ target: vscode
 
 # Inputs
 - ticket: ${input:ticket} # optional, e.g. PROJECT-123
-- output_dir: ${input:output_dir} # optional, defaults from active workflow or workflow/tickets/${ticket}
+- output_dir: ${input:output_dir} # optional, defaults from active workflow or workflow/${ticket}
 - target_branch: ${input:target_branch} # optional, defaults to origin/main
 - merge_ref: ${input:merge_ref} # optional, defaults to target_branch
 - context: ${input:context} # optional, comma-separated file paths or notes
@@ -22,9 +22,9 @@ Resolve merge conflicts without regressing either side. Prove what each side int
 # 0. Resolve Inputs
 1. If `target_branch` is omitted, use `origin/main`.
 2. If `merge_ref` is omitted, use `target_branch`.
-3. If `ticket` or `output_dir` is omitted, read `workflow/tickets/.active-workflow.md` when it exists.
+3. If `ticket` or `output_dir` is omitted, read `workflow/.active-workflow.md` when it exists.
 4. If `ticket` is a Jira URL, extract the `PROJECT-123` key.
-5. If `output_dir` is still missing and `ticket` is known, use `workflow/tickets/${ticket}`.
+5. If `output_dir` is still missing and `ticket` is known, use `workflow/${ticket}`.
 6. Read each file path listed in `context`. Treat inline invocation notes as additional context.
 
 # 1. Preflight
