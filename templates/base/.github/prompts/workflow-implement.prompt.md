@@ -7,7 +7,6 @@ auto-read:
   - workflow/.active-workflow.md
   - workflow/${ticket}/prompt.md
   - workflow/${ticket}/plan.md
-  - workflow/${ticket}/handoff.md
 ---
 
 # Implementation Invocation
@@ -26,6 +25,8 @@ Before loading context, resolve `ticket` and `output_dir`:
 4. If `context` was provided, read each listed file before implementing.
 5. Treat any additional inline instructions in the invocation, such as "run implement but also consider x.md", as developer-provided context. If a file path is mentioned, read it before implementing.
 6. If `ticket` is still missing after active-state lookup, ask the user for it before proceeding.
+
+**Handoff context:** Read only the last 40 lines of `${output_dir}/handoff.md` unless you need to investigate a specific prior decision. Use the `offset` parameter to read from the end. This keeps context lean as the journal grows.
 
 ## Context to Load
 1. `#read ${output_dir}/prompt.md` — the immutable contract (ACs, constraints)

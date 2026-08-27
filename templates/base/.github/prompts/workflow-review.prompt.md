@@ -7,7 +7,6 @@ auto-read:
   - workflow/.active-workflow.md
   - workflow/${ticket}/prompt.md
   - workflow/${ticket}/plan.md
-  - workflow/${ticket}/handoff.md
   - workflow/${ticket}/test.md
 ---
 
@@ -27,6 +26,8 @@ Before loading context, resolve `ticket` and `output_dir`:
 4. If `context` was provided, read each listed file before reviewing.
 5. Treat any additional inline instructions in the invocation, such as "run review but also consider x.md", as developer-provided context. If a file path is mentioned, read it before reviewing.
 6. If `ticket` is still missing after active-state lookup, ask the user for it before proceeding.
+
+**Artifact loading:** Read only the last 40 lines of `${output_dir}/handoff.md` and `${output_dir}/test.md` unless you need full history. Use the `offset` parameter. These files grow during implementation; the tail contains the final state.
 
 # Context to Load
 1) #read ${output_dir}/prompt.md

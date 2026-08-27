@@ -14,13 +14,11 @@ workspace, not from a sibling kit repo. See `README.md` for install commands.
 
 ## Standing Consent
 
-Agents have standing consent to perform in-scope, non-destructive, non-billable work inside this workspace. This includes reading/searching files, editing project files for the requested task, running local tests/lint/format/build commands, creating temporary files, and starting/stopping local dev servers.
+Agents have standing consent for in-scope, non-destructive, non-billable work: reading/searching files, editing project files for the task, running local tests/lint/build, creating temp files, starting/stopping local dev servers.
 
-Agents must ask before destructive actions, changes outside the workspace, credential or permission changes, deployments, force pushes, database migrations against shared/non-local environments, paid/billable external services, or unusually expensive long-running tasks.
+Agents must ask before: destructive actions, changes outside the workspace, credential changes, deployments, force pushes, database migrations on shared environments, paid external services, or unusually expensive tasks.
 
-This repo policy does not override runtime sandbox, network, or security approval prompts. If the tool layer requires explicit approval, agents must request it.
-
-When a runtime approval is required for an in-scope, non-destructive, non-billable action that is likely to recur, agents should ask for narrowly scoped reusable pre-approval if the tool supports it. Do not request reusable pre-approval for destructive actions, credential or profile edits, deployments, force pushes, shared database migrations, paid services, broad shell/interpreter access, or commands that write files unless the user explicitly asks for that scope.
+This policy does not override runtime sandbox, network, or security approval prompts. For recurring in-scope approvals, agents may request narrowly scoped pre-approval — not for destructive actions, deployments, or broad shell access.
 
 ---
 

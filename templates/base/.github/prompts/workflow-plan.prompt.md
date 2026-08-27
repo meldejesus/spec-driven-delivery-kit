@@ -8,7 +8,6 @@ auto-read:
   - workflow/.active-workflow.md
   - workflow/${ticket}/prompt.md
   - workflow/${ticket}/pre-context.md
-  - .github/lessons-learned.md
 tools:
   - read
   - write
@@ -42,7 +41,7 @@ Before generating any plan, read:
 
 If `${output_dir}/pre-context.md` exists, read it too.
 
-Also review relevant code in the workspace, global rules in `.github/copilot-instructions.md`, agent roles in `AGENTS.md`, and prior lessons in `.github/lessons-learned.md`. Surface any lessons relevant to the ticket's domain or components as pre-flight notes at the top of `plan.md`.
+Also review relevant code in the workspace, global rules in `.github/copilot-instructions.md`, and agent roles in `AGENTS.md`. Read `.github/lessons-learned.md` now to surface any domain-relevant lessons before planning. Surface any lessons relevant to the ticket's domain or components as pre-flight notes at the top of `plan.md`.
 
 Do **not** modify or reinterpret the Contract.
 

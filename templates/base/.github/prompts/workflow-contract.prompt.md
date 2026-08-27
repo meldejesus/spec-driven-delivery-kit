@@ -9,7 +9,6 @@ target: vscode
 auto-read:
   - workflow/${ticket}/pre-context.md
   - .github/lessons-learned.md
-  - .github/copilot-instructions.md
 ---
 
 # Inputs
@@ -78,54 +77,7 @@ This is the ticket directory's searchable front door. It should make the work fi
 
 Before writing the index, read `${output_dir}/pre-context.md` if it exists and incorporate any developer-provided paths, links, domain terms, or constraints into the metadata.
 
-Use this structure:
-
-```md
----
-ticket: <PROJECT-ID>
-title: <Ticket title>
-type: standard-ticket
-status: contract-drafting
-created: <YYYY-MM-DD>
-jira_url: <resolved Jira URL>
-pr_url: ""
-tags:
-  - area/<product-area>
-  - type/<bug|feature|refactor|chore>
-  - component/<ComponentOrServiceName>
-description: <2-3 sentence plain-language description of the problem and intended outcome. Write this as you would explain it to a teammate in Slack — no jargon, no ticket-speak.>
-aliases:
-  - <common search term 1>
-  - <common search term 2>
-  - <feature or component name as a developer would say it>
-  - <user-facing terminology for the problem>
-  - <synonym or abbreviation>
-paths:
-  - <repo path 1>
-  - <repo path 2>
-links:
-  - <jira_url>
-  - <any PR, Confluence, or design link>
-related:
-  - "[[RELATED-TICKET-ID]]"
----
-
-# <PROJECT-ID>: <Ticket title>
-
-## Artifacts
-- `prompt.md` — Strategic Contract
-- `reproduce.md` — QA reproduction guide
-- `plan.md` — task checklist (written after Gate A approval)
-- `codebase-scan.md` — planning research notes (written after Gate A approval)
-- `handoff.md` — implementation journal
-- `test.md` — acceptance evidence log
-- `pull-request.md` — PR description
-- `overview.md` — closeout walkthrough
-- `lessons-learned.md` — promotion candidates
-
-## Notes
-<!-- Anything that improves findability but does not belong in the immutable contract -->
-```
+Use the format in `.github/templates/index-md.template.md` for the index.md file.
 
 Rules:
 - **`aliases` is the keyword discoverability field.** Generate 5–10 aliases covering: how a developer would describe the problem in conversation, user-facing terminology, component or service names, related system names, abbreviations, and synonyms for the core concepts. Think: what would someone type in search if they forgot the ticket ID?
@@ -139,7 +91,7 @@ Rules:
 Before drafting the contract:
 
 0. **Read pre-context** — If `${output_dir}/pre-context.md` was not already read during index initialization, check for it now and read it in full if it exists. It contains developer-provided context (file paths, API routes, third-party integrations, known constraints) that must be incorporated into the contract and should override any assumptions made from the ticket alone.
-1. **Fetch external context** — Use `search` or `agent` to review relevant code, docs, `AGENTS.md`, `.github/copilot-instructions.md`, and `.github/lessons-learned.md`.
+1. **Fetch external context** — Use `search` or `agent` to review relevant code, docs, `AGENTS.md`, and `.github/lessons-learned.md`. If workspace-specific coding conventions are needed, read `.github/copilot-instructions.md` at that point.
 2. **Similar-Issue Search** — Scan `.github/archive/` for past handoff logs relating to this feature or domain.
 3. **Investigate prior work** — If a GitHub diff or Jira link is provided, summarize relevant findings.
 4. **Identify gaps, ambiguities, or missing ACs** — Produce an Open Questions list.
@@ -164,15 +116,7 @@ Each AC must map to later evidence in `test.md`.
 
 ### EARS Notation for Acceptance Criteria
 
-Write each AC using one of these EARS patterns — they produce unambiguous, independently testable requirements that agents can map directly to test evidence.
-
-| Pattern | Template | Use when |
-|---|---|---|
-| Ubiquitous | `The <system> shall <action>` | Always-true constraints |
-| Event-driven | `When <trigger>, the <system> shall <action>` | Response to an event |
-| State-driven | `While <state>, the <system> shall <action>` | Ongoing condition |
-| Unwanted behavior | `If <condition>, then the <system> shall <action>` | Error and edge case handling |
-| Optional feature | `Where <feature> is enabled, the <system> shall <action>` | Feature-flag behavior |
+See `.github/references/EARS-notation.md` for EARS notation patterns.
 
 Each AC must use exactly one EARS pattern and map to at least one evidence entry in `test.md`.
 
