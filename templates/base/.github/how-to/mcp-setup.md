@@ -40,11 +40,36 @@ tool discovery.
 
 | Server | Purpose | Install command |
 |---|---|---|
-| Atlassian | Jira + Confluence ticket fetching | `npx -y @atlassian/mcp-atlassian` |
+| Atlassian | Jira + Confluence ticket fetching | Remote server, no install — see below |
 | GitHub | PR diffs, issue reading, repo search | `npx -y @modelcontextprotocol/server-github` |
 | Playwright | Browser automation for QA | `npx -y @playwright/mcp` |
 | Linear | Linear issue fetching | `npx -y @linear/mcp` |
 | Filesystem | Read files outside workspace | `npx -y @modelcontextprotocol/server-filesystem` |
+
+### Atlassian — official remote MCP server
+
+Atlassian's official server (`atlassian/atlassian-mcp-server`, from the
+[MCP registry](https://registry.modelcontextprotocol.io)) is a **remote HTTP
+server**, not a local `npx` package — do not install it like the others.
+
+```json
+"atlassian": {
+  "type": "http",
+  "url": "https://mcp.atlassian.com/v1/mcp"
+}
+```
+
+- Auth is OAuth, not a static token: run `/mcp` in Claude Code, select the
+  Atlassian server, and follow the browser login prompt. Once authenticated
+  it persists at the account level — you should not need to redo this per
+  terminal session or per machine.
+- Homepage: <https://www.atlassian.com/platform/remote-mcp-server>
+- Elsevier-internal access request (IAW): <https://iaw.science.regn.net/iawrequest.asp?iMainID=2027744>
+- Claude Code CLI can also see Atlassian through a separate, unrelated path —
+  a claude.ai account-level Connector (tools prefixed `mcp__claude_ai_Atlassian__*`).
+  That's configured via claude.ai's web Connector settings, not this repo's
+  `.claude/mcp.json`. If it's already connected for your account, you likely
+  don't need both.
 
 ### Which servers are needed per stage
 

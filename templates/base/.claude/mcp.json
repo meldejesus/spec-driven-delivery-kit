@@ -1,15 +1,9 @@
 {
-  "_comment": "Copy this file to .claude/mcp.json in your workspace root. Set credentials in ~/.claude/.env or your shell profile. Optional servers: Linear (npx @linear/mcp), SonarQube, Filesystem (npx @modelcontextprotocol/server-filesystem).",
+  "_comment": "Copy this file to .claude/mcp.json in your workspace root. Atlassian is the official remote MCP server (https://www.atlassian.com/platform/remote-mcp-server) — no static token needed, it authenticates via OAuth on first use (run /mcp in Claude Code and follow the browser prompt). GitHub and Playwright are local npx servers; set their credentials in ~/.claude/.env or your shell profile. Optional servers: Linear (npx @linear/mcp), SonarQube, Filesystem (npx @modelcontextprotocol/server-filesystem).",
   "mcpServers": {
     "atlassian": {
-      "command": "npx",
-      "args": ["-y", "@atlassian/mcp-atlassian"],
-      "env": {
-        "JIRA_URL": "${JIRA_URL}",
-        "JIRA_TOKEN": "${JIRA_TOKEN}",
-        "CONFLUENCE_URL": "${CONFLUENCE_URL}",
-        "CONFLUENCE_TOKEN": "${CONFLUENCE_TOKEN}"
-      }
+      "type": "http",
+      "url": "https://mcp.atlassian.com/v1/mcp"
     },
     "github": {
       "command": "npx",
