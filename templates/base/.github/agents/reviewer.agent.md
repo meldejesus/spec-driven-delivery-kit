@@ -5,6 +5,7 @@ infer: false
 tools: ["read", "grep", "glob", "bash", "write"]
 write-allow:
   - workflow/**
+  - ../workflow/**
 ---
 
 # File Tool Usage
