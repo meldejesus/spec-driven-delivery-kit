@@ -3,21 +3,26 @@ name: workflow-implement
 description: Run the implementation phase for a ticket. Executes plan.md tasks, validates final build, and journals to handoff.md and test.md after every task.
 tools: [read, write, edit, terminal, search, agent]
 agent: Implementer
+auto-read:
+  - workflow/.active-workflow.md
+  - workflow/${ticket}/prompt.md
+  - workflow/${ticket}/plan.md
+  - workflow/${ticket}/handoff.md
 ---
 
 # Implementation Invocation
 
 ## Inputs
 - ticket: ${input:Ticket ID (e.g., PROJECT-123)}
-- output_dir: ${input:output_dir} # optional - defaults from active workflow or workflow/tickets/${ticket}
+- output_dir: ${input:output_dir} # optional - defaults from active workflow or workflow/${ticket}
 - context: ${input:context}       # optional - file path(s) to additional context (comma-separated or single path)
 
 ## 0. Resolve Inputs
 Before loading context, resolve `ticket` and `output_dir`:
 
-1. If either value was omitted, read `workflow/tickets/.active-workflow.md` and use its `ticket`, `ticket_url`, and `output_dir` values.
+1. If either value was omitted, read `workflow/.active-workflow.md` and use its `ticket`, `ticket_url`, and `output_dir` values.
 2. If `ticket` is a full Jira URL, extract the `PROJECT-123` ID.
-3. If `output_dir` is still missing, use `workflow/tickets/${ticket}`.
+3. If `output_dir` is still missing, use `workflow/${ticket}`.
 4. If `context` was provided, read each listed file before implementing.
 5. Treat any additional inline instructions in the invocation, such as "run implement but also consider x.md", as developer-provided context. If a file path is mentioned, read it before implementing.
 6. If `ticket` is still missing after active-state lookup, ask the user for it before proceeding.
@@ -39,6 +44,8 @@ If `${output_dir}/pre-context.md` exists, read it too.
   2. **Update `${output_dir}/test.md`** with PASS/FAIL evidence (or N/A if no test artifact).
   3. **Mark task `[x]`** in plan.md.
   4. **Commit the task** — run `git add -A && git commit -m "<message>"` where `<message>` is a verb-first imperative sentence describing only what this task did. Max 72 chars. No ticket prefix needed.
+
+> **Optional:** For test-first implementation, invoke the `tdd` skill before writing code: `use the tdd skill on <task description>`.
      - Good: `Add search endpoint to API`, `Extract ranking logic into standalone module`, `Add unit tests for session reducer`
      - Bad: `WIP`, `Fix stuff`, `PROJECT-123 changes`
      - If terminal is unavailable, record the intended commit message in `${output_dir}/handoff.md` under `## Pending Commit` so it can be applied manually.
@@ -76,10 +83,12 @@ Log: ${output_dir}/logs/<name>.log  (if saved)
 ```
 If no test was run: `N/A — no test artifact for this task`
 
+> **Optional:** Run a quality check before Gate D: `use the branch-review skill` — a two-axis review (Standards + Spec) of the full diff. Gate D (`run review`) remains the required review gate; this is an optional pre-flight.
+
 ## End State
 When all tasks are `[x]`:
 1. Confirm `${output_dir}/test.md` contains a passing `### Final build validation` entry for the final diff, or a human-approved waiver recorded in `${output_dir}/handoff.md`.
-2. Update `workflow/tickets/.active-workflow.md`:
+2. Update `workflow/.active-workflow.md`:
    ```md
    # Active Workflow
    ticket: ${ticket}
@@ -87,6 +96,7 @@ When all tasks are `[x]`:
    output_dir: ${output_dir}
    last_completed_stage: implement
    next_stage: review
+   available_next_commands: "run review"
    updated_by: workflow-implement
    ```
 3. Announce **"Stage Complete: Implementation"**

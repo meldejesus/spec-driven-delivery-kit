@@ -4,8 +4,7 @@ description: Mentoring agent that explains completed implementation changes to a
 model: claude-3-5-sonnet-20241022
 tools: [read, search, write, edit, github]
 write-allow:
-  - workflow/tickets/**
-target: vscode
+  - workflow/**
 infer: false
 ---
 
@@ -71,10 +70,10 @@ If there was a significant plan deviation or hard tradeoff, include it in the re
 After composing the walkthrough, you MUST write it to disk before this task is considered complete.
 
 **Step 1 — Check if the file exists:**
-- Try `read_file` on `workflow/tickets/<TICKET>/overview.md`.
+- Try `read_file` on `workflow/<TICKET>/overview.md`.
 
 **Step 2 — Write:**
-- If the file does **not** exist → use `create_file` with path `workflow/tickets/<TICKET>/overview.md` and the full walkthrough as content.
+- If the file does **not** exist → use `create_file` with path `workflow/<TICKET>/overview.md` and the full walkthrough as content.
 - If the file **already exists** → use `replace_string_in_file` to overwrite the entire content.
 
 **Do NOT skip this step.** Outputting to chat without writing the file is an incomplete execution.
@@ -84,5 +83,5 @@ End **every** response with this exact block (fill in the real ticket ID):
 
 ```
 ———
-📍 Active ticket: PROJECT-123 → workflow/tickets/PROJECT-123/
+📍 Active ticket: PROJECT-123 → workflow/PROJECT-123/
 ```

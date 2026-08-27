@@ -21,7 +21,7 @@ Use the merge-conflict prompt as the executable checklist:
 #read .github/prompts/merge-conflict.prompt.md
 
 ticket=PROJECT-123
-output_dir=workflow/tickets/PROJECT-123
+output_dir=workflow/PROJECT-123
 target_branch=origin/main
 merge_ref=origin/main
 ```

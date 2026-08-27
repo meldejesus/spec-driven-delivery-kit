@@ -3,21 +3,26 @@ name: workflow-closeout
 description: Run post-review closeout for a completed ticket: write the education overview first, then extract promotion candidates before pushing.
 agent: Architect
 tools: [read, write, edit, search, agent]
+auto-read:
+  - workflow/.active-workflow.md
+  - workflow/${ticket}/handoff.md
+  - workflow/${ticket}/test.md
+  - workflow/${ticket}/pull-request.md
 ---
 
 # Closeout Invocation
 
 ## Inputs
 - ticket: ${input:Ticket ID (e.g., PROJECT-123)}
-- output_dir: ${input:output_dir} # optional - defaults to workflow/tickets/${ticket}
+- output_dir: ${input:output_dir} # optional - defaults to workflow/${ticket}
 - context: ${input:context}       # optional - file path(s) to additional context (comma-separated or single path)
 
 ## 0. Resolve Paths
 Before loading context, resolve `ticket` and `output_dir`:
 
-1. If either value was omitted, read `workflow/tickets/.active-workflow.md` and use its `ticket`, `ticket_url`, and `output_dir` values.
+1. If either value was omitted, read `workflow/.active-workflow.md` and use its `ticket`, `ticket_url`, and `output_dir` values.
 2. If `ticket` is a full Jira URL, extract the `PROJECT-123` ID.
-3. If `output_dir` is still missing, use `workflow/tickets/${ticket}`.
+3. If `output_dir` is still missing, use `workflow/${ticket}`.
 4. If `context` was provided, read each listed file before closeout.
 5. Treat any additional inline instructions in the invocation, such as "run closeout but also consider x.md", as developer-provided context. If a file path is mentioned, read it before closeout.
 6. If `ticket` is still missing after active-state lookup, ask the user for it before proceeding.
@@ -152,7 +157,7 @@ Stage Complete: Closeout (promotion skipped)
 ## End State
 After closeout is complete, produce the exact next steps:
 
-First update `workflow/tickets/.active-workflow.md`:
+First update `workflow/.active-workflow.md`:
 
 ```md
 # Active Workflow
@@ -161,6 +166,7 @@ ticket_url: https://your-domain.atlassian.net/browse/${ticket}
 output_dir: ${output_dir}
 last_completed_stage: closeout
 next_stage: push-pr
+available_next_commands: "push branch → open PR → run sonar pr_number=<N>"
 updated_by: workflow-closeout
 ```
 

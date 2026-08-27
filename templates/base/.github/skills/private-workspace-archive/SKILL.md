@@ -25,8 +25,7 @@ dependency caches, or the public `spec-driven-delivery-kit`.
    - `.github/lessons-learned.md`
    - `worklog/`
    - `workflow/refinement/`
-   - `workflow/tickets/`
-   - `workflow/spikes/`
+   - `workflow/` (ticket directories and spike subdirectories)
    - `workflow/code-review/`
    - `workflow/cleanup-log.md`
 5. If the operations match the request, apply them:
@@ -48,9 +47,9 @@ dependency caches, or the public `spec-driven-delivery-kit`.
   add duplicate snapshot folders.
 - Keep private root files in root-relative archive paths.
 - Keep reference-only material under `workflow-archive-private/other/`.
-- Keep workflow tickets under `workflow-archive-private/workflow/tickets/`.
+- Keep workflow tickets under `workflow-archive-private/workflow/<ticket-id>/`.
 - Keep refinement assessments under `workflow-archive-private/workflow/refinement/`.
-- Keep spike outputs under `workflow-archive-private/workflow/spikes/`.
+- Keep spike outputs under `workflow-archive-private/workflow/<ticket-id>/spike/`.
 - Keep PR review outputs under `workflow-archive-private/workflow/code-review/`.
 - Keep worklog files under `workflow-archive-private/worklog/`.
 - Never archive `.env`, tokens, key files, dependency folders, build output, or

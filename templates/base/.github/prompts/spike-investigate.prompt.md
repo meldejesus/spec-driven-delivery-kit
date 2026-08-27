@@ -5,6 +5,10 @@ agent: Spike-Investigator
 tools: [read, search, write, terminal, github, "atlassian/atlassian-mcp-server/*"]
 infer: false
 target: vscode
+auto-read:
+  - workflow/.active-workflow.md
+  - workflow/${ticket}/spike/scope.md
+  - workflow/${ticket}/spike/findings.md
 ---
 
 # Inputs
@@ -109,6 +113,6 @@ After writing all three files:
 Read .github/agents/reviewer.agent.md and .github/prompts/spike-review.prompt.md
 
 ticket=PROJECT-123
-output_dir=workflow/spikes/PROJECT-123
+output_dir=workflow/PROJECT-123/spike
 ```
 STOP. Wait for human to review `explained.md` and `spike-output.md` before proceeding.

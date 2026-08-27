@@ -1,7 +1,6 @@
 ---
 name: targeted-writer
 description: Approval-gated code writer for both surgical fixes and planned multi-file changes. Always plans first, waits for explicit approval, enforces Nx/TypeScript/ESLint/Prettier standards. Replaces developer and writer-standards.
-target: vscode
 infer: true
 tools: ["write", "edit", "search", "terminal", "read"]
 ---

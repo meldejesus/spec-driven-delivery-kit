@@ -4,6 +4,11 @@ description: Generate plan.md and codebase-scan.md from the approved contract.
 agent: Plan-Agent
 infer: false
 target: vscode
+auto-read:
+  - workflow/.active-workflow.md
+  - workflow/${ticket}/prompt.md
+  - workflow/${ticket}/pre-context.md
+  - .github/lessons-learned.md
 tools:
   - read
   - write
@@ -19,11 +24,11 @@ tools:
 # 0. Normalize Inputs
 Before doing anything else, resolve the working values of `ticket` and `output_dir`:
 
-0. **Active workflow fallback** — If `ticket` or `output_dir` was omitted, read `workflow/tickets/.active-workflow.md` and use its `ticket`, `ticket_url`, and `output_dir` values. If the file is missing and the input is still ambiguous, ask the user for the missing value before proceeding.
+0. **Active workflow fallback** — If `ticket` or `output_dir` was omitted, read `workflow/.active-workflow.md` and use its `ticket`, `ticket_url`, and `output_dir` values. If the file is missing and the input is still ambiguous, ask the user for the missing value before proceeding.
 1. **Ticket ID extraction** — If `ticket` is a short ID (matches `[A-Z][A-Z0-9]+-\d+`), expand it:
    - `ticket` → `https://your-domain.atlassian.net/browse/<ID>`
-   - If `output_dir` was not provided and active state did not provide one, set it to `workflow/tickets/<ID>`
-2. **Full URL provided** — If `ticket` is already a full URL, extract the ticket ID from the path segment and set `output_dir` to `workflow/tickets/<ID>` if not explicitly provided.
+   - If `output_dir` was not provided and active state did not provide one, set it to `workflow/<ID>`
+2. **Full URL provided** — If `ticket` is already a full URL, extract the ticket ID from the path segment and set `output_dir` to `workflow/<ID>` if not explicitly provided.
 3. **Context files** — If `context` was provided, read each file path listed. Treat their contents as authoritative developer-provided context alongside the approved contract. They override assumptions from the ticket alone.
 4. **Inline context** — Treat any additional instructions in the invocation, such as "run plan but also consider x.md", as authoritative developer context. If a file path is mentioned, read it before planning.
 5. Confirm the resolved values internally before proceeding. Do not ask the user to confirm — just use them.
@@ -69,6 +74,15 @@ Extract from `prompt.md`:
   - Clear description of the work
   - Expected output (code change or evidence)
   - An orchestration tag (`@local`, `@subagent`, `@background`)
+
+### Task Design Principles
+
+**Thin tracer bullets** — Each task should cut through all layers (UI → logic → data) rather than batching all UI tasks, then all logic tasks. A vertical slice creates a working feedback loop after every task, not after phase three.
+
+**Blocking edges** — Before finalizing task order, identify dependencies. Sequence blockers first. Note explicitly in `plan.md` when task N cannot start until task M is complete.
+
+**Rate of feedback as speed limit** — If a task takes more than 15 minutes to verify, split it. The verification step defines the task boundary, not the implementation step.
+
 - Always include a final validation task after all implementation tasks:
   - Run the focused tests/lint required by the plan.
   - Run the affected build check for the final diff:
@@ -122,7 +136,7 @@ Produce this file whenever real file paths and code are identified during planni
 
 # 6. Stage Completion
 After writing both files:
-- Update `workflow/tickets/.active-workflow.md`:
+- Update `workflow/.active-workflow.md`:
   ```md
   # Active Workflow
   ticket: <PROJECT-ID>
@@ -130,6 +144,7 @@ After writing both files:
   output_dir: ${output_dir}
   last_completed_stage: plan
   next_stage: implement
+  available_next_commands: "run implement"
   updated_by: workflow-plan
   ```
 - Announce: "Stage Complete: Plan (Gate B)."

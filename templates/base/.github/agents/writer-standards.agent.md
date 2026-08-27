@@ -1,7 +1,6 @@
 ---
 name: writer-standards
 description: "DEPRECATED — use @targeted-writer instead. See .github/agents/targeted-writer.agent.md"
-target: vscode
 infer: false
 tools: ["read"]
 ---

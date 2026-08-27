@@ -1,30 +1,44 @@
 ---
 name: workflow-index
-description: Update and inspect the cross-lane workflow inventory for tickets, spikes, and refinement artifacts. Use when Codex needs to refresh workflow/index.md, find where recent workflow work lives, summarize the active workflow inventory, or reconcile workflow/tickets, workflow/spikes, and workflow/refinement entries.
+description: Regenerate the static table in workflow/index.md from all index.md files in the workflow directory. Use when the static fallback table is stale or when the user asks to refresh the workflow index.
 ---
 
 # Workflow Index
 
-Use this skill to keep `workflow/index.md` synchronized with workflow artifacts.
+Keeps `workflow/index.md` synchronized with the actual workflow artifacts on disk.
+
+**Obsidian users:** the Dataview queries in `workflow/index.md` stay current automatically — you don't need this skill unless you want to refresh the static fallback table.
+
+**Non-Obsidian users:** run this skill to regenerate the static table.
 
 ## Procedure
 
-1. Run the deterministic updater from the workspace root:
+1. Find all `index.md` files under `workflow/`:
 
 ```bash
-python3 workflow/scripts/update-index.py
+find workflow -name "index.md" ! -path "workflow/index.md"
 ```
 
-2. Review the resulting `workflow/index.md` for obvious parse issues:
-   - missing issue/topic names
-   - empty summaries
-   - wrong lane classification
-   - unexpected missing artifacts
+2. For each `index.md`, read the YAML frontmatter and extract:
+   - `ticket`
+   - `title`
+   - `type`
+   - `status`
+   - `tags` (join as comma-separated)
+   - `created`
 
-3. If parsing is wrong, fix the source artifact when possible:
-   - ticket and spike directories should prefer an `index.md` with `## Search Metadata`
-   - refinement files should have a clear heading and, when practical, a `Summary:` line
+3. Sort entries by `created` descending.
 
-4. Do not hand-maintain generated table rows unless the script cannot infer the needed value. Prefer improving `workflow/scripts/update-index.py` or the source artifact metadata.
+4. Rewrite the **Static Index** table in `workflow/index.md` (the section under `## Static Index`). Do not modify anything above that section — the Dataview queries must stay intact.
 
-5. Report the number of entries updated and call out any artifacts that need cleaner metadata.
+5. Report how many entries were written and flag any `index.md` files with missing or empty frontmatter fields.
+
+## Source artifact quality
+
+If an `index.md` is missing frontmatter (uses the old `## Search Metadata` format), flag it — it needs to be updated to YAML frontmatter for Obsidian compatibility. See `workflow/TAGS.md` for the canonical tag taxonomy and field definitions.
+
+## Rules
+
+- Never hand-edit individual table rows. Always regenerate from source frontmatter.
+- Do not remove or modify the Dataview query blocks.
+- If a field is missing, use `—` in the table rather than leaving it blank.

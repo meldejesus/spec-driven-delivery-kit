@@ -11,15 +11,15 @@ tools: [read, search]
 
 ## Inputs
 - ticket: ${input:Ticket ID (e.g., PROJECT-123)}
-- output_dir: ${input:output_dir} # optional - defaults from active workflow or workflow/tickets/${ticket}
+- output_dir: ${input:output_dir} # optional - defaults from active workflow or workflow/${ticket}
 - context: ${input:context}       # optional - file path(s) to additional context (comma-separated or single path)
 
 ## 0. Resolve Inputs
 Before loading context, resolve `ticket` and `output_dir`:
 
-1. If either value was omitted, read `workflow/tickets/.active-workflow.md` and use its `ticket`, `ticket_url`, and `output_dir` values.
+1. If either value was omitted, read `workflow/.active-workflow.md` and use its `ticket`, `ticket_url`, and `output_dir` values.
 2. If `ticket` is a full Jira URL, extract the `PROJECT-123` ID.
-3. If `output_dir` is still missing, use `workflow/tickets/${ticket}` for standard implementation tickets. For spike education, the caller should pass `output_dir=workflow/spikes/${ticket}`.
+3. If `output_dir` is still missing, use `workflow/${ticket}` for standard implementation tickets. For spike education, the caller should pass `output_dir=workflow/${ticket}/spike`.
 4. If `context` was provided, read each listed file before education.
 5. Treat any additional inline instructions in the invocation, such as "run educate but also consider x.md", as developer-provided context. If a file path is mentioned, read it before education.
 6. If `ticket` is still missing after active-state lookup, ask the user for it before proceeding.

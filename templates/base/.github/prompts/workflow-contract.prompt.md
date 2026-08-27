@@ -6,12 +6,17 @@ model: claude-3-5-sonnet-20241022
 tools: [agent, search, read, write, github, atlassian/atlassian-mcp-server/*]
 infer: false
 target: vscode
+auto-read:
+  - workflow/${ticket}/pre-context.md
+  - .github/lessons-learned.md
+  - .github/copilot-instructions.md
 ---
 
 # Inputs
 - ticket: ${input:ticket}         # short form: PROJECT-123  OR full URL: https://your-domain.atlassian.net/browse/PROJECT-123
 - output_dir: ${input:output_dir} # optional — auto-derived from ticket ID if omitted
 - context: ${input:context}       # optional — file path(s) to additional context (comma-separated or single path)
+- tracker_url: ${input:tracker_url}  # optional — use this URL directly instead of deriving from ticket ID. Supports Linear, GitHub Issues, or any tracker URL.
 
 # Active Workflow State
 This stage starts or switches the active workflow.
@@ -19,7 +24,7 @@ This stage starts or switches the active workflow.
 After resolving `ticket` and `output_dir`, update:
 
 ```text
-workflow/tickets/.active-workflow.md
+workflow/.active-workflow.md
 ```
 
 Use this format:
@@ -39,11 +44,12 @@ Before doing anything else, resolve the working values of `ticket` and `output_d
 
 1. **Ticket ID extraction** — If `ticket` is a short ID (matches `[A-Z][A-Z0-9]+-\d+`), expand it:
    - `ticket` → `https://your-domain.atlassian.net/browse/<ID>`
-   - If `output_dir` was not provided, set it to `workflow/tickets/<ID>`
-2. **Full URL provided** — If `ticket` is already a full URL, extract the ticket ID from the path segment and set `output_dir` to `workflow/tickets/<ID>` if not explicitly provided.
+   - If `output_dir` was not provided, set it to `workflow/<ID>`
+2. **Full URL provided** — If `ticket` is already a full URL, extract the ticket ID from the path segment and set `output_dir` to `workflow/<ID>` if not explicitly provided.
 3. **Context files** — If `context` was provided, read each file path listed. Treat their contents as authoritative developer-provided context alongside `pre-context.md`. They override assumptions from the ticket alone.
 4. **Inline context** — Treat any additional instructions in the invocation, such as "draft contract but also consider x.md", as authoritative developer context. If a file path is mentioned, read it before drafting.
 5. Confirm the resolved values internally before proceeding. Do not ask the user to confirm — just use them.
+3. **tracker_url override** — If `tracker_url` is provided, use it as the external ticket URL and skip Jira URL derivation. Store it in `.active-workflow.md` as `ticket_url`.
 
 # 1. Fetch Ticket Content
 Try the following in order — use the first one that succeeds:
@@ -75,46 +81,59 @@ Before writing the index, read `${output_dir}/pre-context.md` if it exists and i
 Use this structure:
 
 ```md
+---
+ticket: <PROJECT-ID>
+title: <Ticket title>
+type: standard-ticket
+status: contract-drafting
+created: <YYYY-MM-DD>
+jira_url: <resolved Jira URL>
+pr_url: ""
+tags:
+  - area/<product-area>
+  - type/<bug|feature|refactor|chore>
+  - component/<ComponentOrServiceName>
+description: <2-3 sentence plain-language description of the problem and intended outcome. Write this as you would explain it to a teammate in Slack — no jargon, no ticket-speak.>
+aliases:
+  - <common search term 1>
+  - <common search term 2>
+  - <feature or component name as a developer would say it>
+  - <user-facing terminology for the problem>
+  - <synonym or abbreviation>
+paths:
+  - <repo path 1>
+  - <repo path 2>
+links:
+  - <jira_url>
+  - <any PR, Confluence, or design link>
+related:
+  - "[[RELATED-TICKET-ID]]"
+---
+
 # <PROJECT-ID>: <Ticket title>
 
-## Search Metadata
-- ticket: <PROJECT-ID>
-- ticket_url: <resolved Jira URL>
-- workflow_type: standard-ticket
-- output_dir: <resolved output_dir>
-- status: contract-drafting
-- created: <YYYY-MM-DD>
-- source: Jira
-- summary: <1-2 sentence plain-language description of the problem and intended outcome>
-- searchable_terms:
-  - <domain or product area>
-  - <feature, route, component, service, or data model>
-  - <important acceptance-criteria terms>
-- related_paths:
-  - <repo paths discovered or provided so far>
-- related_links:
-  - <Jira, PR, Confluence, or design links discovered or provided so far>
-
-## Artifact Map
-- `prompt.md` - Strategic Contract
-- `reproduce.md` - reproduction and QA guide
-- `plan.md` - implementation plan, created after Gate A approval
-- `codebase-scan.md` - planning research notes, created after Gate A approval
-- `handoff.md` - implementation journal
-- `test.md` - acceptance evidence log
-- `pull-request.md` - review and PR synthesis
-- `overview.md` - closeout walkthrough
-- `lessons-learned.md` - promotion candidates
+## Artifacts
+- `prompt.md` — Strategic Contract
+- `reproduce.md` — QA reproduction guide
+- `plan.md` — task checklist (written after Gate A approval)
+- `codebase-scan.md` — planning research notes (written after Gate A approval)
+- `handoff.md` — implementation journal
+- `test.md` — acceptance evidence log
+- `pull-request.md` — PR description
+- `overview.md` — closeout walkthrough
+- `lessons-learned.md` — promotion candidates
 
 ## Notes
-- <Any short context that improves searchability but does not belong in the immutable contract>
+<!-- Anything that improves findability but does not belong in the immutable contract -->
 ```
 
 Rules:
-- Do not leave placeholder metadata if the ticket content provides a better title, summary, term, path, or link.
-- If `index.md` already exists, update its metadata and artifact map without deleting human-authored notes.
-- Keep the summary and searchable terms concrete enough that `rg "<term>" workflow/tickets` can rediscover the ticket later.
-- For change-request output directories, set `workflow_type: change-request` and include the parent ticket directory under `related_paths`.
+- **`aliases` is the keyword discoverability field.** Generate 5–10 aliases covering: how a developer would describe the problem in conversation, user-facing terminology, component or service names, related system names, abbreviations, and synonyms for the core concepts. Think: what would someone type in search if they forgot the ticket ID?
+- **`description`** must be plain language — no ticket-speak. This is what shows in Obsidian hover previews and full-text search results.
+- **`tags`** follow the taxonomy in `workflow/TAGS.md`. Use `area/`, `type/`, and `component/` prefixes. Consult the taxonomy before inventing new tags.
+- Do not leave placeholder metadata if the ticket content provides a better value.
+- If `index.md` already exists, update its frontmatter and artifact list without deleting human-authored notes.
+- For change-request directories, set `type: change-request` and add the parent ticket to `related`.
 
 # 2. Research & Discovery
 Before drafting the contract:
@@ -142,6 +161,20 @@ Your goal is to distill all ambiguous requirements into a complete, immutable **
 ## 3.2 Acceptance Criteria (AC)
 Create a list of **observable, testable outcomes.**
 Each AC must map to later evidence in `test.md`.
+
+### EARS Notation for Acceptance Criteria
+
+Write each AC using one of these EARS patterns — they produce unambiguous, independently testable requirements that agents can map directly to test evidence.
+
+| Pattern | Template | Use when |
+|---|---|---|
+| Ubiquitous | `The <system> shall <action>` | Always-true constraints |
+| Event-driven | `When <trigger>, the <system> shall <action>` | Response to an event |
+| State-driven | `While <state>, the <system> shall <action>` | Ongoing condition |
+| Unwanted behavior | `If <condition>, then the <system> shall <action>` | Error and edge case handling |
+| Optional feature | `Where <feature> is enabled, the <system> shall <action>` | Feature-flag behavior |
+
+Each AC must use exactly one EARS pattern and map to at least one evidence entry in `test.md`.
 
 ## 3.3 Non-Functional Requirements (NFRs)
 Include:
@@ -229,7 +262,7 @@ Write **three files**:
 
 `prompt.md` and `reproduce.md` are part of **Gate A** and must be reviewed by the human before proceeding to planning. `index.md` is a search/navigation aid and should be kept current if the title, summary, key terms, paths, or links become clearer during Contract.
 
-Also update `workflow/tickets/.active-workflow.md`:
+Also update `workflow/.active-workflow.md`:
 
 ```md
 # Active Workflow
@@ -238,6 +271,7 @@ ticket_url: https://your-domain.atlassian.net/browse/<PROJECT-ID>
 output_dir: ${output_dir}
 last_completed_stage: contract
 next_stage: plan
+available_next_commands: "run plan"
 updated_by: workflow-contract
 ```
 

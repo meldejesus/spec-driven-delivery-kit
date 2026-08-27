@@ -4,8 +4,7 @@ description: Tactical planner that converts an approved Strategic Contract (prom
 model: claude-3-5-sonnet-20241022
 tools: [read, search, write, edit, agent, terminal, github]
 write-allow:
-  - workflow/tickets/**
-target: vscode
+  - workflow/**
 infer: false
 ---
 
@@ -55,5 +54,5 @@ End **every** response with this exact block (fill in the real ticket ID):
 
 ```
 ———
-📍 Active ticket: PROJECT-123 → workflow/tickets/PROJECT-123/
+📍 Active ticket: PROJECT-123 → workflow/PROJECT-123/
 ```

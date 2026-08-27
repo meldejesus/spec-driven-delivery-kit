@@ -8,7 +8,35 @@ Those folders are the workflow infrastructure:
 - `.github/prompts/` defines the repeatable stage instructions.
 - `AGENTS.md` is the registry and quick reference.
 - `.github/how-to/` explains how to run and maintain the workflow.
-- `workflow/tickets/.active-workflow.md` stores the active implementation ticket and output directory so later stages can run from short commands.
+- `workflow/.active-workflow.md` stores the active implementation ticket and output directory so later stages can run from short commands.
+
+## Two Entry Points
+
+### Ticket-first (you have a ticket)
+
+You have a Jira, Linear, or GitHub issue with defined requirements. Start with the contract:
+
+```
+run contract ticket=PROJECT-123
+```
+
+### Idea-first (no ticket yet)
+
+You have an idea or problem statement but no formal ticket. Use the Explore skills first:
+
+```
+use the grill-with-docs skill    ← interview the idea against existing docs
+use the to-spec skill            ← synthesize into a structured spec
+use the to-tickets skill         ← break spec into agent-ready tickets
+```
+
+Then file the highest-priority output as a ticket and start the workflow:
+
+```
+run contract ticket=PROJECT-123
+```
+
+Do not skip the ticket-filing step. The ticket is the gate that records human intent before the workflow runs. For small work without a tracker, use `pre-context.md` instead — see `.github/how-to/howToUse-no-tracker.md`.
 
 ## Kit Source vs Installed Workspace
 
@@ -37,7 +65,7 @@ Use `--all` to also install helper folders such as `scripts/`, `standup/`, and
 
 The actual specs are the per-ticket artifacts produced during a run:
 
-- `.active-workflow.md` - active workflow pointer under `workflow/tickets/`
+- `.active-workflow.md` - active workflow pointer under `workflow/`
 - `index.md` - searchable ticket front door with metadata, summary, terms, links, paths, and artifact map
 - `prompt.md` - Strategic Contract
 - `reproduce.md` - reproduction and QA guide
@@ -53,9 +81,9 @@ Workflow artifacts live in the lane that matches the kind of work:
 
 | Workflow type | Output directory |
 |---|---|
-| Implementation tickets | `workflow/tickets/<ticket-id>/` |
+| Implementation tickets | `workflow/<ticket-id>/` |
 | Ticket refinement | `workflow/refinement/<ticket-or-batch>.md` |
-| Spikes / research tickets | `workflow/spikes/<ticket-id>/` |
+| Spikes / research tickets | `workflow/<ticket-id>/spike/` |
 | Reviews of someone else's PR | `workflow/code-review/<repo>-pr-<number>/` |
 
 The best short label for this system is:
@@ -125,7 +153,7 @@ run closeout
 Extra context can be added inline, for example:
 
 ```text
-run review but also consider workflow/tickets/PROJECT-123/manual-test-notes.md
+run review but also consider workflow/PROJECT-123/manual-test-notes.md
 ```
 
 ## Gates
@@ -143,7 +171,7 @@ The gates are the main difference between this workflow and a normal "ask the ag
 
 | Artifact | Owner | Purpose |
 |---|---|---|
-| `workflow/tickets/.active-workflow.md` | Workflow | Active ticket, output directory, and next stage pointer |
+| `workflow/.active-workflow.md` | Workflow | Active ticket, output directory, and next stage pointer |
 | `index.md` | Architect | Searchable ticket directory front door: ID, title, summary, keywords, paths, links, artifact map |
 | `prompt.md` | Architect | Immutable contract: scope, ACs, constraints, risks, evidence strategy |
 | `reproduce.md` | Architect | Reproduction and manual verification guide |
