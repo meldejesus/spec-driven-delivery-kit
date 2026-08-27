@@ -19,6 +19,7 @@ The installed workspace shape is the contract:
 ```text
 workspace/
   AGENTS.md
+  TAGS.md
   .github/
     agents/
     prompts/
@@ -49,6 +50,7 @@ Core installable files live under:
 ```text
 templates/base/
   AGENTS.md
+  TAGS.md
   .github/
   .copilot/
   workflow/

@@ -4,6 +4,9 @@ This directory stores live workflow artifacts after the kit is installed into a
 workspace. Keep different workflow types in different subdirectories so search,
 restore, and cleanup stay predictable.
 
+Use `TAGS.md` at the workspace root to keep a stable topic-tag vocabulary for
+cross-ticket and archive retrieval.
+
 ## Structure
 
 ```text
@@ -96,3 +99,13 @@ workflow/code-review/<repo-or-ticket>-pr-123/
 Use this lane for PR review artifacts that need to survive the conversation.
 Reviewing your own implementation ticket before opening a PR still belongs in
 that ticket's `workflow/tickets/TICKET-123/` folder.
+
+## Topic Tags
+
+Use lightweight tags to group related artifacts across tickets, spikes, and
+refinement outputs.
+
+- Keep canonical tag definitions in `TAGS.md`.
+- Add `- tags:` metadata in ticket or spike `index.md` files.
+- Optionally add inline hashtags (for example, `Tags: #topic-a #topic-b`) in
+  entry-point docs.

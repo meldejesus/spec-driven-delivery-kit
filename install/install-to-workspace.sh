@@ -23,6 +23,7 @@ Options:
 
 Core install paths:
   AGENTS.md
+  TAGS.md
   .github/
   .copilot/
   workflow/           copied from templates/base/workflow/
@@ -192,6 +193,7 @@ echo "Target workspace: $target"
 echo "Mode: $mode"
 
 install_path "$kit_root/templates/base/AGENTS.md" "$target/AGENTS.md"
+install_path "$kit_root/templates/base/TAGS.md" "$target/TAGS.md"
 install_path "$kit_root/templates/base/.github" "$target/.github"
 install_path "$kit_root/templates/base/.copilot" "$target/.copilot"
 install_path "$kit_root/templates/base/workflow" "$target/workflow"
