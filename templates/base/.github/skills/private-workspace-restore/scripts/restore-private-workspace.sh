@@ -2,11 +2,9 @@
 set -euo pipefail
 
 apply=0
-include_tickets=0
-include_refinement=0
-include_spikes=0
-include_code_review=0
 include_workflow_history=0
+include_code_review=0
+include_refinement=0
 include_local_notes=0
 
 for arg in "$@"; do
@@ -17,24 +15,16 @@ for arg in "$@"; do
     --dry-run)
       apply=0
       ;;
-    --include-tickets)
-      include_tickets=1
-      ;;
-    --include-refinement|--include-pointing)
+    --include-workflow-history)
+      include_workflow_history=1
+      include_code_review=1
       include_refinement=1
-      ;;
-    --include-spikes)
-      include_spikes=1
       ;;
     --include-code-review)
       include_code_review=1
       ;;
-    --include-workflow-history)
-      include_workflow_history=1
-      include_tickets=1
+    --include-refinement)
       include_refinement=1
-      include_spikes=1
-      include_code_review=1
       ;;
     --include-local-notes)
       include_local_notes=1
@@ -95,28 +85,25 @@ if [ "$apply" -eq 0 ]; then
   printf 'Dry run. Re-run with --apply to restore files.\n'
 fi
 
+# Default restore — always included
 restore_file ".github/lessons-learned.md" ".github/lessons-learned.md"
 restore_dir "worklog" "worklog"
-restore_file "workflow/tickets/.active-workflow.md" "workflow/tickets/.active-workflow.md"
+restore_file "workflow/.active-workflow.md" "workflow/.active-workflow.md"
 
-if [ "$include_tickets" -eq 1 ]; then
-  restore_dir "workflow/tickets" "workflow/tickets"
+# Full ticket history — all tickets live flat under workflow/
+if [ "$include_workflow_history" -eq 1 ]; then
+  restore_dir "workflow" "workflow"
+  restore_file "workflow/cleanup-log.md" "workflow/cleanup-log.md"
 fi
 
-if [ "$include_refinement" -eq 1 ]; then
-  restore_dir "workflow/refinement" "workflow/refinement"
-fi
-
-if [ "$include_spikes" -eq 1 ]; then
-  restore_dir "workflow/spikes" "workflow/spikes"
-fi
-
+# Code reviews (peer reviews of teammates' PRs)
 if [ "$include_code_review" -eq 1 ]; then
   restore_dir "workflow/code-review" "workflow/code-review"
 fi
 
-if [ "$include_workflow_history" -eq 1 ]; then
-  restore_file "workflow/cleanup-log.md" "workflow/cleanup-log.md"
+# Batch refinement assessments
+if [ "$include_refinement" -eq 1 ]; then
+  restore_dir "workflow/refinement" "workflow/refinement"
 fi
 
 if [ "$include_local_notes" -eq 1 ]; then

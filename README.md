@@ -98,6 +98,37 @@ Use copy mode for a self-contained workspace:
 
 The installer does not overwrite existing files unless `--force` is passed.
 
+## Token Efficiency
+
+The kit is designed to minimize tokens loaded per session and per ticket.
+
+### Per-session savings
+- **CLAUDE.md** is lean (~50 lines) — no duplicate tables, trimmed placeholders
+- **AGENTS.md Standing Consent** is condensed to 3 paragraphs; full policy is in `.github/policies/STANDING-CONSENT.md` (loaded on demand)
+- **Stage isolation** — each `run X` is a fresh invocation via `.active-workflow.md` recovery anchor, no full context reload
+
+### Per-stage savings
+- **`handoff.md` is not auto-loaded** in implement or review stages — agents read only the last 40 lines via offset, saving 50–120 tokens per invocation as the journal grows
+- **`lessons-learned.md`** is loaded on-demand in plan, not pre-loaded
+- **`copilot-instructions.md`** is loaded on-demand in contract, not pre-loaded
+- **Templates and references are extracted** — index.md template, EARS notation, and PR structure live in `.github/templates/` and `.github/references/`, loaded only when the agent writes those artifacts
+
+### Compared to GitHub Spec Kit
+| | This kit | GitHub Spec Kit |
+|---|---|---|
+| Implement prompt | ~110 lines | 222 lines |
+| Plan prompt | ~159 lines | 170 lines |
+| Contract/Specify prompt | ~250 lines | 345 lines |
+| Token budgeting | Explicit (80K/stage, 100K smart zone) | None |
+| Partial artifact loading | Yes (handoff.md tail-only) | No |
+| Hooks overhead | None | Checks `extensions.yml` every run |
+| Stage recovery | `.active-workflow.md` anchor | Reload from scratch |
+
+### Compaction
+- `handoff.md` exceeding 50 lines triggers the Compactor agent
+- Accuracy degrades past 100K tokens — do not fill the window
+- Use `fork-session` skill to hand off to a fresh session when approaching context limits
+
 ## Why The Layout Works
 
 Most AI tools discover instructions from the current directory or its parents.

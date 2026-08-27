@@ -32,11 +32,16 @@ Use this skill after cloning/installing the public kit and cloning
 6. Use optional flags only when the user asks:
 
 ```bash
-.github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-tickets
-.github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-refinement
-.github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-spikes
-.github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-code-review
+# Restore full ticket history (all workflow/<ticket-id>/ directories)
 .github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-workflow-history
+
+# Restore only peer code reviews
+.github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-code-review
+
+# Restore only batch refinement assessments
+.github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-refinement
+
+# Restore local notes
 .github/skills/private-workspace-restore/scripts/restore-private-workspace.sh --include-local-notes
 ```
 

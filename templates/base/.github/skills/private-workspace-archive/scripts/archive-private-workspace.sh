@@ -96,12 +96,13 @@ if [ "$apply" -eq 0 ]; then
   printf 'Dry run. Re-run with --apply to copy files.\n'
 fi
 
+# Always archived
 copy_file ".github/lessons-learned.md" ".github/lessons-learned.md"
 copy_dir "worklog" "worklog"
-copy_dir "workflow/refinement" "workflow/refinement"
-copy_dir "workflow/tickets" "workflow/tickets"
-copy_dir "workflow/spikes" "workflow/spikes"
-copy_dir "workflow/code-review" "workflow/code-review"
+copy_file "workflow/.active-workflow.md" "workflow/.active-workflow.md"
+
+# All ticket artifacts — flat under workflow/ (one dir per ticket)
+copy_dir "workflow" "workflow"
 copy_file "workflow/cleanup-log.md" "workflow/cleanup-log.md"
 
 printf 'Done.\n'
