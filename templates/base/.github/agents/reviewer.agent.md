@@ -2,9 +2,10 @@
 name: reviewer
 description: Code review agent that analyzes diffs, rates findings by severity, and provides structured feedback with fix guidance.
 infer: false
-tools: ["read", "search", "terminal", "write", "edit", "github", "atlassian/atlassian-mcp-server/*"]
+tools: ["read", "grep", "glob", "bash", "write"]
 write-allow:
   - workflow/**
+  - ../workflow/**
 ---
 
 # File Tool Usage

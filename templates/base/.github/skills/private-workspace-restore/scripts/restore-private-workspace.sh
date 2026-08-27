@@ -88,7 +88,14 @@ fi
 # Default restore — always included
 restore_file ".github/lessons-learned.md" ".github/lessons-learned.md"
 restore_dir "worklog" "worklog"
-restore_file "workflow/.active-workflow.md" "workflow/.active-workflow.md"
+
+# Restore active workflow pointer — check new path first, fall back to old path for archives not yet migrated
+if [ -f "$archive_root/workflow/.active-workflow.md" ]; then
+  restore_file "workflow/.active-workflow.md" "workflow/.active-workflow.md"
+elif [ -f "$archive_root/workflow/tickets/.active-workflow.md" ]; then
+  printf 'note: restoring from legacy path workflow/tickets/.active-workflow.md\n'
+  restore_file "workflow/tickets/.active-workflow.md" "workflow/.active-workflow.md"
+fi
 
 # Full ticket history — all tickets live flat under workflow/
 if [ "$include_workflow_history" -eq 1 ]; then

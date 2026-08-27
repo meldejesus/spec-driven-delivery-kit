@@ -154,7 +154,8 @@ install_path() {
     run ln -s "$src" "$dest"
   else
     if [ -d "$src" ]; then
-      run cp -R "$src" "$dest"
+      run mkdir -p "$dest"
+      run rsync -a "$src/" "$dest/"
     else
       run cp "$src" "$dest"
     fi
@@ -197,6 +198,10 @@ install_path "$kit_root/templates/base/TAGS.md" "$target/TAGS.md"
 install_path "$kit_root/templates/base/.github" "$target/.github"
 install_path "$kit_root/templates/base/.copilot" "$target/.copilot"
 install_path "$kit_root/templates/base/workflow" "$target/workflow"
+# Always overwrite workflow/TAGS.md — it is kit-managed, not user content
+run mkdir -p "$target/workflow"
+run cp "$kit_root/templates/base/workflow/TAGS.md" "$target/workflow/TAGS.md"
+echo "Installed (always): $target/workflow/TAGS.md"
 
 if [ "$include_worklog" = "1" ]; then
   remove_legacy_path "$target/standup"
