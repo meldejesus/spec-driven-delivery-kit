@@ -154,7 +154,8 @@ install_path() {
     run ln -s "$src" "$dest"
   else
     if [ -d "$src" ]; then
-      run cp -R "$src" "$dest"
+      run mkdir -p "$dest"
+      run rsync -a "$src/" "$dest/"
     else
       run cp "$src" "$dest"
     fi
