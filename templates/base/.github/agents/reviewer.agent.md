@@ -2,7 +2,7 @@
 name: reviewer
 description: Code review agent that analyzes diffs, rates findings by severity, and provides structured feedback with fix guidance.
 infer: false
-tools: ["read", "search", "terminal", "write", "edit"]
+tools: ["read", "grep", "glob", "bash", "write"]
 write-allow:
   - workflow/**
 ---
