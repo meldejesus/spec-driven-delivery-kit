@@ -15,14 +15,14 @@ tools:
 - sprint: ${input:sprint}               # e.g., Apollo 2.0 (2026), required for mode=sprint
 - xx: ${input:xx}                       # optional batch count override, 0..15 preferred
 - max_results: ${input:max_results}     # default 15, hard cap 20
-- output_dir: ${input:output_dir}       # default workflow/refinement (batch/sprint) or workflow/<ticket>/refinement (single ticket)
+- output_dir: ${input:output_dir}       # default workflow/misc (batch/sprint) or workflow/<ticket>/refinement (single ticket)
 - project_key: ${input:project_key}     # optional
 - unpointed_jql_clause: ${input:unpointed_jql_clause} # optional JQL fragment override
 - source_file: ${input:source_file}     # mode=tech-debt only
 
 # Defaults and bounds
 - If output_dir is empty and mode=tickets with a single ticket key, default to `workflow/<ticket>/refinement`.
-- If output_dir is empty and mode=sprint or mode=tickets with multiple tickets, default to `workflow/refinement`.
+- If output_dir is empty and mode=sprint or mode=tickets with multiple tickets, default to `workflow/misc`.
 - If max_results is empty, default to 15.
 - Normalize xx/max_results to integer.
 - Enforce bounds: hard stop 0..20, operational execution cap 0..15.

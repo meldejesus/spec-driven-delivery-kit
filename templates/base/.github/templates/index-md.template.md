@@ -1,6 +1,6 @@
 # index.md Template
 
-Use this format when creating `index.md` for a ticket, spike, or code review.
+Use this format when creating `index.md` for a ticket, spike, or misc item.
 
 ```md
 ---
@@ -30,6 +30,7 @@ links:
   - <any PR, Confluence, or design link>
 related:
   - "[[RELATED-TICKET-ID]]"
+related_to: ""
 ---
 
 # <PROJECT-ID>: <Ticket title>

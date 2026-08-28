@@ -2,7 +2,7 @@
 
 This directory stores live workflow artifacts after the kit is installed into a
 workspace. Each ticket gets a single directory so all related artifacts — contract,
-plan, implementation, spike research, and refinement — stay together.
+plan, implementation, and spike research — stay together.
 
 Use `TAGS.md` at the workspace root to keep a stable topic-tag vocabulary for
 cross-ticket and archive retrieval.
@@ -11,13 +11,14 @@ cross-ticket and archive retrieval.
 
 ```text
 workflow/
-├── PROJECT-123/       # All artifacts for ticket PROJECT-123
-│   ├── spike/         # Spike research lives inside the ticket dir (if applicable)
-│   └── refinement/    # Single-ticket refinement lives inside the ticket dir (if applicable)
-├── refinement/        # Batch/sprint refinement that spans multiple tickets
-├── code-review/       # Reviews of someone else's PRs (not always ticket-tied)
-├── .active-workflow.md  # Active workflow pointer
-└── cleanup-log.md     # Workspace organization history when worth preserving
+├── OSMS-1234/           # full ticket work
+├── OSMS-1234-2/         # follow-up on same ticket (index.md has related_to: OSMS-1234)
+├── misc/                # ad-hoc, one-off, or non-ticket items (standalone PR reviews, batch refinement output)
+├── future-tickets/      # queued/planned future work
+├── .active-workflow.md
+├── TAGS.md
+├── README.md
+└── index.md
 ```
 
 ## Implementation Tickets
@@ -44,6 +45,28 @@ artifact map.
 
 `workflow/.active-workflow.md` is generated during a workflow run.
 
+## Follow-up Workflows
+
+When follow-up work is needed on the same ticket (for example, a second PR,
+a post-merge fix, or a separate phase of work), create a new directory with a
+numeric suffix:
+
+```text
+workflow/TICKET-123/    # original work
+workflow/TICKET-123-2/  # follow-up
+workflow/TICKET-123-3/  # another follow-up
+```
+
+The follow-up directory's `index.md` includes a `related_to:` field in its
+frontmatter linking back to the original:
+
+```yaml
+related_to: TICKET-123
+```
+
+This preserves the story in separate, searchable directories while keeping the
+lineage explicit.
+
 ## Spike (Research) Tickets
 
 Spike artifacts live inside the ticket directory under a `spike/` subdirectory:
@@ -66,62 +89,49 @@ story in one place.
 > workspaces. That layout is deprecated. New spike work goes in
 > `workflow/<ticket-id>/spike/`.
 
-## Ticket Refinement
+## Misc (Ad-hoc and Non-ticket Work)
 
-### Single-ticket refinement
-
-When refining a specific ticket, output belongs in the ticket's own directory:
+One-off work that is not tied to a specific ticket belongs under `workflow/misc/`:
 
 ```text
-workflow/TICKET-123/refinement/
-  TICKET-123.md
-```
-
-### Batch or sprint refinement
-
-When refining multiple tickets in one run (batch or sprint mode), the output
-belongs in the shared refinement directory:
-
-```text
-workflow/refinement/
-  ticket-assessment-YYYY-MM-DD.md
-  <sprint-slug>.md
+workflow/misc/
+  <repo>-pr-<number>/      # standalone PR review output
+    index.md
+    triage.md
+    review.md
+    verdict.md
+    testing-notes.md
+  ticket-assessment-YYYY-MM-DD.md    # batch refinement output
+  <sprint-slug>.md                   # sprint refinement output
   tech-debt-<workflow>-<sub-workflow>-YYYY-MM-DD.md
   tech-debt-tickets.md
   workflow-scan-registry.md
 ```
 
-Use this lane for early ticket review before the work is assigned or approved:
-read the Jira issue, compare it against docs and likely code paths, summarize
-the issue in skimmable language, estimate rough complexity, and recommend the
-next workflow. It is a proto-contract, not the full Strategic Contract.
+Use `misc/` for:
+- Standalone PR reviews (not your own ticket's review — that stays in `workflow/TICKET-123/`)
+- Batch or sprint refinement output that spans multiple tickets
+- Tech debt scan output
+- Any ad-hoc artifact that does not belong to a specific ticket
 
-When a ticket is selected for implementation, start the standard contract flow
-under `workflow/<ticket-id>/`. When the right next step is research, start the
-spike flow under `workflow/<ticket-id>/spike/`.
+## Future Tickets
 
-## Code Reviews
-
-Reviews of someone else's PRs belong under:
+Queued or planned work that has not started yet belongs under `workflow/future-tickets/`:
 
 ```text
-workflow/code-review/<repo-or-ticket>-pr-123/
-  index.md
-  triage.md
-  review.md
-  verdict.md
-  testing-notes.md
+workflow/future-tickets/
+  TICKET-456-notes.md
+  backlog-candidates.md
 ```
 
-Use this lane for PR review artifacts that need to survive the conversation.
-Code review lives here because it is not always tied to a specific ticket.
-Reviewing your own implementation ticket before opening a PR still belongs in
-that ticket's `workflow/TICKET-123/` folder.
+Use this directory to park pre-work, scoping notes, or early research for tickets
+that are not yet active. When a ticket moves into active development, start its
+standard directory at `workflow/TICKET-456/`.
 
 ## Topic Tags
 
 Use lightweight tags to group related artifacts across tickets, spikes, and
-refinement outputs.
+misc outputs.
 
 - Keep canonical tag definitions in `TAGS.md`.
 - Add `- tags:` metadata in ticket or spike `index.md` files.

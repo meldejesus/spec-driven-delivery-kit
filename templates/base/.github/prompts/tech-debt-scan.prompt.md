@@ -122,12 +122,12 @@ For each of the six debt categories below, identify specific instances where imp
 Output ticket drafts for the scanned sub-workflow. There is no hard cap — produce as many tickets as the evidence supports. Prioritize issues with the highest user-visible impact or risk of data loss. Merge issues only when they share the same root cause and the same files. Do not merge distinct problems just to reduce count. Skip low-signal style issues.
 
 **Ticket types:**
-- **Standard ticket** — clear problem with a known fix. Use the canonical structure in `workflow/refinement/tech-debt-tickets.md`.
+- **Standard ticket** — clear problem with a known fix. Use the canonical structure in `workflow/misc/tech-debt-tickets.md`.
 - **Spike ticket** — use when the signal is real but the fix requires investigation first, or when the impact is uncertain. A spike ticket should include: the question to answer, why it matters, files to read, and expected output (e.g. "a decision and a follow-on ticket or a pass"). Label effort as `S/M/L (spike)`.
 
 Use spike tickets instead of skipping findings you're uncertain about. The Skipped Signals section is for findings that are clearly below the ticket bar, not for findings where you're unsure.
 
-Use the canonical ticket structure defined in `workflow/refinement/tech-debt-tickets.md`.
+Use the canonical ticket structure defined in `workflow/misc/tech-debt-tickets.md`.
 
 ---
 
@@ -138,8 +138,8 @@ Use the canonical ticket structure defined in `workflow/refinement/tech-debt-tic
 - List tickets in descending order of severity (highest impact first).
 - After the last ticket, add a **Skipped Signals** section listing patterns noticed that did not meet the ticket threshold, with a one-line reason each was skipped.
 - If the user asks to save the output, write two files:
-  1. **Tickets file** — `workflow/refinement/tech-debt-<workflow>-<sub-workflow>-YYYY-MM-DD.md` — standard and spike tickets only (no Skipped Signals here)
-  2. **Spike file** — `workflow/refinement/spikes-<workflow>-<sub-workflow>-YYYY-MM-DD.md` — only if spike tickets were produced. Contains the same spike tickets duplicated here in a watchlist format (fields: Question, Why it matters, Files to read, Expected output, Status: `open`). This file is the living investigation backlog for the sub-workflow; status updates to `answered` or `closed` as spikes are resolved.
+  1. **Tickets file** — `workflow/misc/tech-debt-<workflow>-<sub-workflow>-YYYY-MM-DD.md` — standard and spike tickets only (no Skipped Signals here)
+  2. **Spike file** — `workflow/misc/spikes-<workflow>-<sub-workflow>-YYYY-MM-DD.md` — only if spike tickets were produced. Contains the same spike tickets duplicated here in a watchlist format (fields: Question, Why it matters, Files to read, Expected output, Status: `open`). This file is the living investigation backlog for the sub-workflow; status updates to `answered` or `closed` as spikes are resolved.
   - Skipped Signals belong in the tickets file after the last ticket, not in the spike file.
 
 ---
@@ -148,7 +148,7 @@ Use the canonical ticket structure defined in `workflow/refinement/tech-debt-tic
 
 After completing the scan and saving output:
 
-1. Read `workflow/refinement/workflow-scan-registry.md`.
+1. Read `workflow/misc/workflow-scan-registry.md`.
 2. Find the next **pending** sub-workflow for the same top-level workflow (first row with `⬜ pending` status).
 3. Announce it clearly:
    > **Next sub-workflow:** `<name>` — `<key files>`. Ready to scan when you are.

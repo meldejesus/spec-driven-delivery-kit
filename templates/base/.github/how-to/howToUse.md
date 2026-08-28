@@ -290,7 +290,7 @@ The agent presents its understanding and asks 1–2 clarifying questions. Answer
 | `2` | Requires some logic or has moderate unknowns |
 | `3` | Larger task or significant unknowns |
 
-**Output file:** `workflow/PROJECT-123/refinement/PROJECT-123.md` (single) · `workflow/refinement/ticket-refinement-YYYY-MM-DD.md` (batch) · `workflow/refinement/<sprint-slug>.md` (sprint)
+**Output file:** `workflow/misc/PROJECT-123.md` (single) · `workflow/misc/ticket-refinement-YYYY-MM-DD.md` (batch) · `workflow/misc/<sprint-slug>.md` (sprint)
 
 ---
 

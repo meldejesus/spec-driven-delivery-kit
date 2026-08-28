@@ -60,8 +60,7 @@ Install the kit into an active workspace before running ticket work:
 ./install/install-to-workspace.sh --target /path/to/workspace
 ```
 
-Use `--all` to also install helper folders such as `scripts/`, `standup/`, and
-`workflow/refinement/`.
+Use `--all` to also install helper folders such as `scripts/` and `standup/`.
 
 The actual specs are the per-ticket artifacts produced during a run:
 
@@ -82,9 +81,9 @@ Workflow artifacts live in the lane that matches the kind of work:
 | Workflow type | Output directory |
 |---|---|
 | Implementation tickets | `workflow/<ticket-id>/` |
-| Ticket refinement | `workflow/refinement/<ticket-or-batch>.md` |
+| Ticket refinement | `workflow/misc/<batch-slug>.md` |
 | Spikes / research tickets | `workflow/<ticket-id>/spike/` |
-| Reviews of someone else's PR | `workflow/code-review/<repo>-pr-<number>/` |
+| Reviews of someone else's PR | `workflow/misc/<repo>-pr-<number>/` |
 
 The best short label for this system is:
 

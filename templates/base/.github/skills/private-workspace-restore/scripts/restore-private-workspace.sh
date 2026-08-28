@@ -3,8 +3,7 @@ set -euo pipefail
 
 apply=0
 include_workflow_history=0
-include_code_review=0
-include_refinement=0
+include_misc=0
 include_local_notes=0
 
 for arg in "$@"; do
@@ -17,14 +16,10 @@ for arg in "$@"; do
       ;;
     --include-workflow-history)
       include_workflow_history=1
-      include_code_review=1
-      include_refinement=1
+      include_misc=1
       ;;
-    --include-code-review)
-      include_code_review=1
-      ;;
-    --include-refinement)
-      include_refinement=1
+    --include-misc)
+      include_misc=1
       ;;
     --include-local-notes)
       include_local_notes=1
@@ -103,14 +98,9 @@ if [ "$include_workflow_history" -eq 1 ]; then
   restore_file "workflow/cleanup-log.md" "workflow/cleanup-log.md"
 fi
 
-# Code reviews (peer reviews of teammates' PRs)
-if [ "$include_code_review" -eq 1 ]; then
-  restore_dir "workflow/code-review" "workflow/code-review"
-fi
-
-# Batch refinement assessments
-if [ "$include_refinement" -eq 1 ]; then
-  restore_dir "workflow/refinement" "workflow/refinement"
+# Misc — standalone PR reviews, batch refinement, ad-hoc artifacts
+if [ "$include_misc" -eq 1 ]; then
+  restore_dir "workflow/misc" "workflow/misc"
 fi
 
 if [ "$include_local_notes" -eq 1 ]; then

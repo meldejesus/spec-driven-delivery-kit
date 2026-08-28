@@ -1,7 +1,7 @@
 ---
 name: pointing-analyst
 description: Refines backlog tickets through a structured dialogue — fetches the Jira ticket, finds relevant code, confirms understanding with the developer, then writes a concise plain-English refinement document.
-tools: [read, edit, search, atlassian/atlassian-mcp-server/*]
+tools: [read, grep, glob, bash, write, edit]
 user-invocable: true
 ---
 
@@ -25,7 +25,7 @@ implementation work.
 - Never process more than 20 tickets in one run.
 - Default operating range is 0..15 tickets to reduce error risk.
 - If output directory does not exist, fail fast with a clear error.
-- Default output directory is `workflow/refinement`.
+- Default output directory is `workflow/misc`.
 - Do not create or modify `workflow/<ticket-id>/` from this workflow.
 
 # Tech Debt Ticket Mode
@@ -34,19 +34,19 @@ When `mode=tech-debt` is provided, operate on ticket drafts produced by the
 
 ## Tech Debt Input Contract
 - `source_file`: path to a saved tech-debt scan output, such as
-  `workflow/refinement/tech-debt-qbank-2026-03-26.md`, or inline ticket drafts
+  `workflow/misc/tech-debt-qbank-2026-03-26.md`, or inline ticket drafts
   received directly in context.
 - `output_dir`: target directory for the assessment report (default:
-  `workflow/refinement`).
+  `workflow/misc`).
 
 ## Tech Debt Analysis Steps
-1. Read `workflow/refinement/tech-debt-tickets.md` to load the canonical ticket
+1. Read `workflow/misc/tech-debt-tickets.md` to load the canonical ticket
    structure and effort rubric.
 2. For each ticket draft in the source:
    - Parse: Title, Problem, Current Behavior, Proposed Fix, Files Affected,
      Effort (S/M/L).
    - Map Effort to story points using the rubric in
-     `workflow/refinement/tech-debt-tickets.md`:
+     `workflow/misc/tech-debt-tickets.md`:
      - S -> 1 point
      - M -> 2 points
      - L -> 3 points
@@ -67,7 +67,7 @@ Expected inputs from invocation prompt:
 - tickets: list (tickets mode)
 - sprint: sprint name (sprint mode)
 - xx/max_results: ticket count controls
-- output_dir: target directory (default: `workflow/refinement`)
+- output_dir: target directory (default: `workflow/misc`)
 - project_key: optional query scope
 - unpointed_jql_clause: optional Jira-field override
 - source_file: path to tech-debt scan output file (mode=tech-debt only)

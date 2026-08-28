@@ -24,9 +24,9 @@ dependency caches, or the public `spec-driven-delivery-kit`.
 4. Review the listed copy operations. The default set is:
    - `.github/lessons-learned.md`
    - `worklog/`
-   - `workflow/refinement/`
+   - `workflow/misc/`
    - `workflow/` (ticket directories and spike subdirectories)
-   - `workflow/code-review/`
+   - `workflow/future-tickets/`
    - `workflow/cleanup-log.md`
 5. If the operations match the request, apply them:
 
@@ -48,9 +48,9 @@ dependency caches, or the public `spec-driven-delivery-kit`.
 - Keep private root files in root-relative archive paths.
 - Keep reference-only material under `workflow-archive-private/other/`.
 - Keep workflow tickets under `workflow-archive-private/workflow/<ticket-id>/`.
-- Keep refinement assessments under `workflow-archive-private/workflow/refinement/`.
+- Keep misc assessments and PR reviews under `workflow-archive-private/workflow/misc/`.
 - Keep spike outputs under `workflow-archive-private/workflow/<ticket-id>/spike/`.
-- Keep PR review outputs under `workflow-archive-private/workflow/code-review/`.
+- Keep future ticket notes under `workflow-archive-private/workflow/future-tickets/`.
 - Keep worklog files under `workflow-archive-private/worklog/`.
 - Never archive `.env`, tokens, key files, dependency folders, build output, or
   cloned app repos.

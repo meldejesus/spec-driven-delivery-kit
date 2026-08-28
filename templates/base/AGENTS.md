@@ -150,9 +150,9 @@ Workflow artifacts should use the directory that matches the work:
 | Workflow type | Output directory |
 | ------------- | ---------------- |
 | Implementation ticket | `workflow/<ticket-id>/` |
-| Ticket refinement | `workflow/refinement/<ticket-or-batch>.md` |
+| Ticket refinement | `workflow/misc/<batch-slug>.md` |
 | Spike / research ticket | `workflow/<ticket-id>/spike/` |
-| Review of someone else's PR | `workflow/code-review/<repo>-pr-<number>/` |
+| Review of someone else's PR | `workflow/misc/<repo>-pr-<number>/` |
 
 ### Ticket refinement
 ```
