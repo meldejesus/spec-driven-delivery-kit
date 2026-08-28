@@ -81,6 +81,25 @@ Use these without a prefix when the concern cuts across multiple areas:
 | `third-party` | Involves an external service or vendor |
 | `hotfix` | Urgent production fix |
 
+## `workflow/misc/` tags
+
+Items in `workflow/misc/` use hashtag-style tags to identify their type since they share a flat folder with no hierarchy. Add these near the top of the file or in `index.md` frontmatter.
+
+| Tag | Use for |
+|---|---|
+| `#code-review` | Peer review of a teammate's PR |
+| `#refinement` | Ticket grooming, pointing, or batch assessment |
+| `#tech-debt` | Tech debt analysis or scan output |
+| `#spike` | Research output not tied to a specific ticket folder |
+| `#future-ticket` | Draft or planned ticket not yet in the tracker |
+
+**Search misc by type:**
+```bash
+rg '#code-review' workflow/misc/
+rg '#refinement' workflow/misc/
+rg '#tech-debt' workflow/misc/
+```
+
 ---
 
 ## Searching without knowing the tag
