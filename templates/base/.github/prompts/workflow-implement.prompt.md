@@ -40,11 +40,14 @@ If `${output_dir}/pre-context.md` exists, read it too.
 
 ## Execution Rules
 - Execute tasks **one at a time**, in order from plan.md.
-- **After every task**, before moving to the next:
-  1. **Update `${output_dir}/handoff.md`** with Success, Friction, and State Summary.
-  2. **Update `${output_dir}/test.md`** with PASS/FAIL evidence (or N/A if no test artifact).
-  3. **Mark task `[x]`** in plan.md.
-  4. **Commit the task** — run `git add -A && git commit -m "<message>"` where `<message>` is a verb-first imperative sentence describing only what this task did. Max 72 chars. No ticket prefix needed.
+- **After coding each task**, before moving to the next:
+  1. **Explain the change** in the terminal — what was changed, why, and any tradeoffs or surprises. Keep it to 3-5 bullets. This is a conversation opportunity: the human may ask questions, request adjustments, or redirect before the change is locked in.
+  2. **Wait for explicit approval.** Do not proceed until the human says yes (or equivalent). If the human requests changes, apply them and re-explain before asking again.
+  3. **On approval:**
+     - **Update `${output_dir}/handoff.md`** with Success, Friction, and State Summary.
+     - **Update `${output_dir}/test.md`** with PASS/FAIL evidence (or N/A if no test artifact).
+     - **Mark task `[x]`** in plan.md.
+     - **Commit the task** — run `git add -A && git commit -m "<message>"` where `<message>` is a verb-first imperative sentence describing only what this task did. Max 72 chars. No ticket prefix needed.
 
 > **Optional:** For test-first implementation, invoke the `tdd` skill before writing code: `use the tdd skill on <task description>`.
      - Good: `Add search endpoint to API`, `Extract ranking logic into standalone module`, `Add unit tests for session reducer`
