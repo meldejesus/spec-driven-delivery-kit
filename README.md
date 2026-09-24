@@ -66,37 +66,25 @@ extensions/worklog/
 
 ## Install Into A Workspace
 
-Dry run:
+Full install and migration instructions live in **`install/INSTALL.md`** — including fresh install, updating an existing install, migrating to a different computer, and the per-repo override pattern. Read that file end-to-end the first time.
+
+Quick reference:
 
 ```bash
-./install/install-to-workspace.sh --target /path/to/workspace --dry-run
-```
+# Dry run
+./install/install-to-workspace.sh --target /path/to/workspace --mode symlink --all --dry-run
 
-Install core workflow discovery files:
-
-```bash
-./install/install-to-workspace.sh --target /path/to/workspace
-```
-
-Install core files plus optional extensions:
-
-```bash
-./install/install-to-workspace.sh --target /path/to/workspace --all
-```
-
-Use symlinks for local kit development:
-
-```bash
+# Symlink install (kit changes flow live into the workspace)
 ./install/install-to-workspace.sh --target /path/to/workspace --mode symlink --all
-```
 
-Use copy mode for a self-contained workspace:
-
-```bash
+# Copy install (self-contained snapshot)
 ./install/install-to-workspace.sh --target /path/to/workspace --mode copy --all
 ```
 
-The installer does not overwrite existing files unless `--force` is passed.
+Notes:
+- `workflow/` is always a real local directory — never symlinked — so ticket artifacts never write back into the kit source.
+- The installer does not overwrite existing files unless `--force` is passed.
+- Per-repo overrides (a repo-local `AGENTS.md` or `CLAUDE.md`) shadow workspace-level defaults.
 
 ## Token Efficiency
 

@@ -38,13 +38,22 @@ If `${output_dir}/pre-context.md` exists, read it too.
 
 > ⚠️ **File creation rule:** Always use `create_file` for handoff.md and test.md on the first run. Never use `replace_string_in_file` on a file that does not yet exist.
 
+## Perf-Gate Check (before first task)
+Read the `## Perf-Gate` line at the top of `${output_dir}/plan.md`.
+- If `Perf-Gate: Y`: load `.github/skills/perf-gate/SKILL.md` and apply its checklist to each task that touches a hot-path surface. Append findings to `${output_dir}/test.md` under `### Perf-Gate`. A FAIL blocks Stage Complete until fixed or waived (with human note in handoff.md).
+- If `Perf-Gate: N`: skip the skill entirely.
+- If the field is missing: stop and ask the human to update plan.md before continuing.
+
 ## Execution Rules
 - Execute tasks **one at a time**, in order from plan.md.
-- **After every task**, before moving to the next:
-  1. **Update `${output_dir}/handoff.md`** with Success, Friction, and State Summary.
-  2. **Update `${output_dir}/test.md`** with PASS/FAIL evidence (or N/A if no test artifact).
-  3. **Mark task `[x]`** in plan.md.
-  4. **Commit the task** — run `git add -A && git commit -m "<message>"` where `<message>` is a verb-first imperative sentence describing only what this task did. Max 72 chars. No ticket prefix needed.
+- **After coding each task**, before moving to the next:
+  1. **Explain the change** in the terminal — what was changed, why, and any tradeoffs or surprises. Keep it to 3-5 bullets. This is a conversation opportunity: the human may ask questions, request adjustments, or redirect before the change is locked in.
+  2. **Wait for explicit approval.** Do not proceed until the human says yes (or equivalent). If the human requests changes, apply them and re-explain before asking again.
+  3. **On approval:**
+     - **Update `${output_dir}/handoff.md`** with Success, Friction, and State Summary.
+     - **Update `${output_dir}/test.md`** with PASS/FAIL evidence (or N/A if no test artifact).
+     - **Mark task `[x]`** in plan.md.
+     - **Commit the task** — run `git add -A && git commit -m "<message>"` where `<message>` is a verb-first imperative sentence describing only what this task did. Max 72 chars. No ticket prefix needed.
 
 > **Optional:** For test-first implementation, invoke the `tdd` skill before writing code: `use the tdd skill on <task description>`.
      - Good: `Add search endpoint to API`, `Extract ranking logic into standalone module`, `Add unit tests for session reducer`

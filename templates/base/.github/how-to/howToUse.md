@@ -16,6 +16,29 @@ All commands in one place. For first-time setup, read `QUICKSTART.md` first.
 | 6 | Push | `git push origin <branch>` | — | — |
 | 7 | Sonar | `run sonar pr_number=N` | — | — |
 
+### Optional pre-implement review flags
+
+For larger tickets, add a review pass before spending implement tokens:
+
+| Command | What it does |
+|---|---|
+| `run contract --review` | Runs contract, then a fresh-eyes review of `prompt.md` (AC testability, scope, hidden assumptions). Writes `contract-review.md`. |
+| `run plan --review` | Runs plan, then a fresh-eyes review of `plan.md` including a premortem (3 concrete failure stories). Writes `plan-review.md`. |
+| `run plan --premortem` | Runs plan, then generates only the premortem (skip the risk/coverage review). Writes `premortem.md`. |
+
+These are opt-in. Small tickets should skip them. Use them when scope is unclear, blast radius is high, or the plan touches unfamiliar systems.
+
+You can also invoke the reviews standalone against an existing artifact: `run contract-review` or `run plan-review`.
+
+### Perf-Gate (implement-time check)
+
+`plan.md` includes a `Perf-Gate: [Y|N]` field. The plan-agent pre-fills this by scanning for hot-path keywords (`migration`, `endpoint`, `query`, `loop`, `batch`, `index`, `cache`). You confirm the value.
+
+- `Y` → Implementer loads the `perf-gate` skill and runs its checklist (N+1, missing indexes, unbounded payloads, sync work in async paths, etc.). Findings go to `test.md`. FAILs block Stage Complete.
+- `N` → Skill is not loaded. No overhead.
+
+The skill lives at `.github/skills/perf-gate/SKILL.md`.
+
 ---
 
 ## Stage-by-Stage Details
