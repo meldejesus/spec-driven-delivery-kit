@@ -180,6 +180,13 @@ workflow/tickets/FEATURE-NAME/pre-context.md
 
 **R3.3 — Make ticket ID derivation configurable.** The `workflow-contract.prompt.md` currently derives a Jira URL from the ticket ID. Add a `tracker_url` parameter or `TRACKER_BASE_URL` env var so the same prompt works for Linear (`linear.app/team/PROJECT-123`) or GitHub Issues (`github.com/org/repo/issues/123`).
 
+**R3.4 — Add an explicit local-authoritative contract input.** When a ticket has
+already been fetched and consolidated into `workflow/<ticket>/ticket.md`, the
+contract stage should accept that file as the authoritative source and skip a
+duplicate tracker fetch. Distinguish this from supplemental `context=` files,
+record `source: local-file` in `index.md`, and keep the behavior consistent
+with the existing `pre-context.md` no-tracker path.
+
 ---
 
 ## Priority 4 — Token Optimization (High)

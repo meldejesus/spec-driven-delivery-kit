@@ -17,6 +17,17 @@ auto-read:
 - context: ${input:context}       # optional — file path(s) to additional context (comma-separated or single path)
 - tracker_url: ${input:tracker_url}  # optional — use this URL directly instead of deriving from ticket ID. Supports Linear, GitHub Issues, or any tracker URL.
 
+<!--
+KIT-UPGRADE NOTE (from OSMS-18682, deferred): Support an explicit local
+authoritative source for contract drafting, such as
+`workflow/<ticket>/ticket.md`. When the user says the external ticket has
+already been fetched and consolidated locally, the contract stage should skip
+Atlassian/URL fetching, record `source: local-file`, and treat that file as
+the ticket source. Keep `context=` as supplemental context rather than making
+users choose between a local source and the standard ticket-shaped workflow.
+Reconcile this behavior with the existing `pre-context.md` no-tracker path.
+-->
+
 # Active Workflow State
 This stage starts or switches the active workflow.
 

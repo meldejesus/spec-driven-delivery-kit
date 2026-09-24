@@ -255,6 +255,13 @@ Do not skip ahead of the current batch. Later batches depend on earlier ones —
   - Supports Linear (`linear.app/team/<ID>`), GitHub Issues (`github.com/org/repo/issues/<N>`), or any URL
   - Update `.active-workflow.md` to store `tracker_url` when set
 
+- [ ] **Add local-authoritative ticket source mode to `workflow-contract.prompt.md`** (R3.4)
+  - Accept `workflow/<ticket>/ticket.md` when the user has already fetched and consolidated the external ticket
+  - Skip duplicate Atlassian/URL fetching when the local file is explicitly authoritative
+  - Record `source: local-file` in `index.md`
+  - Keep supplemental `context=` semantics distinct from the authoritative source
+  - Reconcile the behavior with the existing `pre-context.md` no-tracker path
+
 - [ ] **Add "two entry points" section to `spec-driven-workflow.md`** (A4)
   - Ticket-first: you have a Jira/Linear/GitHub ticket → `run contract ticket=<ID>`
   - Idea-first: no ticket yet → use Explore skills (`grill-with-docs` → `to-spec` → `to-tickets`) → file the top ticket → `run contract ticket=<ID>`
