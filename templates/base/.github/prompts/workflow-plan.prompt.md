@@ -113,6 +113,18 @@ For any task with potential risk, add a *Pivot branch*:
 Atomic task list with every AC mapped to one or more tasks, each tagged and with pivot branches where needed.
 Include an **Evidence Mapping table**: Tasks → ACs → Evidence.
 
+### Perf-Gate field (required)
+Include this at the top of plan.md:
+
+```md
+## Perf-Gate
+Perf-Gate: [Y|N] — <reason>
+```
+
+Pre-fill by scanning the plan and codebase-scan for keywords: `migration`, `endpoint`, `query`, `loop`, `batch`, `models/`, `index`, `cache`, `allocate`, `stream`, `worker`. If any match, suggest `Y` with the reason (e.g. "touches `orders` table, expected 10M rows"). If none, suggest `N` with reason "no hot-path surfaces touched".
+
+The plan-writer confirms or edits the value. This field is read by the Implementer to decide whether to load the `perf-gate` skill during implement.
+
 ## File 2: codebase-scan.md — `${output_dir}/codebase-scan.md`
 Produce this file whenever real file paths and code are identified during planning. Required sections:
 
@@ -147,7 +159,23 @@ After writing both files:
   updated_by: workflow-plan
   ```
 - Announce: "Stage Complete: Plan (Gate B)."
-- Provide the exact next command:
+- **If the invocation included `--review`** (e.g. `run plan --review`), immediately chain into plan-review:
+  ```
+  @Reviewer
+  #read .github/prompts/workflow-plan-review.prompt.md
+
+  run plan-review
+  ```
+  Then STOP. Do not proceed to implement.
+- **If the invocation included `--premortem`** (and not `--review`), chain into plan-review in premortem-only mode:
+  ```
+  @Reviewer
+  #read .github/prompts/workflow-plan-review.prompt.md
+
+  run plan-review mode=premortem-only
+  ```
+  Then STOP.
+- **Otherwise**, provide the exact next command:
   ```
   @Implementer
   #read .github/prompts/workflow-implement.prompt.md

@@ -50,18 +50,32 @@ Before doing anything else, resolve the working values of `ticket` and `output_d
 5. Confirm the resolved values internally before proceeding. Do not ask the user to confirm — just use them.
 3. **tracker_url override** — If `tracker_url` is provided, use it as the external ticket URL and skip Jira URL derivation. Store it in `.active-workflow.md` as `ticket_url`.
 
+# 0.5 Resolve Tracker From Prefix Map
+Before fetching, check for `workflow/ticket-prefixes.md` at the workspace root. If present, parse it and look up the ticket's prefix (the letters before the `-`, e.g. `HH` in `HH-012`).
+
+- **Row found, tracker=github** — record the source repo (e.g. `meldejesus77/household`) and the numeric portion of the ticket (e.g. `12`). Use fetch **Option A-GitHub** below.
+- **Row found, tracker=none** — skip remote fetch entirely. Expect the ticket body in `${output_dir}/pre-context.md`. If pre-context is missing, ask the user to paste the ticket body.
+- **Row not found, or map file absent** — fall through to the Jira/URL/manual fetch options below.
+
 # 1. Fetch Ticket Content
 Try the following in order — use the first one that succeeds:
 
-**Option A — Atlassian MCP (preferred):**
-Use the `atlassian/atlassian-mcp-server/*` tool to fetch the Jira ticket at `${ticket}`.
+**Option A-GitHub — gh CLI (when prefix map resolved to github):**
+Run in the terminal:
+```
+gh issue view <NUMBER> --repo <OWNER/REPO> --json title,body,state,labels,url
+```
+Parse the JSON. Use `title`, `body`, and `labels` as the ticket content. Record `url` as the ticket URL. If `gh` returns non-zero (auth expired, repo not found, issue missing), do NOT fall through silently — surface the error to the user and stop.
+
+**Option A-Jira — Atlassian MCP (preferred for Jira):**
+Use the `atlassian/atlassian-mcp-server/*` tool to fetch the Jira ticket at `${ticket}`. Use this when the prefix map didn't resolve or the ticket format matches a Jira URL.
 
 **Option B — URL fetch fallback:**
-If MCP is unavailable, attempt `#fetch ${ticket}` to retrieve the ticket page directly.
+If neither GitHub nor MCP applies, attempt `#fetch ${ticket}` to retrieve the ticket page directly.
 
-**Option C — Manual fallback (if both above fail):**
+**Option C — Manual fallback (if all above fail):**
 Do NOT stop. Instead:
-1. Inform the user: "Atlassian MCP is unavailable. Please paste the ticket title, description, and acceptance criteria here and I will draft the contract from that."
+1. Inform the user: "Ticket fetch unavailable. Please paste the ticket title, description, and acceptance criteria here and I will draft the contract from that."
 2. Wait for the user to paste the content, then continue.
 
 ---
@@ -238,7 +252,15 @@ After writing the index and both Gate A files, ask:
 # 8. Stage Completion
 After writing the index and both Gate A files:
 - Announce: "Stage Complete: Contract (Gate A)."
-- Provide the exact next command:
+- **If the invocation included `--review`** (e.g. `run contract --review`), immediately chain into contract-review:
+  ```
+  @Reviewer
+  #read .github/prompts/workflow-contract-review.prompt.md
+
+  run contract-review
+  ```
+  Then STOP after the review completes. Do not proceed to plan.
+- **Otherwise**, provide the exact next command:
   ```
   @Plan-Agent
   #read .github/prompts/workflow-plan.prompt.md

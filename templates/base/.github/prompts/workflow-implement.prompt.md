@@ -38,6 +38,12 @@ If `${output_dir}/pre-context.md` exists, read it too.
 
 > ⚠️ **File creation rule:** Always use `create_file` for handoff.md and test.md on the first run. Never use `replace_string_in_file` on a file that does not yet exist.
 
+## Perf-Gate Check (before first task)
+Read the `## Perf-Gate` line at the top of `${output_dir}/plan.md`.
+- If `Perf-Gate: Y`: load `.github/skills/perf-gate/SKILL.md` and apply its checklist to each task that touches a hot-path surface. Append findings to `${output_dir}/test.md` under `### Perf-Gate`. A FAIL blocks Stage Complete until fixed or waived (with human note in handoff.md).
+- If `Perf-Gate: N`: skip the skill entirely.
+- If the field is missing: stop and ask the human to update plan.md before continuing.
+
 ## Execution Rules
 - Execute tasks **one at a time**, in order from plan.md.
 - **After coding each task**, before moving to the next:
