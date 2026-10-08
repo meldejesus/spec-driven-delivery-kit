@@ -66,24 +66,33 @@ extensions/worklog/
 
 ## Install Into A Workspace
 
-Full install and migration instructions live in **`install/INSTALL.md`** — including fresh install, updating an existing install, migrating to a different computer, and the per-repo override pattern. Read that file end-to-end the first time.
+**Most common commands — start here.**
 
-Quick reference:
+### First install (new workspace)
 
 ```bash
-# Dry run
-./install/install-to-workspace.sh --target /path/to/workspace --mode symlink --all --dry-run
-
-# Symlink install (kit changes flow live into the workspace)
-./install/install-to-workspace.sh --target /path/to/workspace --mode symlink --all
-
-# Copy install (self-contained snapshot)
 ./install/install-to-workspace.sh --target /path/to/workspace --mode copy --all
 ```
 
+### Reinstall after kit changes (existing workspace)
+
+```bash
+# Preview what will change
+./reinstall.sh /path/to/workspace --dry-run
+
+# Apply
+./reinstall.sh /path/to/workspace
+```
+
+`reinstall.sh` overwrites all kit-managed files (`AGENTS.md`, `TAGS.md`, `.github/`, `.copilot/`, `worklog/`, `scripts/`). It never touches `workflow/` ticket data.
+
+> **Before running:** back up any hand-edited files inside `.github/`, `.copilot/`, or workspace-root `AGENTS.md` — those will be overwritten. Files inside individual repos (per-repo overrides) are never touched.
+
+Full install and migration instructions — including fresh install, computer migration, and the per-repo override pattern — live in **`install/INSTALL.md`**.
+
 Notes:
 - `workflow/` is always a real local directory — never symlinked — so ticket artifacts never write back into the kit source.
-- The installer does not overwrite existing files unless `--force` is passed.
+- The installer does not overwrite existing files unless `--force` is passed (or you use `reinstall.sh`).
 - Per-repo overrides (a repo-local `AGENTS.md` or `CLAUDE.md`) shadow workspace-level defaults.
 
 ## Token Efficiency
@@ -161,3 +170,12 @@ readiness pass before changing visibility:
 - keep only generic workflow docs, prompts, agents, skills, and templates
 
 See `docs/structure.md` for the source-vs-installed model.
+
+## Spec File Style
+
+Prompts, agents, and skills are written in an imperative style optimized for model parsing — numbered steps, explicit conditionals, variable interpolation. This is intentional: the structure exists because models follow procedural instructions reliably, not because the files need to be long.
+
+When editing or adding spec files, follow `docs/spec-file-style-guide.md`. Key points:
+- Prompts ≤ 120 lines, agents ≤ 80 lines, skills ≤ 60 lines
+- One instruction per step; conditions before actions
+- Background, examples, and shared boilerplate belong in referenced files, not inline
