@@ -1,80 +1,75 @@
 # Spec-Driven Delivery Kit
 
-Reusable agent workflow infrastructure for ticket-driven, evidence-gated delivery.
+Evidence-gated, ticket-driven workflow infrastructure for AI coding agents.
 
-This repository is the source for files that get installed into a working
-project. Normal ticket work should happen in the target workspace after install,
-not in this repository.
-
-## What This Is
-
-The kit packages a Jira-to-PR style workflow:
-
-```text
-Contract -> Plan -> Implement -> Review -> Closeout -> Sonar
+```
+CONTRACT ──► PLAN ──► IMPLEMENT ──► REVIEW ──► CLOSEOUT ──► SONAR
+  Gate A       Gate B    Gate C        Gate D     Gate E
 ```
 
-The installed workspace shape is the contract:
+Each stage produces artifacts. Each gate requires human approval before the next stage begins. No stage is skipped.
 
-```text
-workspace/
-  AGENTS.md
-  TAGS.md
-  .github/
-    agents/
-    prompts/
-    skills/
-    how-to/
-  .copilot/
-  workflow/
-    tickets/
-    refinement/
-    spikes/
-    code-review/
-```
+---
 
-Agents and prompts assume those paths exist relative to the workspace root.
+## Workflow Commands
 
-## Repository Layout
+Run these from your workspace root after install. Each command loads the right agent and prompt automatically.
 
-```text
-docs/                         Kit documentation.
-install/                      Installer scripts.
-templates/base/               Core files installed into a target workspace.
-extensions/                   Optional workflow extensions.
-examples/                     Public-safe examples only.
-```
+### Core pipeline
 
-Core installable files live under:
+| Command | Stage | What it does |
+|---|---|---|
+| `run contract ticket=PROJECT-123` | Contract | Fetches the ticket, drafts acceptance criteria, constraints, and a Strategic Contract. Produces `prompt.md` and `index.md`. |
+| `run plan` | Plan | Breaks the contract into atomic, ordered tasks. Produces `plan.md` with a Perf-Gate flag and story points. |
+| `run implement` | Implement | Executes plan tasks one at a time, journals to `handoff.md` and `test.md`, commits after each task, waits for approval before proceeding. |
+| `run review` | Review | Full diff review against the contract. Produces a structured findings report. Blocks promotion if critical issues remain. |
+| `run closeout` | Closeout | Education pass on the diff, extracts lessons learned, proposes global promotions to the kit. |
+| `run sonar` | Sonar | SonarQube / code quality integration pass. |
 
-```text
-templates/base/
-  AGENTS.md
-  TAGS.md
-  .github/
-  .copilot/
-  workflow/
-```
+### Flags
 
-Optional extensions currently include:
+| Flag | Applies to | Effect |
+|---|---|---|
+| `--review` | `contract`, `plan` | Chains a fresh-eyes review immediately after the stage completes. |
+| `--premortem` | `plan` | Chains a premortem-only risk analysis after plan completes. |
+| `ticket=PROJECT-123` | `contract` | Ticket ID or full Jira URL. |
+| `output_dir=/path` | any | Override where artifacts are written. Defaults to `workflow/PROJECT-123/`. |
+| `context=/path/to/file` | `implement` | Load additional context files before executing. |
 
-```text
-extensions/cleanup/
-extensions/codex/
-extensions/worklog/
-```
+### Spike workflow
 
-## Install Into A Workspace
+| Command | What it does |
+|---|---|
+| `run spike-contract ticket=PROJECT-123` | Scopes a research task. Produces a spike contract. |
+| `run spike-investigate` | Executes the spike research. |
+| `run spike-review` | Finalizes and summarizes spike findings. |
 
-**Most common commands — start here.**
+### Optional mid-stage skills
 
-### First install (new workspace)
+These are not part of the required pipeline but can be invoked between stages.
+
+| Invocation | When to use |
+|---|---|
+| `grill-me on the contract` | After contract — stress-test the spec before committing to a plan. |
+| `grill-me on the plan` | After plan — challenge the approach before implementation starts. |
+| `use the branch-review skill` | Before `run review` — optional pre-flight: two-axis review of the full diff. |
+| `use the tdd skill on <task>` | During implement — test-first scaffolding for a specific task. |
+| `use the fork-session skill` | When approaching context limits — hands off state to a fresh session. |
+
+> The agent will suggest `grill-me` at the end of contract and plan stages if it detects ambiguity, conflicting constraints, or high delivery risk. You decide whether to run it.
+
+---
+
+## Quick Start
+
+### 1. Install into a workspace
 
 ```bash
+cd /path/to/spec-driven-delivery-kit
 ./install/install-to-workspace.sh --target /path/to/workspace --mode copy --all
 ```
 
-### Reinstall after kit changes (existing workspace)
+### 2. Update an existing workspace after kit changes
 
 ```bash
 # Preview what will change
@@ -84,98 +79,138 @@ extensions/worklog/
 ./reinstall.sh /path/to/workspace
 ```
 
-`reinstall.sh` overwrites all kit-managed files (`AGENTS.md`, `TAGS.md`, `.github/`, `.copilot/`, `worklog/`, `scripts/`). It never touches `workflow/` ticket data.
+`reinstall.sh` overwrites all kit-managed files. It never touches `workflow/` ticket data.
 
-> **Before running:** back up any hand-edited files inside `.github/`, `.copilot/`, or workspace-root `AGENTS.md` — those will be overwritten. Files inside individual repos (per-repo overrides) are never touched.
+> **Before reinstalling:** back up any hand-edited files inside `.github/`, `.copilot/`, or workspace-root `AGENTS.md` — those will be overwritten. Per-repo overrides (files inside individual repos) are never touched.
 
-Full install and migration instructions — including fresh install, computer migration, and the per-repo override pattern — live in **`install/INSTALL.md`**.
+### 3. Start a ticket
 
-Notes:
-- `workflow/` is always a real local directory — never symlinked — so ticket artifacts never write back into the kit source.
-- The installer does not overwrite existing files unless `--force` is passed (or you use `reinstall.sh`).
-- Per-repo overrides (a repo-local `AGENTS.md` or `CLAUDE.md`) shadow workspace-level defaults.
+Open a session from your workspace root or any child directory:
+
+```
+run contract ticket=PROJECT-123
+```
+
+Artifacts land at `workflow/PROJECT-123/`. To place them inside a specific repo instead:
+
+```
+run contract ticket=PROJECT-123 output_dir=/path/to/repo/workflow/PROJECT-123
+```
+
+Full install and migration details — including computer migration and per-repo overrides — live in **`install/INSTALL.md`**.
+
+---
+
+## Workspace Shape
+
+After install, the workspace exposes these paths. AI tools (Claude Code, Copilot, etc.) discover them by walking up the directory tree from wherever you invoke them.
+
+```
+workspace/
+  AGENTS.md               Agent registry and standing consent
+  TAGS.md                 Hashtag taxonomy for workflow artifacts
+  CLAUDE.md               Project-specific commands (Tests, Build, Dev server)
+  .github/
+    agents/               Agent definitions (.agent.md)
+    prompts/              Stage prompts (.prompt.md)
+    skills/               Reusable skills (SKILL.md)
+    how-to/               Human-readable workflow guides
+    policies/             Standing consent and governance docs
+    templates/            Artifact templates (index.md, PR structure)
+    references/           Notation guides (EARS, ADR format)
+  .copilot/
+    copilot-instructions.md
+  workflow/
+    PROJECT-123/
+      prompt.md           Immutable contract (ACs, constraints)
+      plan.md             Ordered task list with Perf-Gate flag
+      handoff.md          Per-task journal (success, friction, state)
+      test.md             Evidence log (PASS/FAIL per task)
+      index.md            Ticket summary and artifact index
+    .active-workflow.md   Recovery anchor — current stage and ticket
+    TAGS.md               Workflow-level tag reference
+```
+
+`workflow/` is always a real local directory, never symlinked — ticket artifacts never write back into the kit source.
+
+---
+
+## Kit Source Layout
+
+```
+templates/base/     Core files installed into a workspace.
+extensions/         Optional extensions (worklog, cleanup, codex).
+install/            Installer scripts and INSTALL.md.
+docs/               Kit documentation and style guides.
+examples/           Public-safe examples only.
+```
+
+Optional extensions installed with `--all`:
+
+| Extension | Installs | Purpose |
+|---|---|---|
+| `worklog` | `worklog/`, `.github/skills/worklog/` | Daily log and dashboard for session notes |
+| `cleanup` | `scripts/cleanup/` | Workspace cleanup scripts |
+| `codex` | `scripts/codex/` | Codex MCP helper scripts |
+
+---
 
 ## Token Efficiency
 
-The kit is designed to minimize tokens loaded per session and per ticket.
+The kit is designed to minimize tokens loaded per session and per stage.
 
-### Per-session savings
-- **CLAUDE.md** is lean (~50 lines) — no duplicate tables, trimmed placeholders
-- **AGENTS.md Standing Consent** is condensed to 3 paragraphs; full policy is in `.github/policies/STANDING-CONSENT.md` (loaded on demand)
-- **Stage isolation** — each `run X` is a fresh invocation via `.active-workflow.md` recovery anchor, no full context reload
+- **Stage isolation** — each `run X` is a fresh invocation. The `.active-workflow.md` anchor recovers ticket state without reloading full context.
+- **Tail-only handoff** — agents read only the last 40 lines of `handoff.md`, not the full journal.
+- **On-demand loading** — `lessons-learned.md`, `copilot-instructions.md`, templates, and references are loaded only when the stage that needs them runs.
+- **Compaction trigger** — when `handoff.md` exceeds 50 lines, the Compactor agent condenses it. Accuracy degrades past 100K tokens; use `fork-session` before you get there.
 
-### Per-stage savings
-- **`handoff.md` is not auto-loaded** in implement or review stages — agents read only the last 40 lines via offset, saving 50–120 tokens per invocation as the journal grows
-- **`lessons-learned.md`** is loaded on-demand in plan, not pre-loaded
-- **`copilot-instructions.md`** is loaded on-demand in contract, not pre-loaded
-- **Templates and references are extracted** — index.md template, EARS notation, and PR structure live in `.github/templates/` and `.github/references/`, loaded only when the agent writes those artifacts
-
-### Compared to GitHub Spec Kit
 | | This kit | GitHub Spec Kit |
 |---|---|---|
 | Implement prompt | ~110 lines | 222 lines |
 | Plan prompt | ~159 lines | 170 lines |
-| Contract/Specify prompt | ~250 lines | 345 lines |
-| Token budgeting | Explicit (80K/stage, 100K smart zone) | None |
+| Contract prompt | ~250 lines | 345 lines |
+| Token budgeting | Explicit (80K/stage) | None |
 | Partial artifact loading | Yes (handoff.md tail-only) | No |
-| Hooks overhead | None | Checks `extensions.yml` every run |
 | Stage recovery | `.active-workflow.md` anchor | Reload from scratch |
 
-### Compaction
-- `handoff.md` exceeding 50 lines triggers the Compactor agent
-- Accuracy degrades past 100K tokens — do not fill the window
-- Use `fork-session` skill to hand off to a fresh session when approaching context limits
+---
 
-## Why The Layout Works
+## Per-Repo Overrides
 
-Most AI tools discover instructions from the current directory or its parents.
-They generally will not discover a sibling kit repository.
+If a specific repo under the workspace needs different instructions than the shared defaults, drop a local file inside that repo:
 
-That means the kit source can be organized cleanly, but the installed workspace
-must still expose:
+- `AGENTS.md` — overrides the workspace-level agent registry
+- `CLAUDE.md` — project-specific build/test/dev-server commands (always per-project)
 
-```text
-AGENTS.md
-.github/
-.copilot/
-workflow/
-```
+AI tools pick the closest file first. The installer never touches files inside individual repos.
 
-As long as installation produces that shape, the workflow runs the same way.
+---
 
-## Private Overlays And Archives
+## Private Overlays and Archives
 
 Keep reusable workflow machinery separate from private work history.
 
-Recommended split:
-
-```text
-spec-driven-delivery-kit/          Reusable kit source.
+```
+spec-driven-delivery-kit/          Reusable kit source (this repo).
 spec-driven-delivery-overlay/      Project/team-specific instructions.
 workflow-archive-private/          Real ticket artifacts and worklog history.
 ```
 
-Do not publish real Jira tickets, private worklog history, raw logs, CSV exports,
-HAR files, screenshots, production payloads, credentials, or internal links in a
-public kit.
+Do not publish real Jira tickets, private worklog history, raw logs, credentials, or internal URLs in a public kit.
 
-## Public Readiness
-
-This repository layout is public-friendly, but content still needs a public
-readiness pass before changing visibility:
-
-- move project-specific examples out of public history or into a private overlay
-- replace real ticket IDs with neutral examples
-- remove internal URLs and company-specific paths
-- keep only generic workflow docs, prompts, agents, skills, and templates
-
-See `docs/structure.md` for the source-vs-installed model.
+---
 
 ## Spec File Style
 
-Prompts, agents, and skills are written in an imperative style optimized for model parsing — numbered steps, explicit conditionals, variable interpolation. This is intentional: the structure exists because models follow procedural instructions reliably, not because the files need to be long.
+Prompts, agents, and skills are written in an imperative style optimized for model parsing — numbered steps, explicit conditionals, variable interpolation. This is intentional.
 
-When editing or adding spec files, follow `docs/spec-file-style-guide.md`. Key points:
-- Prompts ≤ 120 lines, agents ≤ 80 lines, skills ≤ 60 lines
-- One instruction per step; conditions before actions
-- Background, examples, and shared boilerplate belong in referenced files, not inline
+When editing or adding spec files, follow `docs/spec-file-style-guide.md`. Targets: prompts ≤ 120 lines, agents ≤ 80 lines, skills ≤ 60 lines.
+
+---
+
+## Further Reading
+
+- `install/INSTALL.md` — fresh install, reinstall, computer migration
+- `docs/spec-file-style-guide.md` — how to write and edit prompts, agents, and skills
+- `docs/structure.md` — source-vs-installed model in depth
+- `templates/base/.github/how-to/howToUse.md` — daily use reference (installed into workspace)
