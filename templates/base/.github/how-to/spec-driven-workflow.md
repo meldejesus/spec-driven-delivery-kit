@@ -83,7 +83,7 @@ Workflow artifacts live in the lane that matches the kind of work:
 | Implementation tickets | `workflow/<ticket-id>/` |
 | Ticket refinement | `workflow/misc/<batch-slug>.md` |
 | Spikes / research tickets | `workflow/<ticket-id>/spike/` |
-| Reviews of someone else's PR | `workflow/misc/<repo>-pr-<number>/` |
+| Reviews of someone else's PR | `workflow/misc/<pr-title-slug>/` |
 
 The best short label for this system is:
 

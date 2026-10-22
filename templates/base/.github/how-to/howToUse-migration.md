@@ -12,7 +12,7 @@ The v3 kit simplifies the top-level workflow layout by eliminating all subdirect
 - `workflow/tickets/` — tickets now go flat at `workflow/<ticket-id>/`
 - `workflow/spikes/` — spikes now live inside `workflow/<ticket-id>/spike/`
 - `workflow/refinement/` — batch refinement output goes to `workflow/misc/`
-- `workflow/code-review/` — standalone PR reviews go to `workflow/misc/<repo>-pr-<number>/`
+- `workflow/code-review/` — standalone PR reviews go to `workflow/misc/<pr-title-slug>/`
 
 **New structure:**
 ```

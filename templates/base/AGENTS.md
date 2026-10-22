@@ -110,7 +110,7 @@ Used to review a teammate's PR from a GitHub URL. See `.github/how-to/howToUse.m
 | Prompt                       | What it does                                                                                                  |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | `pr-review-triage.prompt.md` | Fetches PR file list + ticket ACs. Produces risk table and context summary. Optional gate before full review. |
-| `pr-review.prompt.md`        | Full multi-stage review: context + testing guide → code review (parallel) → verdict + GitHub comment.         |
+| `pr-review.prompt.md`        | Full multi-stage review: context + testing guide → code review + separate author comments → verdict.         |
 
 ### `ticket-refinement` — Backlog ticket refinement
 
@@ -152,7 +152,7 @@ Workflow artifacts should use the directory that matches the work:
 | Implementation ticket | `workflow/<ticket-id>/` |
 | Ticket refinement | `workflow/misc/<batch-slug>.md` |
 | Spike / research ticket | `workflow/<ticket-id>/spike/` |
-| Review of someone else's PR | `workflow/misc/<repo>-pr-<number>/` |
+| Review of someone else's PR | `workflow/misc/<pr-title-slug>/` |
 
 ### Ticket refinement
 ```
@@ -194,7 +194,8 @@ standard ticket workflow, spike workflow, backlog clarification, split/merge, or
     ↓ confirm scope
 @Reviewer → pr-review
     ↓ (you go test while code review runs)
-→ report results → verdict + GitHub comment
+→ separate author comments for top findings
+→ report results → verdict
 ```
 
 ---

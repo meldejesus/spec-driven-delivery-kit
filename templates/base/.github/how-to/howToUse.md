@@ -194,11 +194,12 @@ The review runs in three stages, designed so your testing and the agent's review
 
 **Stage 2 — Agent produces (while you test):**
 - What works well
-- Concerns (non-blocking — your call)
 - Blockers (must fix — only when the agent is confident)
+- Should Fix findings (important but non-blocking)
 - Questions for Author (looks off but may be intentional — phrased as questions, not blockers)
 - Edge cases and breaking risks
 - AC coverage table
+- `author-message.md` with up to three separate, concise GitHub comments for the highest-priority Blocker/Should Fix findings; each comment has a separate manual test walkthrough
 
 **Stage 3 — You come back with test results:**
 
@@ -211,14 +212,14 @@ Here's what I found testing:
 
 Or say `skip testing` to go straight to the verdict.
 
-**→ You receive:** Final APPROVE or REQUEST CHANGES verdict + numbered change requests + GitHub comment ready to paste.
+**→ You receive:** Final APPROVE or REQUEST CHANGES verdict + numbered change requests. Paste-ready finding comments remain separate in `author-message.md`.
 
 ### Handling findings
 
 | Finding type | What to do |
 |---|---|
-| **Blocker** | Request change — reference the line |
-| **Concern** | Your call — suggest it or leave a comment |
+| **Blocker** | Request change — use its standalone author message |
+| **Should Fix** | Your call — use its standalone author message or defer it |
 | **Question for Author** | Post as a genuine question, don't block |
 | **Edge case** | Discuss with author — decide before merge |
 
@@ -227,7 +228,7 @@ Or say `skip testing` to go straight to the verdict.
 - **Triage large PRs (20+ files) first:** `run peer-review-triage pr_url=<URL>` — quick file table and risk level before committing to the full review.
 - **Disagree with a finding?** Say so — the agent will reassess or drop it.
 - **Author already addressed something?** Include it in `context=` so it doesn't get re-raised.
-- **Want a concrete fix for a blocker?** Ask: `Give me a concrete fix for blocker #2.`
+- **More findings needed?** Ask for the deferred findings after the author has handled the top comments.
 
 ---
 

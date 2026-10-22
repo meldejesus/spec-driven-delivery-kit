@@ -10,21 +10,24 @@ infer: false
 - pr_url: ${input:pr_url}     # e.g. https://github.com/your-org/your-repo/pull/6531
 - ticket: ${input:ticket}     # optional — e.g. https://your-domain.atlassian.net/browse/PROJECT-123
 - context: ${input:context}   # optional — anything you already know about the area, author's intent, or known constraints
-- output_dir: ${input:output_dir} # optional — defaults to workflow/misc/<repo>-pr-<number>
+- output_dir: ${input:output_dir} # optional — defaults to workflow/misc/<pr-title-slug>
 
 # 0. Normalize Output Directory
 Before fetching context, resolve `output_dir`.
 
-1. Extract the repo name and PR number from `pr_url`.
-2. If `output_dir` was omitted, set it to `workflow/misc/<repo>-pr-<number>`.
-3. Ensure `${output_dir}` exists.
-4. Create or update `${output_dir}/index.md` with:
+1. Extract the repo name and PR number from `pr_url`, then fetch the PR title.
+2. Convert the title to lowercase kebab-case by replacing non-alphanumeric runs with `-`, collapsing repeated `-`, and trimming leading/trailing `-`.
+3. If `output_dir` was omitted, set it to `workflow/misc/<pr-title-slug>`.
+4. If that directory already belongs to a different PR, use `workflow/misc/<pr-title-slug>-<pr-number>`.
+5. Ensure `${output_dir}` exists.
+6. Create or update `${output_dir}/index.md` with:
    - PR URL
+   - PR title
    - ticket URL if provided
    - workflow_type: code-review
    - output_dir
    - status: triage
-   - artifact map for `triage.md`, `review.md`, `verdict.md`, and `testing-notes.md`
+   - artifact map for `triage.md`, `testing-guide.md`, `review.md`, `author-message.md`, `verdict.md`, and `testing-notes.md`
 
 # 1. Fetch All Available Context
 Use every source available before forming opinions. Pull:

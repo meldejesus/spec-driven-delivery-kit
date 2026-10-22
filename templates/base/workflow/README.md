@@ -95,10 +95,12 @@ One-off work that is not tied to a specific ticket belongs under `workflow/misc/
 
 ```text
 workflow/misc/
-  <repo>-pr-<number>/      # standalone PR review output
+  <pr-title-slug>/         # standalone PR review output
     index.md
     triage.md
+    testing-guide.md
     review.md
+    author-message.md
     verdict.md
     testing-notes.md
   ticket-assessment-YYYY-MM-DD.md    # batch refinement output
