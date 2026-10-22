@@ -22,3 +22,17 @@ or refinement note instead of creating a separate message lane.
 - For quick rewrites, respond in chat only.
 - For source material with unclear intent, first state the assumed audience and ask for correction.
 - If the user asks for a durable artifact and the target path is unclear, ask whether it belongs with a ticket, spike, or refinement note.
+
+## When This Skill Is Not Enough
+
+`message-clarity` is a lightweight conversational rewrite — 5 steps, chat output.
+For rigorous audience translation or systematic explanation-debt elimination, use
+the writing kit's dedicated skills instead:
+
+- **Skill 12: Non-Technical Audience Translation** — full procedure with audience
+  modeling, dependency ordering, and fidelity verification. Use when the piece
+  needs to reach a reader with no domain background.
+- **Skill 13: Clarity Loop Revision** — iterative elimination of explanation debt.
+  Use when an argument must be followable step-by-step by a newcomer.
+
+Writing kit: `github.com/meldejesus/writing-kit`

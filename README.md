@@ -210,7 +210,10 @@ When editing or adding spec files, follow `docs/spec-file-style-guide.md`. Targe
 
 ## Further Reading
 
+- `docs/command-reference.md` — **printable reference** of every command, flag, input, and common patterns
 - `install/INSTALL.md` — fresh install, reinstall, computer migration
 - `docs/spec-file-style-guide.md` — how to write and edit prompts, agents, and skills
 - `docs/structure.md` — source-vs-installed model in depth
+- `docs/skill-libraries-research.md` — survey of agent-skills (Addy Osmani), skills (Matt Pocock), and pstack (Lauren Tan); lessons and open questions for this kit
+- `docs/research-specialist-panel-architecture.md` — research into a specialist panel kit (Contractor + Planner + Implementer + Reviewer as a standing team); architecture, CLI compatibility, and how it differs from this kit
 - `templates/base/.github/how-to/howToUse.md` — daily use reference (installed into workspace)

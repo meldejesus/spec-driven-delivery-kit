@@ -26,6 +26,7 @@ Core install paths:
   TAGS.md
   .github/
   .copilot/
+  .claude/            Claude Code slash commands (/contract, /plan, /implement, /workflow-review)
   workflow/           copied from templates/base/workflow/
 
 Optional install paths:
@@ -197,6 +198,7 @@ install_path "$kit_root/templates/base/AGENTS.md" "$target/AGENTS.md"
 install_path "$kit_root/templates/base/TAGS.md" "$target/TAGS.md"
 install_path "$kit_root/templates/base/.github" "$target/.github"
 install_path "$kit_root/templates/base/.copilot" "$target/.copilot"
+install_path "$kit_root/templates/base/.claude" "$target/.claude"
 install_path "$kit_root/templates/base/workflow" "$target/workflow"
 # Always overwrite workflow/TAGS.md — it is kit-managed, not user content
 run mkdir -p "$target/workflow"

@@ -15,6 +15,7 @@ auto-read:
 - ticket: ${input:Ticket ID (e.g., PROJECT-123)}
 - output_dir: ${input:output_dir} # optional - defaults from active workflow or workflow/${ticket}
 - context: ${input:context}       # optional - file path(s) to additional context (comma-separated or single path)
+- --inspect                       # optional - enables per-task expectation gates for code-change tasks (see Execution Rules)
 
 ## 0. Resolve Inputs
 Before loading context, resolve `ticket` and `output_dir`:
@@ -46,6 +47,10 @@ Read the `## Perf-Gate` line at the top of `${output_dir}/plan.md`.
 
 ## Execution Rules
 - Execute tasks **one at a time**, in order from plan.md.
+- **If `--inspect` was passed**, classify each task before executing it:
+  - **Code-change task** (add, create, modify, wire up, refactor): before coding, state in one line what you expect to produce — which files, which methods, what observable outcome. After coding, confirm the diff matches the expectation. Wait for explicit human approval before committing.
+  - **Pass-through task** (run build, run tests, validate, lint, check): execute, log PASS/FAIL to `test.md`, and continue automatically — no gate needed.
+  - If task type is ambiguous, treat it as a code-change task.
 - **After coding each task**, before moving to the next:
   1. **Explain the change** in the terminal — what was changed, why, and any tradeoffs or surprises. Keep it to 3-5 bullets. This is a conversation opportunity: the human may ask questions, request adjustments, or redirect before the change is locked in.
   2. **Wait for explicit approval.** Do not proceed until the human says yes (or equivalent). If the human requests changes, apply them and re-explain before asking again.
