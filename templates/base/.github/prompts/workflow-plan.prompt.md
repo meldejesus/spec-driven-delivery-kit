@@ -159,6 +159,7 @@ After writing both files:
   updated_by: workflow-plan
   ```
 - Announce: "Stage Complete: Plan (Gate B)."
+- **Grilling check:** Briefly assess whether the plan has high task complexity, unclear sequencing, risky dependencies, or steps that touch unfamiliar surfaces. If any of those are present, say so in one sentence and suggest: `grill-me on the plan`. If the plan is straightforward, skip the suggestion entirely.
 - **If the invocation included `--review`** (e.g. `run plan --review`), immediately chain into plan-review:
   ```
   @Reviewer

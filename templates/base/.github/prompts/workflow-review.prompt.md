@@ -168,7 +168,12 @@ Generate a single conventional-commit line that names what this PR does as a who
    updated_by: workflow-review
    ```
 3. Announce **"Stage Complete: Review (Gate D)"**
-4. Produce the exact next steps in order:
+4. **Optional review passes:** Remind the human that the following focused passes are available, then assess the diff and recommend which (if any) are warranted. Be specific about why.
+   - `use the security-review skill` — OWASP, auth, secrets, input validation, dependency safety
+   - `use the performance-review skill` — Core Web Vitals, bundle impact, hot-path analysis
+   - `use the simplification-review skill` — complexity reduction, Chesterton's Fence, Rule of 500
+   If none are warranted for this diff, say so plainly.
+5. Produce the exact next steps in order:
 
 **Step A — Closeout (before pushing)**
 Write the education overview and extract lessons before the branch leaves local:

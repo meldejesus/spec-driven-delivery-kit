@@ -1,11 +1,48 @@
 ---
 created: 2026-08-21
-moved: 2026-08-30
+updated: 2026-10-10
 ---
 
-# Pending — Other Computer (spec-driven-delivery-kit)
+# Pending Tasks — spec-driven-delivery-kit
 
-> **Note:** Moved from the Obsidian vault on 2026-08-30. Original content is from 2026-08-21 — may be outdated. Verify each task still applies before executing (some may already be done or superseded).
+---
+
+## Priority
+
+### 1. Specialist panel kit — next steps
+
+Research doc: `docs/research-specialist-panel-architecture.md`
+
+Suggested order:
+- [ ] Sketch `team-notes.md` and `briefing.md` formats
+- [ ] Write Orchestrator prompt — convene/express classification logic only
+- [ ] Simulate the panel manually on one real ticket (switch agents by hand, no new infrastructure)
+- [ ] Evaluate Claude Code Agent tool for subagent spawning on a throwaway project
+- [ ] Decide: new repo or continue simulating
+
+Hold until at least 3-4 tickets run through the current kit. The friction points will
+clarify what the panel actually needs to solve.
+
+---
+
+### 3. Audit generated workflow artifacts
+
+Review each file the kit generates per ticket to confirm it still earns its place. Files to audit:
+- `prompt.md` — immutable contract
+- `plan.md` — task list + Perf-Gate flag
+- `handoff.md` — per-task journal
+- `test.md` — evidence log
+- `index.md` — ticket summary (least clearly used downstream — check which stages load it)
+- `pull-request.md` — PR synthesis
+- `.active-workflow.md` — recovery anchor
+
+Questions to answer: Is `index.md` read by any stage after contract? Does `test.md` provide enough signal at review time, or should it be structured differently?
+
+---
+
+## Carry-forward (from 2026-08-21 — completed 2026-10-11)
+
+All three tasks below were completed and can be removed on next cleanup pass.
 
 Three small tasks to complete when back on the coding machine.
 The `.claude/commands/` files are already in `templates/base/` and will be there when you pull.

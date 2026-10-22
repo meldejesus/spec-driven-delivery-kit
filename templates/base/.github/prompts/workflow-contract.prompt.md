@@ -263,6 +263,7 @@ After writing the index and both Gate A files, ask:
 # 8. Stage Completion
 After writing the index and both Gate A files:
 - Announce: "Stage Complete: Contract (Gate A)."
+- **Grilling check:** Briefly assess whether the spec has ambiguous requirements, conflicting constraints, unclear scope, or high delivery risk. If any of those are present, say so in one sentence and suggest: `grill-me on the contract`. If the spec is clear and low-risk, skip the suggestion entirely.
 - **If the invocation included `--review`** (e.g. `run contract --review`), immediately chain into contract-review:
   ```
   @Reviewer

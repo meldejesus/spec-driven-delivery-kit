@@ -209,6 +209,7 @@ Skills are self-contained tools invoked by name — no prompt file or agent pref
 | Skill | When to use | Invocation |
 |---|---|---|
 | `which-skill` | Not sure which command or skill fits the situation | `use the which-skill skill` |
+| `ticket-search` | Find past tickets by topic, feature, or technology across workflow/ and archive | `use the ticket-search skill to find tickets about <topic>` |
 | `workflow-index` | Regenerate `workflow/index.md` from ticket frontmatter (non-Obsidian) | `use the workflow-index skill` |
 | `asset-inventory` | Inventory all workflow assets on a machine — skills, agents, prompts, hooks, MCP | `use the asset-inventory skill` |
 
@@ -252,6 +253,26 @@ Skills are self-contained tools invoked by name — no prompt file or agent pref
 
 > Skills in `.github/skills/` are loaded by the CLI from that directory. `sonar-check` and `copilot-chat-cleanup` are built-in project skills.
 > `sonar-check` and `tailwind-check` run automatically inside `workflow-review` and `pr-review` — invoke them standalone only for one-off audits.
+
+---
+
+## Claude Code Commands
+
+For Claude Code users, slash commands in `.claude/commands/` dispatch directly
+to the right prompt without copy-pasting the full invocation.
+
+| Command | Dispatches to | Equivalent to |
+|---|---|---|
+| `/contract [ticket]` | `workflow-contract.prompt.md` | `@Architect #read workflow-contract` |
+| `/plan [ticket]` | `workflow-plan.prompt.md` | `@Plan-Agent #read workflow-plan` |
+| `/implement` | `workflow-implement.prompt.md` | `@Implementer #read workflow-implement` |
+| `/workflow-review [ticket]` | `workflow-review.prompt.md` | `@Reviewer #read workflow-review` |
+
+All commands fall back to `workflow/.active-workflow.md` if no ticket is provided.
+
+> `/workflow-review` is intentionally named to avoid collision with Claude Code's
+> built-in `/review` command. Use `/review` for quick diff-only review;
+> use `/workflow-review` for full contract-traced, evidence-gated review.
 
 ---
 
