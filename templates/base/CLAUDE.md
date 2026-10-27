@@ -4,6 +4,13 @@ Project instructions for Claude Code. This file is read automatically at the sta
 
 ---
 
+## Writing Style
+
+For workflow artifacts, also follow
+[Workflow Writing](.github/copilot-instructions.md#workflow-writing). Apply the
+style guide during drafting and check clarity and technical accuracy before
+saving, while preserving each artifact's required structure and evidence.
+
 ## Project Commands
 
 <!-- Fill in project-specific commands when installing into a workspace -->

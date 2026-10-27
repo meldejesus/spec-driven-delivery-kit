@@ -10,6 +10,20 @@ auto-read:
   - workflow/${ticket}/test.md
 ---
 
+## Writing Requirements — All Agents
+
+Before writing or updating this stage's artifacts, read
+`docs/writing-style-guide.md` if the workspace provides it. Otherwise, read
+`.github/skills/writing-style-guide/SKILL.md`. Apply the guide while drafting,
+then check clarity and technical accuracy before saving or handing off.
+
+Explain what changes, why, and what the reader should do in plain language.
+Keep the required document structure, acceptance criteria, task IDs,
+dependencies, exact identifiers, paths, commands, expected results, evidence,
+and approval boundaries. Keep proposals, completed work, and unverified checks
+distinct. Write only the artifacts this stage authorizes; style cleanup must
+not change scope or add another approval gate.
+
 # Review Invocation (Reusable)
 
 # Inputs
@@ -88,7 +102,9 @@ If `${output_dir}/pre-context.md` exists, read it too.
 ## Pull Request Synthesis Structure
 Write for engineers who skim. The primary goal is a PR description someone can understand in 60-90 seconds: what changed, what behavior is protected, what is intentionally not solved, and how to verify it.
 
-`pull-request.md` is a human-facing PR artifact. This scan-friendly style applies here, not to contract-oriented workflow files.
+`pull-request.md` uses the PR structure below. All workflow artifacts follow
+the shared Workflow Writing guidance in `.github/copilot-instructions.md`;
+contracts and plans retain their required criteria and traceability.
 
 Tone and shape:
 - Use plain headings: `The problem`, `The update`, and `How to test`.

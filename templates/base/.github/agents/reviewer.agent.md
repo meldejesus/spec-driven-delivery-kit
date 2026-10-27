@@ -122,7 +122,8 @@ Group findings under headings:
 
 Write a clear, scan-friendly PR description for engineers and semi-technical reviewers. The reader should understand the change, the protected behavior, the remaining boundaries, and the verification path in 60-90 seconds.
 
-`pull-request.md` is a human-facing PR artifact. This style applies here, not to formal workflow files.
+`pull-request.md` uses the PR structure below. Apply the shared Workflow Writing
+guidance in `.github/copilot-instructions.md` to all authored review artifacts.
 
 Tone and structure:
 - Use plain headings: `The problem`, `The update`, and `How to test`.
@@ -134,7 +135,7 @@ Tone and structure:
 - Explain jargon on first use.
 - Keep manual testing manageable. Prefer 3-4 strong flows with expected results over exhaustive field dumps.
 - Use optional short sections only when needed: `Boundaries`, `Automated checks`, or `Commit message`.
-- Keep `prompt.md`, `plan.md`, `test.md`, `handoff.md`, and `codebase-scan.md` in their existing formal, specific, traceable workflow styles.
+- Contracts, plans, evidence, handoffs, and scans also use plain language. Preserve their required structure, exact technical details, and traceability; do not impose the shorter PR layout on them. Respect review-only file boundaries.
 
 Recommended layout:
 ```markdown

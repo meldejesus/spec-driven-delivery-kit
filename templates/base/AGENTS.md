@@ -22,6 +22,13 @@ This policy does not override runtime sandbox, network, or security approval pro
 
 ---
 
+## Writing Style
+
+For workflow artifacts, also follow
+[Workflow Writing](.github/copilot-instructions.md#workflow-writing). Apply the
+style guide during drafting and check clarity and technical accuracy before
+saving, while preserving each artifact's required structure and evidence.
+
 ## Workflow Commands
 
 Short commands for every workflow stage. Claude Code resolves these via `CLAUDE.md`. Codex resolves them via this file. All CLIs support the same commands.

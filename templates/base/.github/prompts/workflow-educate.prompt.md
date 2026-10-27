@@ -5,6 +5,20 @@ agent: Educator
 tools: [read, search]
 ---
 
+## Writing Requirements — All Agents
+
+Before writing or updating this stage's artifacts, read
+`docs/writing-style-guide.md` if the workspace provides it. Otherwise, read
+`.github/skills/writing-style-guide/SKILL.md`. Apply the guide while drafting,
+then check clarity and technical accuracy before saving or handing off.
+
+Explain what changes, why, and what the reader should do in plain language.
+Keep the required document structure, acceptance criteria, task IDs,
+dependencies, exact identifiers, paths, commands, expected results, evidence,
+and approval boundaries. Keep proposals, completed work, and unverified checks
+distinct. Write only the artifacts this stage authorizes; style cleanup must
+not change scope or add another approval gate.
+
 # Education Invocation
 
 > Standard ticket flow should normally use `.github/prompts/workflow-closeout.prompt.md`, which runs this education step before promotion. Use this prompt directly for standalone education or spike education.

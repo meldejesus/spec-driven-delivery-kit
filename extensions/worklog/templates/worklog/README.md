@@ -48,3 +48,14 @@ export WORKLOG_REPO_PATH="/path/to/source/repo"
 python3 worklog/scripts/worklog-entry.py checkout feature/example
 python3 worklog/scripts/worklog-entry.py commit feature/example "short note"
 ```
+
+## Search Related Tickets
+
+Search active and archived workflow tickets from the workspace root:
+
+```bash
+python3 worklog/scripts/workflow-search.py 'document uploader' syllabus vault
+```
+
+All terms must appear somewhere in a ticket's notes. Add `--any` to match any
+term. Results include copyable ticket IDs, matching context, and file paths.

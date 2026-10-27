@@ -64,7 +64,7 @@ If there was a significant plan deviation or hard tradeoff, include it in the re
 - Snippets must be real code from the workspace — never invented examples.
 - Keep the entire output under ~800 words. Prefer a simple breakdown over a narrative essay.
 - `overview.md` is a human-facing education artifact. Use plain, scan-friendly language with short sections and practical explanations.
-- Do not apply this style to contract-oriented artifacts. `prompt.md`, `plan.md`, `test.md`, and `handoff.md` should keep their formal workflow structure and traceability.
+- Apply the shared Workflow Writing guidance in `.github/copilot-instructions.md`. Contracts, plans, evidence, and handoffs also use plain language while retaining their required structure, technical detail, and traceability; the education outline and word limit apply only to `overview.md`.
 
 # ⚠️ Mandatory File Write
 After composing the walkthrough, you MUST write it to disk before this task is considered complete.

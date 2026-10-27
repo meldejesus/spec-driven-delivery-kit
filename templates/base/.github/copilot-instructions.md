@@ -28,6 +28,34 @@ commands, documentation links, and domain rules after installation.
   containing the ticket ID, title, summary, search terms, related paths, related
   links, and artifact map.
 
+## Workflow Writing
+
+Before creating or updating workflow prose, read the workspace writing style
+guide when one is provided. Otherwise, use
+`.github/skills/writing-style-guide/SKILL.md`. Apply it while drafting contracts,
+plans, codebase scans, handoffs, test/evidence notes, reviews, pull requests,
+spike findings, and closeout documents.
+
+Write so the user can review the document and an agent can act on it:
+
+- Lead with the problem, intended behavior, or current state. Explain what
+  changes and why before giving implementation detail.
+- Use short, concrete headings and direct sentences. Explain an unfamiliar
+  technical term through its effect; keep identifiers exact.
+- Preserve the required artifact structure, acceptance criteria, task IDs,
+  dependencies, file paths, commands, expected results, evidence links, and
+  approval boundaries. Plain language must not remove implementation detail.
+- Keep facts, proposals, assumptions, completed work, and unverified checks
+  distinct. A style edit must not change scope, decisions, or test results.
+- Before saving or handing off, check both readability and meaning against
+  the source. Clarify dense prose while preserving required detail. During
+  implementation, keep journal entries brief and retain existing audit history.
+
+This check is part of each existing writing step. It adds no approval gate,
+mandatory separate agent, or extra workflow artifact. Keep each document's
+required shape; a short PR description does not replace a contract's criteria
+or a plan's executable checklist.
+
 ## Implementation Standards
 
 - Follow existing project conventions before introducing new abstractions.
