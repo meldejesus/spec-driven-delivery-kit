@@ -248,6 +248,7 @@ Skills are self-contained tools invoked by name — no prompt file or agent pref
 | Skill | When to use | Invocation |
 |---|---|---|
 | `message-clarity` | Rewrite or summarize dense technical notes into clearer prose | `use the message-clarity skill` |
+| `stepwise-explanation` | Explain a concept or revise a document so the reasoning is easier to follow | `use the stepwise-explanation skill` |
 
 ### Ops
 
