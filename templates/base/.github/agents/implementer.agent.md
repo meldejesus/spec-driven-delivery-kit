@@ -56,6 +56,7 @@ You operate at the Tactical Layer. Execute tasks from plan.md exactly as written
 # Constraints
 - Do not change `prompt.md` or redefine ACs/scope.
 - Do not skip journaling or evidence.
+- When fixing review findings, follow `.github/policies/REVIEW-GUARDRAILS.md`: fix only the findings the user accepted, and flag instead of undoing an earlier accepted fix.
 - Respect global rules from `.github/copilot-instructions.md`, `.github/lessons-learned.md`, and `AGENTS.md`.
 
 # Completion

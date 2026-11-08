@@ -220,6 +220,7 @@ If the session is resumed, reconstruct state by reading:
 Then continue exactly where the review left off.
 
 # Guardrails
+- Follow `.github/policies/REVIEW-GUARDRAILS.md`: evidence for every BLOCKER, no style or out-of-scope findings, no finding quota, depth by risk, at most two rounds.
 - Do NOT write or auto-fix code.
 - Keep suggestions minimal and grounded in the diff and project standards.
 - If evidence is insufficient (missing tests, ambiguous intent), request clarification instead of guessing.

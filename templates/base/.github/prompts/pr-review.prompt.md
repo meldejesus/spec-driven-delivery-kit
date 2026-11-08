@@ -37,6 +37,17 @@ Before fetching the rest of the context, resolve `output_dir`.
    - status: review-running
    - artifact map for `testing-guide.md`, `review.md`, `author-message.md`, `verdict.md`, and `testing-notes.md`
 
+# Local Checkout (temporary worktree)
+Review from the GitHub diff when you can. If you need to run tests or read files at
+the PR's head commit, use a temporary worktree:
+
+1. Create it detached so it doesn't hold a branch name:
+   `git -C /Users/dejesusm1/osmosis/monorepo-worktree worktree add --detach ../pr<number>-review <pr-head-sha>`
+2. Don't commit, create branches, or push from it.
+3. Record its path in `${output_dir}/index.md` under `temp_worktree`.
+4. Delete it when the review ends (see **Cleanup**). `monorepo-worktree` is the only
+   permanent worktree. Never remove it or `osmosis-gme-monorepo`.
+
 # Silent Fetch (do this before any output)
 1. Use `github` to fetch: PR title, description, changed file paths, full diff, existing review comments
 2. Use `atlassian/atlassian-mcp-server/*` (if ticket provided) to fetch: ACs, problem description
@@ -103,6 +114,8 @@ Write Stage 1 to `${output_dir}/testing-guide.md`.
 Run immediately after Stage 1. Do not stop for input.
 
 ## Review Discipline — Avoid False Alarms
+
+Also follow `.github/policies/REVIEW-GUARDRAILS.md`: no finding quota, depth by risk, at most two rounds.
 
 **Before classifying anything as a finding:**
 1. Could this be an intentional decision with context you don't have?
@@ -242,5 +255,17 @@ Numbered list. Each: what to fix and why.
 - If the verdict is APPROVE and there are no author messages, provide one short approval sentence.
 
 Write Stage 3 to `${output_dir}/verdict.md`.
+
+Then run **Cleanup**.
+
+# Cleanup
+Run this after writing `verdict.md`, and also if the user ends the review early.
+
+1. If this review created a temporary worktree, delete it:
+   `git -C /Users/dejesusm1/osmosis/monorepo-worktree worktree remove --force <path>`
+   then `git worktree prune`. Snapshot updates and test output in it are disposable.
+2. If you created a local branch for the review, delete it.
+3. Set `temp_worktree: removed` in `${output_dir}/index.md` and tell the user which
+   worktree was deleted.
 
 STOP. Point the user to `author-message.md` for the separate copy-paste comments.

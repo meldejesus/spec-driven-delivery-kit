@@ -22,6 +22,24 @@ This policy does not override runtime sandbox, network, or security approval pro
 
 ---
 
+## Review Guardrails
+
+Every review follows [.github/policies/REVIEW-GUARDRAILS.md](.github/policies/REVIEW-GUARDRAILS.md), whoever runs it: stage, peer or
+independent review, and Codex, Claude Code, Copilot or an outside tool.
+
+- Label findings BLOCKER, SHOULD FIX or NICE TO HAVE. A BLOCKER cites a
+  requirement line or a concrete failing case.
+- No style, refactor or out-of-scope findings, and no finding quota. Zero
+  findings is valid.
+- Review risky areas closely (locks, auth, migrations, cleanup, public
+  interfaces, resource limits) and everything else lightly.
+- At most two rounds per checkpoint; round 2 checks only accepted fixes.
+  Disputes go to the user.
+- The user decides which findings the implementer gets. The implementer fixes
+  only those and doesn't undo earlier accepted fixes.
+
+---
+
 ## Writing Style
 
 For workflow artifacts, also follow
@@ -42,6 +60,7 @@ Short commands for every workflow stage. Claude Code resolves these via `CLAUDE.
 | `run closeout` | Architect | `workflow-closeout.prompt.md` |
 | `run sonar pr_number=<N>` | Reviewer | `workflow-sonar.prompt.md` |
 | `run peer-review pr_url=<URL>` | Reviewer | `pr-review.prompt.md` |
+| `run independent-review artifact=<contract\|plan\|diff\|doc>` | Reviewer | `independent-review.prompt.md` |
 | `run spike-contract ticket=<ID>` | Architect | `spike-contract.prompt.md` |
 | `run spike-investigate` | Spike-Investigator | `spike-investigate.prompt.md` |
 | `run spike-review` | Reviewer | `spike-review.prompt.md` |
@@ -110,6 +129,13 @@ Used for time-boxed research tickets. See `.github/how-to/howToUse.md` (Spike se
 | `spike-contract.prompt.md`    | Fetches spike ticket, creates searchable `index.md`, drafts scope document with question, boundaries, and sources. **Gate A.** |
 | `spike-investigate.prompt.md` | Works through sources, journals findings, writes structured output document.                    |
 | `spike-review.prompt.md`      | Reviews spike output — checks question was answered, findings are grounded, gaps are honest.    |
+
+### `independent-review` — Second opinion at any checkpoint
+Reviews a contract, plan, task-batch diff or doc before Gate D, ideally from a different model or tool. Findings only, no verdict. The prompt stands on its own, so it can be pasted into an outside tool.
+
+| Prompt                          | What it does                                                                                       |
+| ------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `independent-review.prompt.md`  | Reviews one artifact against its requirements under the review guardrails, with deep and light areas and a two-round cap. |
 
 ### `pr-review-*` — Reviewing someone else's PR
 Used to review a teammate's PR from a GitHub URL. See `.github/how-to/howToUse.md` (Peer Review section).
@@ -286,15 +312,16 @@ All commands fall back to `workflow/.active-workflow.md` if no ticket is provide
 
 ## Which Review to Use
 
-Three review commands exist for different contexts:
+Use the review that fits the situation. All of them follow the [review guardrails](.github/policies/REVIEW-GUARDRAILS.md).
 
 | Situation | Command |
 |---|---|
 | Your ticket is ready to merge — final Gate D check | `run review` |
 | Reviewing a teammate's PR from a GitHub URL | `run peer-review pr_url=<URL>` |
 | Mid-implementation check on your own branch (not Gate D) | `use the branch-review skill` |
+| Second opinion on a contract, plan, task batch or doc, ideally from another model or tool | `run independent-review artifact=<type>` |
 
-`run review` reads `plan.md` and `contract.md` to verify AC coverage. `run peer-review` fetches the PR diff directly. `branch-review` is a lightweight two-axis check (Standards + Spec) for sanity checks during implementation.
+`run review` reads `plan.md` and `contract.md` to verify AC coverage. `run peer-review` fetches the PR diff directly. `branch-review` is a lightweight two-axis check (Standards + Spec) for sanity checks during implementation. `run independent-review` returns findings only and is meant for a reviewer that didn't write the artifact.
 
 ---
 

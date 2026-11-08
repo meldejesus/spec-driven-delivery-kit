@@ -82,6 +82,7 @@ If `${output_dir}/pre-context.md` exists, read it too.
 - **If terminal tools are unavailable:** skip all execution steps. Note in review output: `⚠️ Terminal unavailable — diff, build, lint, and Tailwind checks could not be verified. Proceeding with static review of context files only.`
 
 # Review Rules
+- Follow `.github/policies/REVIEW-GUARDRAILS.md`: a BLOCKER cites an AC, NFR or a concrete failing case; no finding quota; depth by risk.
 - Validate AC coverage end-to-end (Contract → Plan → Evidence).
 - Findings MUST reference file:path:line (or symbol) and tag AC or NFR.
 - If any AC lacks evidence in test.md → Decision = REQUEST CHANGES with “Evidence Required” findings.
