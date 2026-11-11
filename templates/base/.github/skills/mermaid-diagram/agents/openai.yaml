@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mermaid Diagram"
+  short_description: "Create, validate, and export printable Mermaid diagrams"
+  default_prompt: "Use $mermaid-diagram to create a validated Mermaid diagram and print-safe PDF exports from the target file or workflow I provide."

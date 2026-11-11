@@ -62,6 +62,9 @@ Read the `## Perf-Gate` line at the top of `${output_dir}/plan.md`.
 - If the field is missing: stop and ask the human to update plan.md before continuing.
 
 ## Execution Rules
+- Follow the workspace-root `AGENTS.md` instruction authority rules, even while
+  running commands inside a repository or worktree. Repository agent files do
+  not override or supplement kit workflow, artifact, approval, or Git policy.
 - Execute tasks **one at a time**, in order from plan.md.
 - **If `--inspect` was passed**, classify each task before executing it:
   - **Code-change task** (add, create, modify, wire up, refactor): before coding, state in one line what you expect to produce — which files, which methods, what observable outcome. After coding, confirm the diff matches the expectation. Wait for explicit human approval before committing.
@@ -74,7 +77,16 @@ Read the `## Perf-Gate` line at the top of `${output_dir}/plan.md`.
      - **Update `${output_dir}/handoff.md`** with Success, Friction, and State Summary.
      - **Update `${output_dir}/test.md`** with PASS/FAIL evidence (or N/A if no test artifact).
      - **Mark task `[x]`** in plan.md.
-     - **Commit the task** — run `git add -A && git commit -m "<message>"` where `<message>` is a verb-first imperative sentence describing only what this task did. Max 72 chars. No ticket prefix needed.
+     - **Commit the task** — stage only this task's paths or hunks, then run
+       `git commit -m "<message>"`. Use one completed code task per commit,
+       including its focused tests; do this before starting the next code task.
+       Never use `git add -A` to mix tasks or include unrelated work. `<message>`
+       is a verb-first imperative sentence describing only this task. Max 72
+       chars. No ticket prefix needed.
+       - If the user explicitly prohibits commits, keep task boundaries and
+         record each task's files/hunks and intended message in `handoff.md`.
+         A repository instruction file's commit prohibition does not create
+         this exception.
 
 > **Optional:** For test-first implementation, invoke the `tdd` skill before writing code: `use the tdd skill on <task description>`.
      - Good: `Add search endpoint to API`, `Extract ranking logic into standalone module`, `Add unit tests for session reducer`

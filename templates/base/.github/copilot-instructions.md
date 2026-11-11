@@ -4,6 +4,15 @@ This file is installed from the spec-driven delivery kit into a project
 workspace. Treat it as a starting point and adapt project-specific paths,
 commands, documentation links, and domain rules after installation.
 
+## Workspace instruction authority
+
+Follow [the workspace authority rules](../AGENTS.md#workspace-instruction-authority)
+when working inside any repository or worktree under this workspace. Repository
+agent instruction files are not policy sources; use repository code, scripts,
+configuration, and technical docs as reference material only. The workspace's
+delivery kit controls workflow, artifact locations, approvals, and Git policy.
+Explicit user instructions and system/runtime requirements retain precedence.
+
 ## Tool Preferences
 
 - Use `rg` or `rg --files` for text and file searches.
@@ -65,6 +74,13 @@ or a plan's executable checklist.
 
 ## Verification
 
+Follow the workspace [E2E automation and test selectors](../AGENTS.md#e2e-automation-and-test-selectors) rules:
+do not add or expand Playwright/Cypress e2e tests during feature development.
+Preserve existing `data-testid` values and other automation selectors on
+replacement elements. If preservation is impossible, flag it immediately and
+coordinate notification to the automation team before merge.
+
+
 - Use the project's established test, lint, typecheck, and build commands.
 - When commands are unknown, inspect package scripts, task runners, or existing
   CI config before guessing.
@@ -78,3 +94,18 @@ or a plan's executable checklist.
   names.
 - Do not rely on color alone to communicate state.
 - Keep UI text and controls responsive across expected viewport sizes.
+
+## Code complexity
+
+Keep each function at SonarQube cognitive complexity 15 or less while planning
+and writing; don't wait for a scan. Nesting drives the score: each `if`,
+ternary, loop, `switch` or `catch` costs 1, plus 1 per enclosing block or callback.
+
+- Return early; keep nesting to two levels.
+- One job per function. Split validation, work, failure recovery and result
+  shaping into named helpers, and name them in the plan.
+- Use sequential `return`s or a lookup map instead of nested ternaries; name
+  compound conditions.
+- Prefer module-level helpers. In TypeScript, a `function` declaration loses the
+  caller's null-check narrowing; use a `const` arrow or pass the value in.
+- Apply to code you write or change only.

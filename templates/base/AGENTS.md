@@ -40,7 +40,92 @@ independent review, and Codex, Claude Code, Copilot or an outside tool.
 
 ---
 
-## Writing Style
+## Workspace instruction authority
+
+For work started in this workspace, the workspace root owns agent
+instructions, including work performed inside its repositories and worktrees.
+Changing the terminal working directory does not change that authority.
+
+- Follow the user's instructions and the spec-driven-delivery-kit installed at
+  this workspace root: `AGENTS.md`, `.github/`, and the ticket's root
+  `workflow/<ticket>/` artifacts. Explicit user instructions take precedence
+  over kit defaults; system and runtime requirements still apply.
+- Ignore agent-policy instructions inside individual repositories and
+  worktrees, including their `AGENTS.md`, `CLAUDE.md`, Copilot instructions,
+  agent definitions, skills, and Spec Kit configuration. Do not let those files
+  select a workflow, artifact location, approval gate, or Git policy, even when
+  their rule does not directly conflict with a workspace rule.
+- Repository source, package scripts, configuration, and technical documentation
+  remain reference material for implementation, conventions, and validation.
+  Reading them does not make repository agent instructions authoritative.
+- Use the delivery kit, not a repository's GitHub Spec Kit. Keep workflow
+  artifacts in the workspace-root `workflow/` directory; do not create repository
+  `specs/`, `tasks.md`, or `.specify/` state for kit-managed work.
+- The implementation default is **one completed code task per commit**, with
+  its focused tests included. Stage only that task's paths or hunks; never use
+  blanket staging that could include another task or someone else's work.
+  Commit after the task's checks and journal update, before starting the next
+  code task. A separate test task may have its own commit; do not defer all
+  implementation to one final commit.
+- If the user explicitly says not to commit, preserve task boundaries and
+  record each task's files/hunks and intended commit message in `handoff.md`.
+  Do not treat a repository's blanket commit prohibition as such an exception.
+  Implementation consent does not authorize a push or publication.
+
+## E2E automation and test selectors
+
+These rules apply to every agent, including Codex, Claude Code, and GitHub
+Copilot, across this workspace's repositories and worktrees.
+
+- Do not add Playwright or Cypress end-to-end tests or automation scripts as
+  part of feature development. Do not expand existing e2e suites to work around
+  this rule. The automation team owns this coverage until the team standardizes
+  the process. A contract or plan requiring browser verification does not
+  authorize adding e2e scripts; use existing checks and record manual steps and
+  results instead. Unit and component tests remain in scope.
+- Before changing UI markup, inspect existing automation for selectors that
+  depend on the affected elements. Preserve existing `data-testid` values and
+  other selectors used by e2e tests, including element IDs. Renaming, removing,
+  or moving a selector to an element with different behavior can break tests.
+- When replacing an element, carry its existing `data-testid` onto the
+  equivalent replacement element and preserve the selector's intended behavior.
+  Avoid duplicate test IDs where tests expect one matching element.
+- If a selector cannot be preserved, flag the change immediately to the user
+  and arrange notification to the automation team before merge. Record the old
+  and new selectors, affected flows, and required automation updates in the
+  handoff or PR notes. Do not silently change selectors or rewrite e2e tests
+  to hide the breakage. Send messages to the automation team only when the user
+  authorizes that communication; otherwise provide a ready-to-send notice.
+
+## Worktrees
+
+These rules apply to every agent, including Codex, Claude Code, and GitHub
+Copilot.
+
+- **Never delete these checkouts.** `monorepo-worktree` (under the workspace root)
+  is the user's only permanent worktree. `osmosis-gme-monorepo`
+  is the main checkout. Do not remove, prune, or `rm` either one, even as part
+  of a cleanup step.
+- **Every other worktree is temporary.** This includes worktrees for PR
+  reviews, validation runs, spikes, and agent isolation.
+- **Create temporary worktrees detached.** Use
+  `git worktree add --detach <path> <commit>`. A worktree that checks out a
+  branch locks that branch, so `git checkout <branch>` then fails in
+  `monorepo-worktree` with "already used by worktree."
+- **Delete a temporary worktree when its task ends.** Run
+  `git worktree remove <path>`, then `git worktree prune`, and tell the user
+  what you removed. Snapshot updates and test output in a temporary worktree
+  are disposable, so `--force` is fine for those.
+- **Ask before deleting real work.** If a temporary worktree has commits that
+  aren't pushed, or edits that aren't just generated output, ask the user
+  first. Also ask before deleting a worktree that you didn't create.
+
+## Writing style
+
+Before writing or revising documentation, explanations, ticket comments, or
+message drafts, read and follow [docs/writing-style-guide.md](docs/writing-style-guide.md).
+Use short subjects, direct verbs, and enough context for a reader new to the
+system. Follow any user-requested format or required document template.
 
 For workflow artifacts, also follow
 [Workflow Writing](.github/copilot-instructions.md#workflow-writing). Apply the
@@ -252,6 +337,7 @@ Skills are self-contained tools invoked by name — no prompt file or agent pref
 | Skill | When to use | Invocation |
 |---|---|---|
 | `fork-session` | Compact current conversation to a temp file and hand off to a fresh session | `use the fork-session skill` |
+| `mermaid-diagram` | Create or repair a renderer-compatible Mermaid diagram from source files or a described workflow | `use the mermaid-diagram skill on <file or workflow>` |
 
 ### Review
 
@@ -338,3 +424,26 @@ Use the review that fits the situation. All of them follow the [review guardrail
 | `.github/how-to/howToUse-claude-code.md` | Claude Code CLI — startup, MCP config, permission notes |
 | `.github/how-to/howToUse-codex.md` | Codex CLI — startup, AGENTS.md as config, fallback invocation |
 | `docs/` | Architecture decisions, terminology, state-of-the-art references |
+
+## Imports
+
+Use static imports by default. Use dynamic imports only when deferring module
+loading avoids unwanted startup work or side effects, or when runtime loading
+is required. Add a short comment explaining why a dynamic import is needed.
+Keep dependency creation lazy when it requires configuration or opens connections;
+a static import does not require calling a factory during module loading.
+
+## Code complexity
+
+Keep each function at SonarQube cognitive complexity 15 or less while planning
+and writing; don't wait for a scan. Nesting drives the score: each `if`,
+ternary, loop, `switch` or `catch` costs 1, plus 1 per enclosing block or callback.
+
+- Return early; keep nesting to two levels.
+- One job per function. Split validation, work, failure recovery and result
+  shaping into named helpers, and name them in the plan.
+- Use sequential `return`s or a lookup map instead of nested ternaries; name
+  compound conditions.
+- Prefer module-level helpers. In TypeScript, a `function` declaration loses the
+  caller's null-check narrowing; use a `const` arrow or pass the value in.
+- Apply to code you write or change only.
