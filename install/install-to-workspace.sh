@@ -18,7 +18,8 @@ Options:
   --with-codex        Also install optional Codex helper scripts.
   --all               Install core files and optional extension templates.
   --github-only       Install only .github/ (safe for Desktop or shared roots).
-  --force             Overwrite all kit-managed files, even locally modified ones.
+  --force             Also replace files that differ from the kit but are not in
+                      the manifest yet. Each one is backed up first.
   --dry-run           Print actions without changing files.
   -h, --help          Show this help.
 
@@ -38,14 +39,22 @@ Optional install paths:
 
 Manifest:
   .kit-manifest is written to the workspace after each install. On reinstall:
-  - Kit-managed files with no local edits are updated silently.
-  - Locally modified kit files are backed up (.kit-backup) and then updated.
+  - Kit files with no local edits are updated.
+  - Kit files with local edits are copied to .kit-backups/<timestamp>/ and
+    then updated.
   - Files retired from the kit (in old manifest, not in new kit) are deleted if
     unmodified, or left in place with a warning if locally modified.
-  - Files not in the manifest (ticket data, worklog, user-added skills, etc.)
-    are never touched.
-  - With no manifest yet: files identical to the current kit are treated as
-    kit-owned; files that differ are left alone.
+  - Files the kit never installed (ticket data, user-added skills, etc.) are
+    never touched.
+  - With no manifest yet: files identical to the kit are claimed as kit-owned.
+    Files that differ are skipped, or backed up and replaced with --force.
+
+Seed files:
+  worklog/ (except worklog/scripts/), .github/lessons-learned.md,
+  workflow/index.md, workflow/README.md, workflow/future-tickets/, and
+  workflow/misc/ are copied only when missing. They hold your own content, so
+  the installer never updates, replaces, or removes them.
+
 USAGE
 }
 
@@ -164,10 +173,15 @@ file_hash() {
 }
 
 # --- Manifest ---
+#
+# Manifest lines are "<sha256>  <relative path>". The hash is always 64 hex
+# characters, so the path starts at column 67. Lookups compare the whole path
+# with awk; grep -F cannot anchor on end of line.
 
 manifest_file="$target/.kit-manifest"
 old_manifest_tmp=""
 new_manifest_tmp=""
+backup_root="$target/.kit-backups/$(date +%Y%m%d-%H%M%S)"
 
 init_manifest() {
   old_manifest_tmp="$(mktemp)"
@@ -178,67 +192,168 @@ init_manifest() {
   trap 'rm -f "$old_manifest_tmp" "$new_manifest_tmp"' EXIT
 }
 
-manifest_lookup() {
+manifest_path_of() {
+  echo "$1" | cut -c67-
+}
+
+manifest_hash_for() {
   local rel="$1"
-  if [ -s "$old_manifest_tmp" ]; then
-    grep -F "  ${rel}$" "$old_manifest_tmp" 2>/dev/null | awk '{print $1}' | head -1
-  fi
+  local file="$2"
+  awk -v r="$rel" 'substr($0, 67) == r { print $1; exit }' "$file"
+}
+
+manifest_lookup() {
+  manifest_hash_for "$1" "$old_manifest_tmp"
+}
+
+in_new_manifest() {
+  [ -n "$(manifest_hash_for "$1" "$new_manifest_tmp")" ]
 }
 
 record_manifest() {
   local src="$1"
   local rel="$2"
-  local hash
-  hash=$(file_hash "$src")
-  echo "$hash  $rel" >> "$new_manifest_tmp"
+  echo "$(file_hash "$src")  $rel" >> "$new_manifest_tmp"
+}
+
+unrecord_manifest() {
+  local rel="$1"
+  awk -v r="$rel" 'substr($0, 67) != r' "$new_manifest_tmp" > "${new_manifest_tmp}.tmp"
+  mv "${new_manifest_tmp}.tmp" "$new_manifest_tmp"
 }
 
 write_manifest() {
   if [ "$dry_run" != "1" ] && [ -s "$new_manifest_tmp" ]; then
-    sort "$new_manifest_tmp" > "$manifest_file"
+    sort -u "$new_manifest_tmp" > "$manifest_file"
     _log "Wrote manifest: $manifest_file"
   fi
 }
 
+# --- Path classes ---
+
+# Seed files start as templates and then hold the user's own content. They are
+# copied only when missing, never tracked in the manifest, never updated, and
+# never retired.
+is_seed_path() {
+  case "$1" in
+    worklog/scripts/*) return 1 ;;
+    worklog/*) return 0 ;;
+    .github/lessons-learned.md) return 0 ;;
+    workflow/index.md|workflow/README.md) return 0 ;;
+    workflow/future-tickets/*|workflow/misc/*) return 0 ;;
+  esac
+  return 1
+}
+
+# Always-replace files are fully kit-owned, so local edits are backed up and
+# replaced even without --force.
+is_always_replace_path() {
+  [ "$1" = "workflow/TAGS.md" ]
+}
+
+# --- Backups ---
+
+backup_path() {
+  local rel="$1"
+  run mkdir -p "$(dirname "$backup_root/$rel")"
+  run cp -p "$target/$rel" "$backup_root/$rel"
+}
+
+replace_with_backup() {
+  local src="$1"
+  local rel="$2"
+  backup_path "$rel"
+  run cp "$src" "$target/$rel"
+  echo "⚠️  Local edits backed up to ${backup_root#${target}/}/$rel — kit version installed: $rel"
+}
+
+retire_legacy_path() {
+  local rel="$1"
+  [ -e "$target/$rel" ] || return 0
+  run mkdir -p "$(dirname "$backup_root/$rel")"
+  run mv "$target/$rel" "$backup_root/$rel"
+  _log "Moved legacy path to ${backup_root#${target}/}/$rel"
+}
+
+# --- Retired kit files ---
+
+remove_retired_file() {
+  local old_hash="$1"
+  local rel="$2"
+  local dest="$target/$rel"
+
+  if in_new_manifest "$rel" || is_seed_path "$rel" || [ ! -f "$dest" ]; then
+    return
+  fi
+  if [ "$(file_hash "$dest")" = "$old_hash" ]; then
+    run rm "$dest"
+    _log "Removed retired kit file: $rel"
+    return
+  fi
+  echo "⚠️  Retired kit file has local edits, leaving in place: $rel"
+}
+
 remove_retired_files() {
-  [ -s "$old_manifest_tmp" ] || return
+  [ -s "$old_manifest_tmp" ] || return 0
+  local line
   while IFS= read -r line; do
     [ -z "$line" ] && continue
-    local old_hash
-    old_hash=$(echo "$line" | awk '{print $1}')
-    local rel
-    rel=$(echo "$line" | awk '{$1=""; sub(/^  /, ""); print}')
-    # Skip if still in new kit
-    if grep -qF "  ${rel}$" "$new_manifest_tmp" 2>/dev/null; then
-      continue
-    fi
-    local dest="$target/$rel"
-    [ -f "$dest" ] || continue
-    local dest_hash
-    dest_hash=$(file_hash "$dest")
-    if [ "$dest_hash" = "$old_hash" ]; then
-      run rm "$dest"
-      _log "Removed retired kit file: $rel"
-    else
-      echo "⚠️  Retired kit file has local edits, leaving in place: $rel"
-    fi
+    remove_retired_file "${line%% *}" "$(manifest_path_of "$line")"
   done < "$old_manifest_tmp"
 }
 
 # --- File install with manifest awareness ---
+
+install_seed_file() {
+  local src="$1"
+  local rel="$2"
+  [ -e "$target/$rel" ] && return
+  run cp "$src" "$target/$rel"
+  _log "Seeded: $rel"
+}
+
+# Decides what to do with an existing file that differs from the kit version.
+update_existing_file() {
+  local src="$1"
+  local rel="$2"
+  local dest_hash
+  dest_hash=$(file_hash "$target/$rel")
+  local manifest_hash
+  manifest_hash=$(manifest_lookup "$rel")
+
+  if [ -n "$manifest_hash" ] && [ "$dest_hash" = "$manifest_hash" ]; then
+    run cp "$src" "$target/$rel"
+    _log "Updated: $rel"
+    return
+  fi
+
+  local has_local_edits_to_replace="0"
+  if [ -n "$manifest_hash" ] || [ "$force" = "1" ] || is_always_replace_path "$rel"; then
+    has_local_edits_to_replace="1"
+  fi
+  if [ "$has_local_edits_to_replace" = "1" ]; then
+    replace_with_backup "$src" "$rel"
+    return
+  fi
+
+  _log "Skipping (differs from kit, not yet kit-managed; --force backs it up and replaces it): $rel"
+  unrecord_manifest "$rel"
+}
 
 install_file() {
   local src="$1"
   local dest="$2"
   local rel="${dest#${target}/}"
 
-  [ -f "$src" ] || return
-
-  local src_hash
-  src_hash=$(file_hash "$src")
-  record_manifest "$src" "$rel"
-
+  [ -f "$src" ] || return 0
   run mkdir -p "$(dirname "$dest")"
+
+  if is_seed_path "$rel"; then
+    install_seed_file "$src" "$rel"
+    return
+  fi
+
+  record_manifest "$src" "$rel"
 
   if [ "$mode" = "symlink" ]; then
     if [ ! -e "$dest" ] && [ ! -L "$dest" ]; then
@@ -254,47 +369,9 @@ install_file() {
     return
   fi
 
-  local dest_hash
-  dest_hash=$(file_hash "$dest")
-  local manifest_hash
-  manifest_hash=$(manifest_lookup "$rel")
-
-  if [ "$force" = "1" ]; then
-    run cp "$src" "$dest"
-    _log "Force-updated: $rel"
-    return
-  fi
-
-  if [ -n "$manifest_hash" ]; then
-    # Kit-managed file from a previous install
-    if [ "$dest_hash" = "$manifest_hash" ]; then
-      # Unmodified since install
-      if [ "$dest_hash" != "$src_hash" ]; then
-        run cp "$src" "$dest"
-        _log "Updated: $rel"
-      fi
-      # else: already up to date, silent
-    else
-      # Locally modified — back up, then apply kit update
-      local backup="${dest}.kit-backup"
-      run cp "$dest" "$backup"
-      run cp "$src" "$dest"
-      echo "⚠️  Local edits backed up to ${rel}.kit-backup — kit update applied"
-    fi
-  else
-    # No manifest entry: bootstrap check
-    if [ "$dest_hash" = "$src_hash" ]; then
-      # Identical to kit — claim as kit-owned (record in manifest, no copy needed)
-      _log "Claimed (bootstrap): $rel"
-    else
-      # Differs, not kit-managed — leave alone
-      _log "Skipping (user file): $rel"
-      # Remove from new manifest since we're not managing it
-      if [ "$dry_run" != "1" ]; then
-        grep -vF "  ${rel}$" "$new_manifest_tmp" > "${new_manifest_tmp}.tmp" && mv "${new_manifest_tmp}.tmp" "$new_manifest_tmp" || true
-      fi
-    fi
-  fi
+  # Identical files need no copy; the manifest entry claims them as kit-owned.
+  [ "$(file_hash "$dest")" = "$(file_hash "$src")" ] && return
+  update_existing_file "$src" "$rel"
 }
 
 install_dir() {
@@ -335,18 +412,14 @@ install_dir  "$kit_root/templates/base/.copilot"     "$target/.copilot"
 install_dir  "$kit_root/templates/base/.claude"      "$target/.claude"
 install_dir  "$kit_root/templates/base/workflow"     "$target/workflow"
 
-# workflow/TAGS.md is always kit-managed (overwrite even if edited)
-if [ "$dry_run" != "1" ]; then
-  mkdir -p "$target/workflow"
-  cp "$kit_root/templates/base/workflow/TAGS.md" "$target/workflow/TAGS.md"
-fi
-_log "Installed (always): workflow/TAGS.md"
-
 if [ "$include_worklog" = "1" ]; then
-  run rm -rf "$target/standup" "$target/scripts/standup-sync" \
-             "$target/scripts/worklog-sync" "$target/.github/skills/standup" 2>/dev/null || true
+  # Paths from the pre-worklog standup extension. Move them to the backup
+  # folder instead of deleting them.
+  for legacy in standup scripts/standup-sync scripts/worklog-sync .github/skills/standup; do
+    retire_legacy_path "$legacy"
+  done
   install_dir "$kit_root/extensions/worklog/templates/worklog"               "$target/worklog"
-  install_dir "$kit_root/extensions/worklog/templates/.github/skills/worklog" "$target/.github/skills/worklog"
+  # The worklog skill itself ships with the base kit in .github/skills/worklog/.
 fi
 
 if [ "$include_cleanup" = "1" ]; then

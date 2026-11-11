@@ -83,9 +83,14 @@ git pull                                     # if the kit source is behind
   --target /path/to/workspace --mode copy --all --force
 ```
 
-`--force` replaces `AGENTS.md`, `TAGS.md`, `.github/`, `.copilot/`, `worklog/`, `scripts/` from the kit source. It does **not** wipe `workflow/` ticket data — the installer preserves existing ticket directories inside `workflow/` and only overwrites `workflow/TAGS.md` (which is kit-managed).
+Run it with `--dry-run` first and read the output.
 
-> **Before running `--force`,** back up any hand-edited files inside `.github/`, `.copilot/`, or `AGENTS.md` at the workspace root — those will be overwritten. Per-repo overrides (files living *inside* a specific repo under the workspace) are not touched.
+- **Kit files are updated.** Files with local edits are copied to `.kit-backups/<timestamp>/` before the kit version replaces them.
+- **Your content is never replaced.** Ticket folders, `worklog/` notes and dashboards, `.github/lessons-learned.md`, and `workflow/index.md` are copied only when missing.
+- **Retired kit files are removed** when they have no local edits. Edited ones stay, with a warning.
+- **Files the kit never installed are not touched**, including `.claude/settings.local.json` and skills you added.
+
+The installer records what it installed in `.kit-manifest`. On the first run there is no manifest, so files that differ from the kit are skipped unless you pass `--force`, which backs each one up and installs the kit version. To keep a local edit, sync it into the kit source before reinstalling.
 
 ---
 

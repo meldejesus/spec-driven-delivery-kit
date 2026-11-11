@@ -6,8 +6,10 @@ set -euo pipefail
 if [ "${1:-}" = "" ] || [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
   echo "Usage: ./reinstall.sh /path/to/workspace [--dry-run]"
   echo ""
-  echo "Overwrites kit-managed files in the workspace (AGENTS.md, TAGS.md,"
-  echo ".github/, .copilot/, worklog/, scripts/). Never touches workflow/ ticket data."
+  echo "Updates kit files in the workspace. Files with local edits are copied to"
+  echo ".kit-backups/<timestamp>/ before the kit version replaces them. Ticket data,"
+  echo "worklog notes, lessons-learned.md, and files the kit never installed are not"
+  echo "touched. Run with --dry-run first."
   echo ""
   echo "Equivalent to:"
   echo "  ./install/install-to-workspace.sh --target <workspace> --mode copy --all --force"
