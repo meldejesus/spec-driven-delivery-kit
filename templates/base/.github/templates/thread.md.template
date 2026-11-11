@@ -5,31 +5,39 @@ Append-only. Each agent reads the tail before acting; appends one entry when don
 
 ## Roles
 
-Roles are self-assigned by order of first append:
-- **Writer** — first agent to append after Entry 1. Runs workflow stages, edits code and workflow files.
-- **Reviewer** — second distinct agent to append. Reviews contract, plan, and implementation using `independent-review`. Appends findings to `thread.md` only; never edits code or other workflow files.
-- **User** — approves each stage; picks which findings to fix.
+The user assigns the agents at the start of the work by filling in the Agent
+column. Use the agent's CLI or model name, such as Claude, Codex or Copilot.
+Either agent can take either role.
 
-The Reviewer joins at **contract, plan, and implement review** stages — not only at the final code review.
+| Role | Agent | Does |
+| --- | --- | --- |
+| Writer | <agent> | Runs workflow stages; edits code and workflow files. |
+| Reviewer | <agent> | Reviews contract, plan and implementation with `independent-review`. Appends findings to `thread.md` only; never edits code or other files. |
+| User | User | Approves each stage; picks which findings to fix. |
+
+If your agent name isn't in the table, or the table still shows `<agent>`, write
+`Question for User:` asking for your role, and stop.
+
+The Reviewer joins at the stages where the Writer requests review (contract,
+plan and implementation), not only at the final code review.
 
 ## Rules
 
-- **Append only.** Head each entry `## AgentName — YYYY-MM-DD HH:MM`. Never edit earlier entries.
+- **Append only.** Head each entry `## <Agent> (<Role>) — YYYY-MM-DD HH:MM`, such as `## Claude (Writer) — 2026-11-11 13:55`. The user heads entries `## User — YYYY-MM-DD HH:MM`. Never edit earlier entries.
 - **"your turn"** means: read every entry since your last one, do your part, append one entry, stop.
 - **Writer entry:** what was done, files changed, commit SHA if any, what the Reviewer should check.
 - **Reviewer entry:** numbered findings labeled BLOCKER, SHOULD FIX, or NICE TO HAVE, each with `file:line`. Otherwise "No findings." Report only real problems against the contract. No style comments, no extra features.
 - **Writer fixes only findings the user approves.**
-- **End every entry with `Next: Role — what`.**
+- **End every entry with `Next: <Role> — <what>`.**
 - **At most two review rounds per stage.** Then write `Ready for User` and stop.
 - **Ask, don't guess.** Unclear requirement or setup detail → write `Question for User:` and stop.
 
 ---
 
-## Entry 1 — ${date}
-**From:** User
+## User — ${date}
 
 Ticket: ${ticket}
 Contract at: workflow/${ticket}/prompt.md
 Plan at: workflow/${ticket}/plan.md
 
-Next: Writer — run contract stage, then Reviewer reviews prompt.md
+Next: Writer — run contract stage

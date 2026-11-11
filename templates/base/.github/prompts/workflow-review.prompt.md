@@ -190,7 +190,7 @@ Generate a single conventional-commit line that names what this PR does as a who
 3. Announce **"Stage Complete: Review (Gate D)"**
 4. **Thread entry (if `${output_dir}/thread.md` exists):** Append one entry:
    ```
-   ## Reviewer — YYYY-MM-DD HH:MM
+   ## <Agent> (Reviewer) — YYYY-MM-DD HH:MM
    Stage: Review (Gate D) complete. Decision: [APPROVE / REQUEST CHANGES].
    [Numbered findings if any, each with file:line and severity. Otherwise: "No findings."]
    Next: User — select findings to fix, then tell Writer "your turn"

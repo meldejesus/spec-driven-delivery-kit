@@ -178,7 +178,7 @@ After writing both files:
 - Announce: "Stage Complete: Plan (Gate B)."
 - **Thread entry (if `${output_dir}/thread.md` exists):** Append one entry:
   ```
-  ## Plan-Agent — YYYY-MM-DD HH:MM
+  ## <Agent> (Writer) — YYYY-MM-DD HH:MM
   Stage: Plan (Gate B) complete.
   Tasks: [N] tasks across [M] ACs. Perf-Gate: [Y/N].
   [One sentence on approach or key risk.]

@@ -46,7 +46,10 @@ Reconcile this behavior with the existing `pre-context.md` no-tracker path.
 # Active Workflow State
 This stage starts or switches the active workflow.
 
-After resolving `ticket` and `output_dir`, update:
+After resolving `ticket` and `output_dir`, update the file below. If it already
+points to a different ticket that isn't closed out, keep that ticket's values as
+`previous_*` lines (for example `previous_active`, `previous_next_stage`) so the
+user can switch back.
 
 ```text
 workflow/.active-workflow.md
@@ -71,11 +74,15 @@ Before doing anything else, resolve the working values of `ticket` and `output_d
 1. **Ticket ID extraction** — If `ticket` is a short ID (matches `[A-Z][A-Z0-9]+-\d+`), expand it:
    - `ticket` → `https://your-domain.atlassian.net/browse/<ID>`
    - If `output_dir` was not provided, set it to `workflow/<ID>`
-2. **Full URL provided** — If `ticket` is already a full URL, extract the ticket ID from the path segment and set `output_dir` to `workflow/<ID>` if not explicitly provided.
-3. **Context files** — If `context` was provided, read each file path listed. Treat their contents as authoritative developer-provided context alongside `pre-context.md`. They override assumptions from the ticket alone.
-4. **Inline context** — Treat any additional instructions in the invocation, such as "draft contract but also consider x.md", as authoritative developer context. If a file path is mentioned, read it before drafting.
-5. Confirm the resolved values internally before proceeding. Do not ask the user to confirm — just use them.
-3. **tracker_url override** — If `tracker_url` is provided, use it as the external ticket URL and skip Jira URL derivation. Store it in `.active-workflow.md` as `ticket_url`.
+2. **Local ID (no tracker)** — If `ticket` is neither a short ID nor a URL, such as `HACK-tower`, treat it as local work with no external ticket:
+   - Set `output_dir` to `workflow/<ID>` if not provided, and `ticket_url` to `""`.
+   - Use `${output_dir}/pre-context.md` as the ticket source and record `source: local-file` in `index.md` and `.active-workflow.md`.
+   - Skip §0.5 and §1. If `pre-context.md` is missing, ask the user to describe the work, write it to `pre-context.md`, then continue.
+3. **Full URL provided** — If `ticket` is already a full URL, extract the ticket ID from the path segment and set `output_dir` to `workflow/<ID>` if not explicitly provided.
+4. **tracker_url override** — If `tracker_url` is provided, use it as the external ticket URL and skip Jira URL derivation. Store it in `.active-workflow.md` as `ticket_url`.
+5. **Context files** — If `context` was provided, read each file path listed. Treat their contents as authoritative developer-provided context alongside `pre-context.md`. They override assumptions from the ticket alone.
+6. **Inline context** — Treat any additional instructions in the invocation, such as "draft contract but also consider x.md", as authoritative developer context. If a file path is mentioned, read it before drafting.
+7. Confirm the resolved values internally before proceeding. Do not ask the user to confirm — just use them.
 
 # 0.5 Resolve Tracker From Prefix Map
 Before fetching, check for `workflow/ticket-prefixes.md` at the workspace root. If present, parse it and look up the ticket's prefix (the letters before the `-`, e.g. `HH` in `HH-012`).
@@ -110,7 +117,7 @@ Do NOT stop. Instead:
 # 1.5 Initialize Ticket Directory Index
 Ensure `${output_dir}` exists. Before writing `prompt.md`, `reproduce.md`, or `handoff.md`, create or update:
 
-**Thread init:** If `${output_dir}/thread.md` does not exist, create it from `.github/templates/thread.md.template`, substituting `${ticket}` and today's date. If `thread.md` already exists, read the last 5 entries before proceeding.
+**Thread init (non-solo mode only):** If `${output_dir}/thread.md` does not exist, create it from `.github/templates/thread.md.template`, substituting `${ticket}` and today's date. If the user named the Writer and Reviewer agents, fill in the Roles table; otherwise put your own agent name in the Writer row and ask the user to name the Reviewer in the final prompt. If `thread.md` already exists, read the Roles section and the last 5 entries before proceeding.
 
 ```text
 ${output_dir}/index.md
@@ -283,23 +290,18 @@ After writing the index and both Gate A files:
 - Announce: "Stage Complete: Contract (Gate A)."
 - **Thread entry (if `${output_dir}/thread.md` exists):** Append one entry before handing off:
   ```
-  ## Architect — YYYY-MM-DD HH:MM
+  ## <Agent> (Writer) — YYYY-MM-DD HH:MM
   Stage: Contract (Gate A) complete.
   Contract drafted: [one sentence on scope].
   Key constraints: [one sentence].
   Next: [see Reviewer assessment below]
   ```
 - **Reviewer assessment (non-solo mode only):** Briefly assess whether independent review is warranted — ambiguous ACs, conflicting constraints, high delivery risk, or broad scope. If yes, say so in one sentence, set `Next:` to `Reviewer — run independent-review on prompt.md` and output the Terminal B kickoff. If no, set `Next:` to `User — approve Gate A` and skip the kickoff. In solo mode, always set `Next:` to `User — approve Gate A` with no Reviewer suggestion.
-- **Terminal B kickoff (non-solo, Reviewer warranted only):**
+- **Terminal B kickoff (non-solo, Reviewer warranted only):** Produce the exact text to paste into a second terminal to bring the Reviewer in:
   ```
   Read .github/skills/team-kickoff/SKILL.md and follow it. ticket=${ticket}
   ```
-  After that, say **"your turn"** — the Reviewer reads the thread and proceeds automatically.
-- **Terminal B kickoff:** Produce the exact text to paste into a second terminal to bring the Reviewer in:
-  ```
-  Read .github/skills/team-kickoff/SKILL.md and follow it. ticket=${ticket}
-  ```
-  After that, say **"your turn"** — the Reviewer reads the thread and proceeds from the `Next:` line automatically.
+  After that, say **"your turn"** — the Reviewer reads the thread and proceeds from the `Next:` line automatically. If the Reviewer row in the Roles table is still `<agent>`, ask the user to fill it in first.
 - **Grilling check:** Briefly assess whether the spec has ambiguous requirements, conflicting constraints, unclear scope, or high delivery risk. If any of those are present, say so in one sentence and suggest: `grill-me on the contract`. If the spec is clear and low-risk, skip the suggestion entirely.
 - **If the invocation included `--review`** (e.g. `run contract --review`), immediately chain into contract-review:
   ```

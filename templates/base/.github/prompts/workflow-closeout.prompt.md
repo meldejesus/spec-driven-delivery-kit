@@ -198,7 +198,7 @@ pr_number=<PR_NUMBER>
 
 **Thread entry (if `${output_dir}/thread.md` exists):** Append one final entry:
 ```
-## Architect — YYYY-MM-DD HH:MM
+## <Agent> (Writer) — YYYY-MM-DD HH:MM
 Stage: Closeout complete.
 Lessons extracted: [N]. Promotions proposed: [Y/N].
 Next: User — push branch, open PR, run sonar

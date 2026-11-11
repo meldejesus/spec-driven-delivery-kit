@@ -83,3 +83,6 @@ disputed for the user to decide.
 3. **Unverified:** anything you couldn't confirm, and what would confirm it.
 
 No verdict and no PR description. The user decides what to accept.
+
+If the ticket has a `thread.md`, append the findings there as one entry,
+following its Rules section, instead of writing a separate file.

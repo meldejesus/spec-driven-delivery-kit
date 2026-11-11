@@ -14,12 +14,15 @@ Either agent may run this skill at the start of their session.
 
 # Process
 
-1. **Read `workflow/.active-workflow.md`** — get the active ticket ID and output_dir.
-   If missing, ask the user for the ticket ID before proceeding.
+1. **Resolve the ticket.** Use `ticket=<ID>` from the invocation if given, with
+   `output_dir` = `workflow/<ID>`. Otherwise read `workflow/.active-workflow.md`
+   for the active ticket ID and output_dir. If neither is available, ask the user
+   for the ticket ID before proceeding.
 
 2. **Read `${output_dir}/thread.md`** — read the full file if under 60 lines;
-   otherwise read only the last 15 entries. Identify:
-   - Your assigned role (look for your CLI/model in the Roles table)
+   otherwise read the Roles section at the top plus the last 15 entries. Identify:
+   - Your assigned role: find your CLI or model name in the Agent column of the
+     Roles table
    - The last entry addressed to you
    - The current `Next:` instruction
 
@@ -36,9 +39,10 @@ Either agent may run this skill at the start of their session.
 
 6. **Proceed immediately** with the work indicated by the last `Next:` entry addressed to you.
    Do not wait for further instruction. "your turn" means: read the thread, do your part, append one entry, stop.
+   Head your entry `## <Agent> (<Role>) — YYYY-MM-DD HH:MM`, such as `## Codex (Reviewer) — 2026-11-11 14:30`.
 
 # Notes
 
-- If your role is not listed in the Roles table, ask the user to update `thread.md` before proceeding.
+- If your agent name isn't in the Roles table, or the table still shows `<agent>`, write `Question for User:` asking for your role in `thread.md`, and stop.
 - If the last `Next:` entry is not addressed to you, say so and stop — do not act on another agent's turn.
 - If `thread.md` does not exist, this is a solo workflow session. Proceed with the standard stage prompts.

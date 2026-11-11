@@ -146,7 +146,7 @@ When all tasks are `[x]`:
 3. Announce **"Stage Complete: Implementation"**
 4. **Thread entry (if `${output_dir}/thread.md` exists):** Append one entry:
    ```
-   ## Implementer — YYYY-MM-DD HH:MM
+   ## <Agent> (Writer) — YYYY-MM-DD HH:MM
    Stage: Implementation complete.
    Tasks done: [N/N]. Final build: PASS.
    Files changed: [brief list or count].
