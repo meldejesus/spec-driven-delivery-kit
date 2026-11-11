@@ -45,6 +45,7 @@ mode="copy"
 include_worklog="0"
 include_cleanup="0"
 include_codex="0"
+github_only="0"
 force="0"
 dry_run="0"
 
@@ -57,6 +58,10 @@ while [ "$#" -gt 0 ]; do
     --mode)
       mode="${2:-}"
       shift 2
+      ;;
+    --github-only)
+      github_only="1"
+      shift
       ;;
     --with-tools|--all)
       include_worklog="1"
@@ -193,6 +198,13 @@ remove_legacy_path() {
 echo "Kit root: $kit_root"
 echo "Target workspace: $target"
 echo "Mode: $mode"
+
+if [ "$github_only" = "1" ]; then
+  # Skills/prompts only — safe to run against Desktop or any shared root
+  install_path "$kit_root/templates/base/.github" "$target/.github"
+  echo "Done (github-only). Skills and prompts installed to: $target/.github"
+  exit 0
+fi
 
 install_path "$kit_root/templates/base/AGENTS.md" "$target/AGENTS.md"
 install_path "$kit_root/templates/base/TAGS.md" "$target/TAGS.md"
