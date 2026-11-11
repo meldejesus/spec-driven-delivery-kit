@@ -243,6 +243,7 @@ Skills are self-contained tools invoked by name — no prompt file or agent pref
 |---|---|---|
 | `which-skill` | Not sure which command or skill fits the situation | `use the which-skill skill` |
 | `ticket-search` | Find past tickets by topic, feature, or technology across workflow/ and archive | `use the ticket-search skill to find tickets about <topic>` |
+| `team-kickoff` | Brief a new agent joining a multi-agent ticket — reads roles, thread state, and active position | `use the team-kickoff skill` |
 | `workflow-index` | Regenerate `workflow/index.md` from ticket frontmatter (non-Obsidian) | `use the workflow-index skill` |
 | `asset-inventory` | Inventory all workflow assets on a machine — skills, agents, prompts, hooks, MCP | `use the asset-inventory skill` |
 

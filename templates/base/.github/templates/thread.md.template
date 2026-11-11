@@ -1,0 +1,35 @@
+# Thread — ${ticket}
+
+Shared communication log for multi-agent work on this ticket.
+Append-only. Each agent reads the tail before acting; appends one entry when done.
+
+## Roles
+
+Roles are self-assigned by order of first append:
+- **Writer** — first agent to append after Entry 1. Runs workflow stages, edits code and workflow files.
+- **Reviewer** — second distinct agent to append. Reviews contract, plan, and implementation using `independent-review`. Appends findings to `thread.md` only; never edits code or other workflow files.
+- **User** — approves each stage; picks which findings to fix.
+
+The Reviewer joins at **contract, plan, and implement review** stages — not only at the final code review.
+
+## Rules
+
+- **Append only.** Head each entry `## AgentName — YYYY-MM-DD HH:MM`. Never edit earlier entries.
+- **"your turn"** means: read every entry since your last one, do your part, append one entry, stop.
+- **Writer entry:** what was done, files changed, commit SHA if any, what the Reviewer should check.
+- **Reviewer entry:** numbered findings labeled BLOCKER, SHOULD FIX, or NICE TO HAVE, each with `file:line`. Otherwise "No findings." Report only real problems against the contract. No style comments, no extra features.
+- **Writer fixes only findings the user approves.**
+- **End every entry with `Next: Role — what`.**
+- **At most two review rounds per stage.** Then write `Ready for User` and stop.
+- **Ask, don't guess.** Unclear requirement or setup detail → write `Question for User:` and stop.
+
+---
+
+## Entry 1 — ${date}
+**From:** User
+
+Ticket: ${ticket}
+Contract at: workflow/${ticket}/prompt.md
+Plan at: workflow/${ticket}/plan.md
+
+Next: Writer — run contract stage, then Reviewer reviews prompt.md

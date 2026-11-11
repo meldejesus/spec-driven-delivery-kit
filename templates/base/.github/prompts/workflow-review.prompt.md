@@ -51,6 +51,8 @@ Before loading context, resolve `ticket` and `output_dir`:
 
 If `${output_dir}/pre-context.md` exists, read it too.
 
+If `${output_dir}/thread.md` exists, read the last 5 entries before reviewing.
+
 # Diff, Build, Lint/Test, and Quality Gates (report-only)
 - Run the following if terminal tools are available:
   - git fetch origin
@@ -182,10 +184,19 @@ Generate a single conventional-commit line that names what this PR does as a who
    last_completed_stage: review
    next_stage: closeout
    available_next_commands: "run closeout"
+   solo: <carry forward from active-workflow.md>
    updated_by: workflow-review
    ```
 3. Announce **"Stage Complete: Review (Gate D)"**
-4. **Optional review passes:** Remind the human that the following focused passes are available, then assess the diff and recommend which (if any) are warranted. Be specific about why.
+4. **Thread entry (if `${output_dir}/thread.md` exists):** Append one entry:
+   ```
+   ## Reviewer — YYYY-MM-DD HH:MM
+   Stage: Review (Gate D) complete. Decision: [APPROVE / REQUEST CHANGES].
+   [Numbered findings if any, each with file:line and severity. Otherwise: "No findings."]
+   Next: User — select findings to fix, then tell Writer "your turn"
+   ```
+   **If Decision = REQUEST CHANGES:** After Writer fixes the accepted findings, the Reviewer confirms using `independent-review` with `round=2` and `fixes=<list>` — not by re-running Gate D. Gate D runs once. Fix verification is lightweight.
+5. **Optional review passes:** Remind the human that the following focused passes are available, then assess the diff and recommend which (if any) are warranted. Be specific about why.
    - `use the security-review skill` — OWASP, auth, secrets, input validation, dependency safety
    - `use the performance-review skill` — Core Web Vitals, bundle impact, hot-path analysis
    - `use the simplification-review skill` — complexity reduction, Chesterton's Fence, Rule of 500

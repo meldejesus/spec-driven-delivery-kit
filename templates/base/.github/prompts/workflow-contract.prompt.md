@@ -30,6 +30,7 @@ not change scope or add another approval gate.
 - output_dir: ${input:output_dir} # optional — auto-derived from ticket ID if omitted
 - context: ${input:context}       # optional — file path(s) to additional context (comma-separated or single path)
 - tracker_url: ${input:tracker_url}  # optional — use this URL directly instead of deriving from ticket ID. Supports Linear, GitHub Issues, or any tracker URL.
+- --solo                          # optional — single-agent mode: no Reviewer involvement, all Next: lines route to User
 
 <!--
 KIT-UPGRADE NOTE (from OSMS-18682, deferred): Support an explicit local
@@ -60,6 +61,7 @@ ticket_url: https://your-domain.atlassian.net/browse/<PROJECT-ID>
 output_dir: <resolved output_dir>
 last_completed_stage: none
 next_stage: contract
+solo: <true if --solo was passed, false otherwise>
 updated_by: workflow-contract
 ```
 
@@ -107,6 +109,8 @@ Do NOT stop. Instead:
 
 # 1.5 Initialize Ticket Directory Index
 Ensure `${output_dir}` exists. Before writing `prompt.md`, `reproduce.md`, or `handoff.md`, create or update:
+
+**Thread init:** If `${output_dir}/thread.md` does not exist, create it from `.github/templates/thread.md.template`, substituting `${ticket}` and today's date. If `thread.md` already exists, read the last 5 entries before proceeding.
 
 ```text
 ${output_dir}/index.md
@@ -277,6 +281,25 @@ After writing the index and both Gate A files, ask:
 # 8. Stage Completion
 After writing the index and both Gate A files:
 - Announce: "Stage Complete: Contract (Gate A)."
+- **Thread entry (if `${output_dir}/thread.md` exists):** Append one entry before handing off:
+  ```
+  ## Architect — YYYY-MM-DD HH:MM
+  Stage: Contract (Gate A) complete.
+  Contract drafted: [one sentence on scope].
+  Key constraints: [one sentence].
+  Next: [see Reviewer assessment below]
+  ```
+- **Reviewer assessment (non-solo mode only):** Briefly assess whether independent review is warranted — ambiguous ACs, conflicting constraints, high delivery risk, or broad scope. If yes, say so in one sentence, set `Next:` to `Reviewer — run independent-review on prompt.md` and output the Terminal B kickoff. If no, set `Next:` to `User — approve Gate A` and skip the kickoff. In solo mode, always set `Next:` to `User — approve Gate A` with no Reviewer suggestion.
+- **Terminal B kickoff (non-solo, Reviewer warranted only):**
+  ```
+  Read .github/skills/team-kickoff/SKILL.md and follow it. ticket=${ticket}
+  ```
+  After that, say **"your turn"** — the Reviewer reads the thread and proceeds automatically.
+- **Terminal B kickoff:** Produce the exact text to paste into a second terminal to bring the Reviewer in:
+  ```
+  Read .github/skills/team-kickoff/SKILL.md and follow it. ticket=${ticket}
+  ```
+  After that, say **"your turn"** — the Reviewer reads the thread and proceeds from the `Next:` line automatically.
 - **Grilling check:** Briefly assess whether the spec has ambiguous requirements, conflicting constraints, unclear scope, or high delivery risk. If any of those are present, say so in one sentence and suggest: `grill-me on the contract`. If the spec is clear and low-risk, skip the suggestion entirely.
 - **If the invocation included `--review`** (e.g. `run contract --review`), immediately chain into contract-review:
   ```

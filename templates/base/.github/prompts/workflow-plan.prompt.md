@@ -55,6 +55,8 @@ Before generating any plan, read:
 
 If `${output_dir}/pre-context.md` exists, read it too.
 
+If `${output_dir}/thread.md` exists, read the last 5 entries before planning.
+
 Also review relevant code in the workspace, global rules in `.github/copilot-instructions.md`, and agent roles in `AGENTS.md`. Read `.github/lessons-learned.md` now to surface any domain-relevant lessons before planning. Surface any lessons relevant to the ticket's domain or components as pre-flight notes at the top of `plan.md`.
 
 Do **not** modify or reinterpret the Contract.
@@ -170,10 +172,20 @@ After writing both files:
   last_completed_stage: plan
   next_stage: implement
   available_next_commands: "run implement"
+  solo: <carry forward from active-workflow.md>
   updated_by: workflow-plan
   ```
 - Announce: "Stage Complete: Plan (Gate B)."
+- **Thread entry (if `${output_dir}/thread.md` exists):** Append one entry:
+  ```
+  ## Plan-Agent — YYYY-MM-DD HH:MM
+  Stage: Plan (Gate B) complete.
+  Tasks: [N] tasks across [M] ACs. Perf-Gate: [Y/N].
+  [One sentence on approach or key risk.]
+  Next: [see Reviewer assessment below]
+  ```
 - **Grilling check:** Briefly assess whether the plan has high task complexity, unclear sequencing, risky dependencies, or steps that touch unfamiliar surfaces. If any of those are present, say so in one sentence and suggest: `grill-me on the plan`. If the plan is straightforward, skip the suggestion entirely.
+- **Reviewer assessment (non-solo mode only):** Read `solo` from `workflow/.active-workflow.md`. If `solo: true`, set `Next:` to `User — approve Gate B` and skip. If `solo: false`, briefly assess whether independent review is warranted — complex dependency graph, tasks touching unfamiliar surfaces, or high risk of missed ACs. If yes, set `Next:` to `Reviewer — run independent-review on plan.md` and output the Terminal B kickoff. If no, set `Next:` to `User — approve Gate B`.
 - **If the invocation included `--review`** (e.g. `run plan --review`), immediately chain into plan-review:
   ```
   @Reviewer

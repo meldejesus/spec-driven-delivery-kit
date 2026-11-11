@@ -62,6 +62,8 @@ Read these ticket artifacts before doing any closeout work:
 #read ${output_dir}/pull-request.md
 ```
 
+If `${output_dir}/thread.md` exists, read the last 5 entries before proceeding.
+
 Also read:
 
 ```text
@@ -181,6 +183,7 @@ output_dir: ${output_dir}
 last_completed_stage: closeout
 next_stage: push-pr
 available_next_commands: "push branch → open PR → run sonar pr_number=<N>"
+solo: <carry forward from active-workflow.md>
 updated_by: workflow-closeout
 ```
 
@@ -191,6 +194,14 @@ After CI finishes and the PR number is known:
 #read .github/prompts/workflow-sonar.prompt.md
 ticket=${ticket}
 pr_number=<PR_NUMBER>
+```
+
+**Thread entry (if `${output_dir}/thread.md` exists):** Append one final entry:
+```
+## Architect — YYYY-MM-DD HH:MM
+Stage: Closeout complete.
+Lessons extracted: [N]. Promotions proposed: [Y/N].
+Next: User — push branch, open PR, run sonar
 ```
 
 Then STOP.

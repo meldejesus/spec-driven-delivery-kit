@@ -51,6 +51,8 @@ Before loading context, resolve `ticket` and `output_dir`:
 
 If `${output_dir}/pre-context.md` exists, read it too.
 
+If `${output_dir}/thread.md` exists, read the last 5 entries before starting.
+
 > ⚠️ **File creation rule:** Always use `create_file` for handoff.md and test.md on the first run. Never use `replace_string_in_file` on a file that does not yet exist.
 
 ## Perf-Gate Check (before first task)
@@ -126,10 +128,24 @@ When all tasks are `[x]`:
    last_completed_stage: implement
    next_stage: review
    available_next_commands: "run review"
+   solo: <carry forward from active-workflow.md>
    updated_by: workflow-implement
    ```
 3. Announce **"Stage Complete: Implementation"**
-4. Produce the exact next command:
+4. **Thread entry (if `${output_dir}/thread.md` exists):** Append one entry:
+   ```
+   ## Implementer — YYYY-MM-DD HH:MM
+   Stage: Implementation complete.
+   Tasks done: [N/N]. Final build: PASS.
+   Files changed: [brief list or count].
+   Commits: [SHAs or count].
+   For reviewer: [one sentence on what to focus on].
+   Next: [see Reviewer assessment below]
+   ```
+4. **Reviewer assessment:** Read `solo` from `workflow/.active-workflow.md`.
+   - **Solo mode (`solo: true`):** Set `Next:` to `User — approve, then run review (Gate D)`. No Reviewer involvement.
+   - **Non-solo mode:** Briefly assess whether the diff warrants independent review before Gate D — large diff, security/data paths touched, complex logic introduced. If yes, set `Next:` to `Reviewer — run independent-review on diff (artifact=diff, target=origin/main...HEAD)`, output Terminal B kickoff, and note: after findings are fixed and User approves, Reviewer runs Gate D (`run review`) once. If the diff is small and low-risk, set `Next:` to `User — approve, then run review (Gate D)`.
+5. Produce the exact next command:
 
 ```
 @Reviewer
