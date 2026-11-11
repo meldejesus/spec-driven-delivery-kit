@@ -195,6 +195,7 @@ Generate a single conventional-commit line that names what this PR does as a who
    [Numbered findings if any, each with file:line and severity. Otherwise: "No findings."]
    Next: User — select findings to fix, then tell Writer "your turn"
    ```
+   **If Decision = APPROVE:** end with `Next: User — approve Gate D, then tell Writer "run closeout"`.
    **If Decision = REQUEST CHANGES:** After Writer fixes the accepted findings, the Reviewer confirms using `independent-review` with `round=2` and `fixes=<list>` — not by re-running Gate D. Gate D runs once. Fix verification is lightweight.
 5. **Optional review passes:** Remind the human that the following focused passes are available, then assess the diff and recommend which (if any) are warranted. Be specific about why.
    - `use the security-review skill` — OWASP, auth, secrets, input validation, dependency safety

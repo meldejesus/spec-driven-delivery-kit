@@ -8,8 +8,9 @@ description: Brief a new agent joining a multi-agent ticket mid-workflow. Reads 
 At the start of a new terminal session joining an active ticket.
 Invocation: `Read .github/skills/team-kickoff/SKILL.md and follow it. ticket=<ID>`
 
-The Reviewer joins at **contract, plan, and implement review** stages.
-The Writer runs all other stages (contract, plan, implement, closeout).
+The Reviewer runs `independent-review` at the **contract, plan, and implement**
+stages, and runs Gate D (`run review`).
+The Writer runs contract, plan, implement, approved fixes and closeout.
 Either agent may run this skill at the start of their session.
 
 # Process

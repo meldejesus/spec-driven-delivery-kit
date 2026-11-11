@@ -11,8 +11,8 @@ Either agent can take either role.
 
 | Role | Agent | Does |
 | --- | --- | --- |
-| Writer | <agent> | Runs workflow stages; edits code and workflow files. |
-| Reviewer | <agent> | Reviews contract, plan and implementation with `independent-review`. Appends findings to `thread.md` only; never edits code or other files. |
+| Writer | <agent> | Runs contract, plan, implement, approved fixes and closeout; edits code and workflow files. |
+| Reviewer | <agent> | Reviews contract, plan and implementation with `independent-review`, and runs Gate D (`run review`). Appends findings to `thread.md`; never edits code. Gate D also writes `review.md`, `pull-request.md` and `workflow/.active-workflow.md`. |
 | User | User | Approves each stage; picks which findings to fix. |
 
 If your agent name isn't in the table, or the table still shows `<agent>`, write
@@ -23,7 +23,7 @@ plan and implementation), not only at the final code review.
 
 ## Rules
 
-- **Append only.** Head each entry `## <Agent> (<Role>) — YYYY-MM-DD HH:MM`, such as `## Claude (Writer) — 2026-11-11 13:55`. The user heads entries `## User — YYYY-MM-DD HH:MM`. Never edit earlier entries.
+- **Append only.** Head each entry `## <Agent> (<Role>) — YYYY-MM-DD HH:MM`, such as `## Claude (Writer) — 2026-11-11 13:55`. Take the time from the clock (`date '+%Y-%m-%d %H:%M'`) when you append; never estimate it. The user heads entries `## User — YYYY-MM-DD HH:MM`. Never edit earlier entries.
 - **"your turn"** means: read every entry since your last one, do your part, append one entry, stop.
 - **Writer entry:** what was done, files changed, commit SHA if any, what the Reviewer should check.
 - **Reviewer entry:** numbered findings labeled BLOCKER, SHOULD FIX, or NICE TO HAVE, each with `file:line`. Otherwise "No findings." Report only real problems against the contract. No style comments, no extra features.

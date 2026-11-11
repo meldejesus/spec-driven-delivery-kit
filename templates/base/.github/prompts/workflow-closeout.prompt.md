@@ -43,6 +43,8 @@ Before loading context, resolve `ticket` and `output_dir`:
 
 Use the resolved output directory for every artifact below.
 
+If `${output_dir}/thread.md` exists, the Writer runs closeout, not the Reviewer.
+
 ## Purpose
 Closeout combines the two post-review steps that are easy to forget when run separately:
 
@@ -171,7 +173,12 @@ Stage Complete: Closeout (promotion skipped)
 ```
 
 ## End State
-After closeout is complete, produce the exact next steps:
+After closeout is complete, produce the exact next steps.
+
+Use the delivery method in `${output_dir}/prompt.md`. The steps below assume a
+PR. If the contract names another method, such as a direct push, write that
+method's steps instead. If the change is already pushed, record the commit SHA
+and remote branch rather than telling the user to push.
 
 First update `workflow/.active-workflow.md`:
 
