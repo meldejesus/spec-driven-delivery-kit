@@ -146,24 +146,28 @@ install_path() {
     return
   fi
 
-  if [ -e "$dest" ] || [ -L "$dest" ]; then
-    if [ "$force" != "1" ]; then
-      echo "Skipping existing path: $dest"
-      return
-    fi
-    run rm -rf "$dest"
-  fi
-
   run mkdir -p "$(dirname "$dest")"
 
   if [ "$mode" = "symlink" ]; then
-    run ln -s "$src" "$dest"
+    if [ ! -e "$dest" ] && [ ! -L "$dest" ]; then
+      run ln -s "$src" "$dest"
+    else
+      echo "Skipping existing symlink: $dest"
+    fi
   else
     if [ -d "$src" ]; then
       run mkdir -p "$dest"
-      run rsync -a "$src/" "$dest/"
+      if [ "$force" = "1" ]; then
+        run rsync -a "$src/" "$dest/"
+      else
+        run rsync -a --ignore-existing "$src/" "$dest/"
+      fi
     else
-      run cp "$src" "$dest"
+      if [ "$force" = "1" ] || [ ! -e "$dest" ]; then
+        run cp "$src" "$dest"
+      else
+        echo "Skipping existing file: $dest"
+      fi
     fi
   fi
 
