@@ -235,7 +235,7 @@ After drafting the contract, initialize **handoff.md** with:
 - Relevant references (ticket links, diffs, docs)
 - Identified risks and ambiguities
 
-Set compaction rule: summarize handoff.md every 10 turns; if >50 lines, trigger Compactor.
+Set compaction rule: at each stage boundary, if handoff.md exceeds 150 lines, trigger Compactor. Don't compact partway through a stage.
 
 ---
 

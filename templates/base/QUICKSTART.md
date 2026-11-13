@@ -191,7 +191,7 @@ workflow/                     ← Your ticket artifacts live here (generated, no
 ## Getting Unstuck
 
 **The agent seems confused or is going in circles**
-→ Check `handoff.md`. If it's over 50 lines, invoke the Compactor: `use the compactor agent to summarize handoff.md`
+→ Check `handoff.md`. If it's over 150 lines and you're between stages, invoke the Compactor: `use the compactor agent to summarize handoff.md`
 
 **A task keeps failing**
 → Gate C will fire automatically after 3 failures. If it doesn't, stop the agent, read `handoff.md` to understand what failed, then edit `plan.md` to give the agent a clearer path.

@@ -80,7 +80,7 @@ If a task fails 3+ times:
 - Ensure the new path is aligned with the Strategic Contract
 
 ### **Compaction Supervision**
-When `handoff.md` becomes large (>50 lines), instruct the Compactor to summarize.
+At a stage boundary, if `handoff.md` exceeds 150 lines, instruct the Compactor to summarize. Don't compact partway through a stage.
 
 ---
 

@@ -162,7 +162,7 @@ The kit is designed to minimize tokens loaded per session and per stage.
 - **Stage isolation** — each `run X` is a fresh invocation. The `.active-workflow.md` anchor recovers ticket state without reloading full context.
 - **Tail-only handoff** — agents read only the last 40 lines of `handoff.md`, not the full journal.
 - **On-demand loading** — `lessons-learned.md`, `copilot-instructions.md`, templates, and references are loaded only when the stage that needs them runs.
-- **Compaction trigger** — when `handoff.md` exceeds 50 lines, the Compactor agent condenses it. Accuracy degrades past 100K tokens; use `fork-session` before you get there.
+- **Compaction trigger** — at each stage boundary, when `handoff.md` exceeds 150 lines, the Compactor agent condenses it. It doesn't run partway through a stage. Accuracy degrades past 100K tokens; use `fork-session` before you get there.
 
 | | This kit | GitHub Spec Kit |
 |---|---|---|

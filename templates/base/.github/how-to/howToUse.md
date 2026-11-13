@@ -366,7 +366,7 @@ See `.github/how-to/howToUse-ticket-archival.md` for full rationale.
 
 | Problem | Fix |
 |---|---|
-| Agent confused or going in circles | Check `handoff.md`. If > 50 lines: `use the compactor agent to summarize handoff.md` |
+| Agent confused or going in circles | Check `handoff.md`. If > 150 lines and you're between stages: `use the compactor agent to summarize handoff.md` |
 | Task failing repeatedly | Gate C fires after 3 failures. If it doesn't, stop the agent, read `handoff.md`, edit `plan.md` |
 | Lost context mid-workflow | `read workflow/.active-workflow.md` — shows active ticket, output dir, last stage |
 | Scope needs to change after Gate A | Run a new contract with a note — do NOT edit `prompt.md` |

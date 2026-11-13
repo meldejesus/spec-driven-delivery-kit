@@ -39,7 +39,10 @@ For workflow commands, see `AGENTS.md`.
 - Compact between stages, not mid-stage — compacting mid-task loses the thread.
 - Before compacting, write a State Summary to `workflow/<ticket>/handoff.md`.
 - Keep ticket context under 80K tokens per stage.
-- When `handoff.md` exceeds 50 lines, invoke the Compactor agent before continuing.
+- At each stage boundary (after plan, implement and review), if `handoff.md`
+  exceeds 150 lines, invoke the Compactor agent before the next stage. Don't
+  compact partway through a stage; the reasons behind recent tasks are what the
+  next task and the Reviewer need.
 - Accuracy degrades past 100K tokens — do not fill the window just because it is available.
 
 ---
