@@ -54,12 +54,17 @@ the reviewer uses the lists above.
 
 ## Who decides
 
-- Reviewers report findings. The user decides, with an advisor agent if one is
-  helping. Reviewers never instruct the implementer directly.
+- Reviewers report findings. By default, the user decides, with an advisor agent
+  if one is helping. A ticket may opt into `Review fix policy: auto-fix-in-scope`
+  in its `thread.md`; in that mode, the Writer fixes clear findings supported
+  by the ticket/source or approved contract and asks the user about scope
+  changes, ambiguous requirements or disputes. Reviewers never instruct the
+  implementer directly.
 - Before anything goes to the implementer, someone checks each finding against
   the code or artifact.
 - Only accepted BLOCKER and SHOULD FIX findings go to the implementer.
-  NICE TO HAVE findings go to the user as a list.
+  NICE TO HAVE findings go to the user as a list, except in auto-fix mode where
+  clear contract-aligned suggestions may also be fixed without expanding scope.
 
 ## Implementer
 

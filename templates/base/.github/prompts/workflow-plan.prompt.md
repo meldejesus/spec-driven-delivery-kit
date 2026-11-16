@@ -185,7 +185,7 @@ After writing both files:
   Next: [see Reviewer assessment below]
   ```
 - **Grilling check:** Briefly assess whether the plan has high task complexity, unclear sequencing, risky dependencies, or steps that touch unfamiliar surfaces. If any of those are present, say so in one sentence and suggest: `grill-me on the plan`. If the plan is straightforward, skip the suggestion entirely.
-- **Reviewer assessment (non-solo mode only):** Read `solo` from `workflow/.active-workflow.md`. If `solo: true`, set `Next:` to `User — approve Gate B` and skip. If `solo: false`, briefly assess whether independent review is warranted — complex dependency graph, tasks touching unfamiliar surfaces, or high risk of missed ACs. If yes, set `Next:` to `Reviewer — run independent-review on plan.md` and output the Terminal B kickoff. If no, set `Next:` to `User — approve Gate B`.
+- **Reviewer assessment (non-solo mode only):** Read `solo` from `workflow/.active-workflow.md`. If `solo: true`, set `Next:` to `User — approve Gate B` and skip. If `solo: false`, briefly assess whether independent review is warranted — complex dependency graph, tasks touching unfamiliar surfaces, or high risk of missed ACs. If yes, set `Next:` to `Reviewer — run independent-review on plan.md`. In manual mode, end with the Reviewer hand-off block in `.github/skills/team-kickoff/SKILL.md`; in tmux mode, validate and send the handoff after appending the thread entry. If no, set `Next:` to `User — approve Gate B`.
 - **If the invocation included `--review`** (e.g. `run plan --review`), immediately chain into plan-review:
   ```
   @Reviewer

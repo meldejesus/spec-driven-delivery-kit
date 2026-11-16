@@ -16,6 +16,7 @@ Options:
   --with-worklog      Also install the optional worklog extension.
   --with-cleanup      Also install the optional cleanup extension.
   --with-codex        Also install optional Codex helper scripts.
+  --with-relay        Also install the durable local tmux handoff queue.
   --all               Install core files and optional extension templates.
   --github-only       Install only .github/ (safe for Desktop or shared roots).
   --force             Also replace files that differ from the kit but are not in
@@ -36,6 +37,7 @@ Optional install paths:
   .github/skills/worklog/
   scripts/cleanup/
   scripts/codex/
+  scripts/relay/
 
 Manifest:
   .kit-manifest is written to the workspace after each install. On reinstall:
@@ -66,6 +68,7 @@ mode="copy"
 include_worklog="0"
 include_cleanup="0"
 include_codex="0"
+include_relay="0"
 github_only="0"
 force="0"
 dry_run="0"
@@ -88,6 +91,7 @@ while [ "$#" -gt 0 ]; do
       include_worklog="1"
       include_cleanup="1"
       include_codex="1"
+      include_relay="1"
       shift
       ;;
     --with-worklog)
@@ -100,6 +104,10 @@ while [ "$#" -gt 0 ]; do
       ;;
     --with-codex)
       include_codex="1"
+      shift
+      ;;
+    --with-relay)
+      include_relay="1"
       shift
       ;;
     --force)
@@ -428,6 +436,10 @@ fi
 
 if [ "$include_codex" = "1" ]; then
   install_dir "$kit_root/extensions/codex/templates/scripts/codex" "$target/scripts/codex"
+fi
+
+if [ "$include_relay" = "1" ]; then
+  install_dir "$kit_root/extensions/relay/templates/scripts/relay" "$target/scripts/relay"
 fi
 
 remove_retired_files

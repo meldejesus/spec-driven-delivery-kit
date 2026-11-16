@@ -217,3 +217,10 @@ When editing or adding spec files, follow `docs/spec-file-style-guide.md`. Targe
 - `docs/skill-libraries-research.md` — survey of agent-skills (Addy Osmani), skills (Matt Pocock), and pstack (Lauren Tan); lessons and open questions for this kit
 - `docs/research-specialist-panel-architecture.md` — research into a specialist panel kit (Contractor + Planner + Implementer + Reviewer as a standing team); architecture, CLI compatibility, and how it differs from this kit
 - `templates/base/.github/how-to/howToUse.md` — daily use reference (installed into workspace)
+
+## Durable tmux handoffs
+
+Install with `--with-relay` or `--all` to add the persistent local handoff queue.
+Agents in `--relay-tmux` mode enqueue thread entries rather than typing directly
+into the other pane. Occupied drafts remain pending, and receipts track delivery.
+See [the relay extension](extensions/relay/README.md) for commands and recovery.

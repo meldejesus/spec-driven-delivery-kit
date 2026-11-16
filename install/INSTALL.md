@@ -46,7 +46,9 @@ Read the output. Confirm the paths look right.
 ./install/install-to-workspace.sh --target /path/to/workspace --mode copy --all
 ```
 
-`--all` includes optional extensions (worklog, cleanup, codex helpers). Omit it for core-only.
+`--all` includes optional extensions (worklog, cleanup, Codex helpers, durable relay).
+Use `--with-relay` to install only the relay extension alongside core files.
+The helper installs to `scripts/relay/`; enqueueing a handoff starts its worker. Omit it for core-only.
 
 ### 4. Verify
 

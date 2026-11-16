@@ -1,7 +1,7 @@
 # Thread — ${ticket}
 
 Shared communication log for multi-agent work on this ticket.
-Append-only. Each agent reads the tail before acting; appends one entry when done.
+Append-only. Each agent reads the entries since its last one before acting; appends one entry when done.
 
 ## Roles
 
@@ -13,7 +13,19 @@ Either agent can take either role.
 | --- | --- | --- |
 | Writer | <agent> | Runs contract, plan, implement, approved fixes and closeout; edits code and workflow files. |
 | Reviewer | <agent> | Reviews contract, plan and implementation with `independent-review`, and runs Gate D (`run review`). Appends findings to `thread.md`; never edits code. Gate D also writes `review.md`, `pull-request.md` and `workflow/.active-workflow.md`. |
-| User | User | Approves each stage; picks which findings to fix. |
+| User | User | Approves each stage and decides findings outside any configured auto-fix policy. |
+
+## Relay configuration
+
+- Mode: manual
+- Workspace root: <unset>
+- Writer tmux target: <unset>
+- Reviewer tmux target: <unset>
+- Review fix policy: user-selected
+
+`--relay-tmux` sets these per-ticket values. It enables automatic handoffs and
+automatic fixes only for clear findings within the approved contract. It never
+approves a stage or resolves an ambiguous requirement.
 
 If your agent name isn't in the table, or the table still shows `<agent>`, write
 `Question for User:` asking for your role, and stop.
@@ -23,11 +35,18 @@ plan and implementation), not only at the final code review.
 
 ## Rules
 
+- **Read rules once per agent session.** On the first turn, read the workspace
+  instructions and team-kickoff guidance. On later relays in the same session,
+  use those loaded rules and read only new thread entries and the task artifacts
+  named there. Re-read the kickoff guidance only when joining in a new session
+  or when the user says the rules changed.
 - **Append only.** Head each entry `## <Agent> (<Role>) — YYYY-MM-DD HH:MM`, such as `## Claude (Writer) — 2026-11-11 13:55`. Take the time from the clock (`date '+%Y-%m-%d %H:%M'`) when you append; never estimate it. The user heads entries `## User — YYYY-MM-DD HH:MM`. Never edit earlier entries.
-- **"your turn"** means: read every entry since your last one, do your part, append one entry, stop.
+- **"your turn"** means: read every entry since your last one, do your part, append one entry, stop. Don't reread older entries; the thread grows with every turn, and rereading all of it costs more tokens each time.
+- **One agent writes at a time.** Append only when the latest entry's `Next:` names your role, or the user tells you it's your turn. Otherwise stop. This keeps two agents from writing to the file at once.
 - **Writer entry:** what was done, files changed, commit SHA if any, what the Reviewer should check.
 - **Reviewer entry:** numbered findings labeled BLOCKER, SHOULD FIX, or NICE TO HAVE, each with `file:line`. Otherwise "No findings." Report only real problems against the contract. No style comments, no extra features.
-- **Writer fixes only findings the user approves.**
+- **Review fixes:** by default the Writer fixes only findings the user approves. If the thread says `Review fix policy: auto-fix-in-scope`, the Writer fixes clear findings directly supported by the ticket/source or approved contract and pauses for user input on unclear requirements, scope changes, or decisions the contract leaves open.
+- **Automatic tmux relay:** in `tmux` mode, enqueue each new entry addressed to the next agent with `scripts/relay/relay.py` (see team-kickoff step 7). End the sender turn after enqueueing. The durable queue preserves occupied drafts and retries safely. The recipient runs the incoming receipt command and acknowledges the source heading in its next normal entry. Never enqueue a User turn or send direct tmux input as a fallback. Queued, submitted, and received are distinct states.
 - **End every entry with `Next: <Role> — <what>`.**
 - **At most two review rounds per stage.** Then write `Ready for User` and stop.
 - **Ask, don't guess.** Unclear requirement or setup detail → write `Question for User:` and stop.

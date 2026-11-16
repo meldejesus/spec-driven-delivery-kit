@@ -35,8 +35,11 @@ independent review, and Codex, Claude Code, Copilot or an outside tool.
   interfaces, resource limits) and everything else lightly.
 - At most two rounds per checkpoint; round 2 checks only accepted fixes.
   Disputes go to the user.
-- The user decides which findings the implementer gets. The implementer fixes
-  only those and doesn't undo earlier accepted fixes.
+- By default, the user decides which findings the implementer gets. If the
+  ticket's `thread.md` explicitly says `Review fix policy: auto-fix-in-scope`,
+  the implementer fixes clear findings supported by the ticket/source or
+  approved contract and pauses for scope changes, ambiguous requirements or
+  disputes. Preserve earlier accepted fixes.
 
 ---
 

@@ -82,7 +82,16 @@ disputed for the user to decide.
    finding N".
 3. **Unverified:** anything you couldn't confirm, and what would confirm it.
 
-No verdict and no PR description. The user decides what to accept.
+No verdict and no PR description. By default, the user decides what to accept.
+If the thread says `Review fix policy: auto-fix-in-scope`, set `Next:` to the
+Writer for clear contract-aligned findings; leave scope changes, ambiguous
+requirements and disputes for the user.
 
 If the ticket has a `thread.md`, append the findings there as one entry,
-following its Rules section, instead of writing a separate file.
+following its Rules section, instead of writing a separate file. If the thread
+is in tmux relay mode and `Next:` names the Writer, enqueue that exact entry
+with the helper described in `.github/skills/team-kickoff/SKILL.md` and end your
+turn. The queue handles target validation, occupied drafts, retries, and receipt
+tracking. Do not send directly with tmux or wait for the Writer to become idle.
+If the queue helper is missing, report the setup failure and preserve the entry
+for delivery. If `Next:` names the User or asks a question, do not enqueue it.

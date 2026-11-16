@@ -193,10 +193,11 @@ Generate a single conventional-commit line that names what this PR does as a who
    ## <Agent> (Reviewer) — YYYY-MM-DD HH:MM
    Stage: Review (Gate D) complete. Decision: [APPROVE / REQUEST CHANGES].
    [Numbered findings if any, each with file:line and severity. Otherwise: "No findings."]
-   Next: User — select findings to fix, then tell Writer "your turn"
+   Next: [auto-fix mode + REQUEST CHANGES: `Writer — fix the listed in-scope findings`; otherwise: `User — select findings to fix, then tell Writer "your turn"`]
    ```
    **If Decision = APPROVE:** end with `Next: User — approve Gate D, then tell Writer "run closeout"`.
-   **If Decision = REQUEST CHANGES:** After Writer fixes the accepted findings, the Reviewer confirms using `independent-review` with `round=2` and `fixes=<list>` — not by re-running Gate D. Gate D runs once. Fix verification is lightweight.
+   **If Decision = REQUEST CHANGES:** In auto-fix mode, set the thread's `Next:` to Writer and route clear contract-aligned findings without asking the user to select them; pause for any finding that requires changing scope or interpreting an open requirement. After Writer fixes the accepted findings, the Reviewer confirms using `independent-review` with `round=2` and `fixes=<list>` — not by re-running Gate D. Gate D runs once. Fix verification is lightweight. In manual mode, the user selects findings as before.
+   **Tmux relay:** If the thread is in tmux mode, send the next role's turn after appending the entry, using `.github/skills/team-kickoff/SKILL.md`. Never send when `Next:` names User.
 5. **Optional review passes:** Remind the human that the following focused passes are available, then assess the diff and recommend which (if any) are warranted. Be specific about why.
    - `use the security-review skill` — OWASP, auth, secrets, input validation, dependency safety
    - `use the performance-review skill` — Core Web Vitals, bundle impact, hot-path analysis

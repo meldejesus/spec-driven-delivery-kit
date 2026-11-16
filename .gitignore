@@ -38,3 +38,7 @@ temp/
 /messages/
 /templates/workflow/
 /examples/private-*/
+
+# Python relay check artifacts
+__pycache__/
+*.py[cod]

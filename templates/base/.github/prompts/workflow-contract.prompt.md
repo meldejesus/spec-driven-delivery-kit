@@ -31,6 +31,15 @@ not change scope or add another approval gate.
 - context: ${input:context}       # optional — file path(s) to additional context (comma-separated or single path)
 - tracker_url: ${input:tracker_url}  # optional — use this URL directly instead of deriving from ticket ID. Supports Linear, GitHub Issues, or any tracker URL.
 - --solo                          # optional — single-agent mode: no Reviewer involvement, all Next: lines route to User
+- --relay-tmux='writer=<agent>@<target>,reviewer=<agent>@<target>' # optional — automate existing-session handoffs; off by default
+
+`--relay-tmux` requires exact existing tmux pane targets for both roles and
+cannot be combined with `--solo`. Example shape:
+`run contract ticket=PROJECT-123 --relay-tmux='writer=Codex@session:window.pane,reviewer=Claude@session:window.pane'`.
+Use exact targets returned by `tmux list-windows` and `tmux list-panes`; do not
+guess a window name or silently rewrite a target. Without this flag, handoffs
+remain manual. The durable queue helper must be installed with `--with-relay`
+or `--all`; see team-kickoff step 7 for enqueue and receipt commands.
 
 <!--
 KIT-UPGRADE NOTE (from OSMS-18682, deferred): Support an explicit local
@@ -117,7 +126,7 @@ Do NOT stop. Instead:
 # 1.5 Initialize Ticket Directory Index
 Ensure `${output_dir}` exists. Before writing `prompt.md`, `reproduce.md`, or `handoff.md`, create or update:
 
-**Thread init (non-solo mode only):** If `${output_dir}/thread.md` does not exist, create it from `.github/templates/thread.md.template`, substituting `${ticket}` and today's date. If the user named the Writer and Reviewer agents, fill in the Roles table; otherwise put your own agent name in the Writer row and ask the user to name the Reviewer in the final prompt. If `thread.md` already exists, read the Roles section and the last 5 entries before proceeding.
+**Thread init (non-solo mode only):** If `${output_dir}/thread.md` does not exist, create it from `.github/templates/thread.md.template`, substituting `${ticket}` and today's date. If the user named the Writer and Reviewer agents, fill in the Roles table; otherwise put your own agent name in the Writer row and ask the user to name the Reviewer in the final prompt. If `--relay-tmux` was supplied, record the absolute workspace root, both agent names and exact targets, set `Mode: tmux` and `Review fix policy: auto-fix-in-scope`, and validate that both panes exist and their canonical working directories are the workspace root or a descendant. If validation fails, leave the mode manual and explain the fallback. If `thread.md` already exists, read the Roles section, Relay configuration and last 5 entries before proceeding; do not overwrite existing settings.
 
 ```text
 ${output_dir}/index.md
@@ -272,7 +281,9 @@ updated_by: workflow-contract
 ---
 
 # 7. Final Prompt to Human
-After writing the index and both Gate A files, ask:
+If `Next:` is the Reviewer (§8), end with the Reviewer hand-off block from
+`.github/skills/team-kickoff/SKILL.md` instead of this question. Otherwise,
+after writing the index and both Gate A files, ask:
 
 > "I have initialized the ticket index and drafted the Strategic Contract and Reproduction Guide.
 >
@@ -297,11 +308,7 @@ After writing the index and both Gate A files:
   Next: [see Reviewer assessment below]
   ```
 - **Reviewer assessment (non-solo mode only):** Briefly assess whether independent review is warranted — ambiguous ACs, conflicting constraints, high delivery risk, or broad scope. If yes, say so in one sentence, set `Next:` to `Reviewer — run independent-review on prompt.md` and output the Terminal B kickoff. If no, set `Next:` to `User — approve Gate A` and skip the kickoff. In solo mode, always set `Next:` to `User — approve Gate A` with no Reviewer suggestion.
-- **Terminal B kickoff (non-solo, Reviewer warranted only):** Produce the exact text to paste into a second terminal to bring the Reviewer in:
-  ```
-  Read .github/skills/team-kickoff/SKILL.md and follow it. ticket=${ticket}
-  ```
-  After that, say **"your turn"** — the Reviewer reads the thread and proceeds from the `Next:` line automatically. If the Reviewer row in the Roles table is still `<agent>`, ask the user to fill it in first.
+- **Terminal B kickoff (non-solo, Reviewer warranted only):** In manual mode, end the final message with the Reviewer hand-off block in `.github/skills/team-kickoff/SKILL.md` ("Writer: handing off to the Reviewer"), naming the Reviewer from the Roles table. In tmux mode, validate and send the handoff after appending the thread entry. In either mode, pause at Gate A and any `Question for User:`.
 - **Grilling check:** Briefly assess whether the spec has ambiguous requirements, conflicting constraints, unclear scope, or high delivery risk. If any of those are present, say so in one sentence and suggest: `grill-me on the contract`. If the spec is clear and low-risk, skip the suggestion entirely.
 - **If the invocation included `--review`** (e.g. `run contract --review`), immediately chain into contract-review:
   ```

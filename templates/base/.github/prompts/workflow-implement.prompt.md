@@ -156,7 +156,7 @@ When all tasks are `[x]`:
    ```
 4. **Reviewer assessment:** Read `solo` from `workflow/.active-workflow.md`.
    - **Solo mode (`solo: true`):** Set `Next:` to `User — approve, then run review (Gate D)`. No Reviewer involvement.
-   - **Non-solo mode:** Briefly assess whether the diff warrants independent review before Gate D — large diff, security/data paths touched, complex logic introduced. If yes, set `Next:` to `Reviewer — run independent-review on diff (artifact=diff, target=origin/main...HEAD)`, output Terminal B kickoff, and note: after findings are fixed and User approves, Reviewer runs Gate D (`run review`) once. If the diff is small and low-risk, set `Next:` to `User — approve, then run review (Gate D)`.
+   - **Non-solo mode:** Briefly assess whether the diff warrants independent review before Gate D — large diff, security/data paths touched, complex logic introduced. If yes, set `Next:` to `Reviewer — run independent-review on diff (artifact=diff, target=origin/main...HEAD)`. In manual mode, end with the Reviewer hand-off block in `.github/skills/team-kickoff/SKILL.md`; in tmux mode, validate and send the handoff after appending the thread entry. After findings are fixed, the Reviewer runs Gate D (`run review`) once. If the diff is small and low-risk, set `Next:` to `User — approve, then run review (Gate D)`.
 5. Produce the exact next command:
 
 ```
