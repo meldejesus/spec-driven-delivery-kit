@@ -75,54 +75,6 @@ Changing the terminal working directory does not change that authority.
   Do not treat a repository's blanket commit prohibition as such an exception.
   Implementation consent does not authorize a push or publication.
 
-## E2E automation and test selectors
-
-These rules apply to every agent, including Codex, Claude Code, and GitHub
-Copilot, across this workspace's repositories and worktrees.
-
-- Do not add Playwright or Cypress end-to-end tests or automation scripts as
-  part of feature development. Do not expand existing e2e suites to work around
-  this rule. The automation team owns this coverage until the team standardizes
-  the process. A contract or plan requiring browser verification does not
-  authorize adding e2e scripts; use existing checks and record manual steps and
-  results instead. Unit and component tests remain in scope.
-- Before changing UI markup, inspect existing automation for selectors that
-  depend on the affected elements. Preserve existing `data-testid` values and
-  other selectors used by e2e tests, including element IDs. Renaming, removing,
-  or moving a selector to an element with different behavior can break tests.
-- When replacing an element, carry its existing `data-testid` onto the
-  equivalent replacement element and preserve the selector's intended behavior.
-  Avoid duplicate test IDs where tests expect one matching element.
-- If a selector cannot be preserved, flag the change immediately to the user
-  and arrange notification to the automation team before merge. Record the old
-  and new selectors, affected flows, and required automation updates in the
-  handoff or PR notes. Do not silently change selectors or rewrite e2e tests
-  to hide the breakage. Send messages to the automation team only when the user
-  authorizes that communication; otherwise provide a ready-to-send notice.
-
-## Worktrees
-
-These rules apply to every agent, including Codex, Claude Code, and GitHub
-Copilot.
-
-- **Never delete these checkouts.** `monorepo-worktree` (under the workspace root)
-  is the user's only permanent worktree. `osmosis-gme-monorepo`
-  is the main checkout. Do not remove, prune, or `rm` either one, even as part
-  of a cleanup step.
-- **Every other worktree is temporary.** This includes worktrees for PR
-  reviews, validation runs, spikes, and agent isolation.
-- **Create temporary worktrees detached.** Use
-  `git worktree add --detach <path> <commit>`. A worktree that checks out a
-  branch locks that branch, so `git checkout <branch>` then fails in
-  `monorepo-worktree` with "already used by worktree."
-- **Delete a temporary worktree when its task ends.** Run
-  `git worktree remove <path>`, then `git worktree prune`, and tell the user
-  what you removed. Snapshot updates and test output in a temporary worktree
-  are disposable, so `--force` is fine for those.
-- **Ask before deleting real work.** If a temporary worktree has commits that
-  aren't pushed, or edits that aren't just generated output, ask the user
-  first. Also ask before deleting a worktree that you didn't create.
-
 ## Writing style
 
 Before writing or revising documentation, explanations, ticket comments, or

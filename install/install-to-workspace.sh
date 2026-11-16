@@ -249,6 +249,7 @@ is_seed_path() {
     .github/lessons-learned.md) return 0 ;;
     workflow/index.md|workflow/README.md) return 0 ;;
     workflow/future-tickets/*|workflow/misc/*) return 0 ;;
+    AGENTS.md) return 0 ;;
   esac
   return 1
 }
